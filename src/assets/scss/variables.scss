@@ -1,0 +1,26 @@
+$colors: (offwhite: #f2f2f2,
+  white: #ffffff,
+  grey: #5f5d5d,
+  forget-color: #616161,
+  term-color: #7d7d7d,
+  grey-color: #dde3ef,
+  select-color: #ebebeb,
+  light-border: #d6d6d6,
+  active-color: #2e9e32,
+);
+
+
+$border-radius: 16px;
+
+/* Box Shadow Mixin */
+@mixin boxShadow {
+  -moz-box-shadow: 0px 2px 6px 0px #e0e0e0 !important;
+  -webkit-box-shadow: 0px 2px 6px 0px #e0e0e0 !important;
+  box-shadow: 0px 2px 6px 0px #e0e0e0 !important;
+}
+
+@mixin boxShadow-cutom {
+  -moz-box-shadow: 0px 0px 8px #00000026 !important;
+  -webkit-box-shadow: 0px 0px 8px #00000026 !important;
+  box-shadow: 0px 0px 8px #00000026 !important;
+}

@@ -1,0 +1,37 @@
+$i-colors: (
+  "primary": #181C63,
+  "secondary": #4c6072,
+  "secondary-clr": #DC1B2C,
+  "text-main": #333333,
+  "border-main": #4c607233,
+  "bg-light": #ffffff,
+  // "bg-light": #f6f8fa,
+  "text-error": #f00,
+  "success-text": #008000,
+  "color-white": #fff,
+
+  "btn-background" : #DC1B2C,
+  "btn-background-hover" : #b01623,
+  "btn-background-click" : #84101a,
+
+  "secondary-btn-background" : #161b5f,
+  "secondary-btn-background-hover" : #12164c,
+  "secondary-btn-background-click" : #0d1039,
+);
+
+:export {
+  primary: map-get($i-colors, "primary");
+  secondary: map-get($i-colors, "secondary");
+  textMain: map-get($i-colors, "text-main");
+  borderMain: map-get($i-colors, "border-main");
+  bgLight: map-get($i-colors, "bg-light");
+  textError: map-get($i-colors, "text-error");
+  successText: map-get($i-colors, "success-text");
+  colorWhite: map-get($i-colors, "color-white");
+  btnBackground : map-get($i-colors, "btn-background");
+  btnBackgroundHover : map-get($i-colors, "btn-background-hover");
+  btnBackgroundClick : map-get($i-colors, "btn-background-click");
+  secBtnBackground : map-get($i-colors, "secondary-btn-background");
+  secBtnBackgroundHover : map-get($i-colors, "secondary-btn-background-hover");
+  secBBackgroundClick : map-get($i-colors, "secondary-btn-background-click");
+}

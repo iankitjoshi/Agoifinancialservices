@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="43.981" height="28.347" viewBox="0 0 43.981 28.347">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" y1="1" x2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#e1aa32"/>
+      <stop offset="1" stop-color="#ffc545"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.5" y1="1" x2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff1d2"/>
+      <stop offset="1" stop-color="#fff9ec"/>
+    </linearGradient>
+  </defs>
+  <g id="Cards_colored" data-name="Cards colored" transform="translate(0 -91)">
+    <g id="Group_318" data-name="Group 318" transform="translate(0 91)">
+      <g id="Group_317" data-name="Group 317" transform="translate(0 0)">
+        <path id="Path_1036" data-name="Path 1036" d="M43.981,94.866A3.86,3.86,0,0,0,40.115,91H3.866A3.86,3.86,0,0,0,0,94.866v2.577l10.952,2.577L0,102.6v12.885a3.86,3.86,0,0,0,3.866,3.866h36.25a3.86,3.86,0,0,0,3.866-3.866V102.6L33.029,100.02l10.952-2.577Z" transform="translate(0 -91)" fill="url(#linear-gradient)"/>
+      </g>
+    </g>
+    <g id="Group_320" data-name="Group 320" transform="translate(0 97.443)">
+      <g id="Group_319" data-name="Group 319" transform="translate(0 0)">
+        <path id="Path_1037" data-name="Path 1037" d="M0,166v5.154H43.981V166Zm37.538,9.02H27.23a1.288,1.288,0,0,0-1.289,1.288v5.154a1.288,1.288,0,0,0,1.289,1.289H37.538a1.288,1.288,0,0,0,1.289-1.289v-5.154A1.288,1.288,0,0,0,37.538,175.02Zm-20.788,0H6.443a1.289,1.289,0,0,0,0,2.577H16.751a1.289,1.289,0,1,0,0-2.577ZM11.6,180.174H6.443a1.289,1.289,0,0,0,0,2.577H11.6a1.289,1.289,0,1,0,0-2.577Z" transform="translate(0 -166)" fill="url(#linear-gradient-2)"/>
+      </g>
+    </g>
+  </g>
+</svg>
