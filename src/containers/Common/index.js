@@ -26,6 +26,9 @@ import userIcon from '../../assets/images/userIcon.svg'
 import toggleIcon from '../../assets/images/white-toggle.svg'
 import LogoutIcon from '../../assets/images/logoutIcon.svg'
 import WhiteToogleIcon from '../../assets/images/white-toggle.svg'
+import settingIcon from '../../assets/images/settingIcon.svg'
+import categoryIcon from '../../assets/images/categoryIcon.svg'
+
 
 const menuItems = [
   {
@@ -42,6 +45,16 @@ const menuItems = [
     label: "KYC",
     path: '/kyc',
     icon: userIcon
+  },
+  {
+    label: "Order",
+    path: '/Order',
+    icon: categoryIcon
+  },
+  {
+    label: "Settings",
+    path: '/settings',
+    icon: settingIcon
   },
   {
     label: "Logout",

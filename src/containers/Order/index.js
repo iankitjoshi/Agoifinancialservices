@@ -10,15 +10,10 @@ import {
     Card,
     Box,
     CardContent,
-    TextField,
-    MenuItem,
-    Button,
-    Checkbox
 } from '@material-ui/core'
 import { withTranslation } from "react-i18next"
 import EnhancedTableHead from 'components/common/EnhancedTableHead'
 import CustomTablePagination from 'components/common/CustomPagination';
-import InputField from "components/common/InputField"
 import { useDispatch, useSelector } from "react-redux"
 import * as action from './actions'
 import 'react-dates/initialize';
@@ -26,41 +21,32 @@ import "react-dates/lib/css/_datepicker.css";
 import CustomDialogBox from "components/common/CustomDialogBox"
 import { stableSort, getComparator, tablestyle, getTimeStamps, } from "utils"
 import { dateFilter } from 'constant'
-import editIcon from 'assets/images/editIcon.svg';
-import deleteIcon from 'assets/images/deleteIcon.svg'
 import loader from 'assets/images/loader.gif'
-import totalUserIcon from 'assets/images/totalUserIcon.svg'
-import userActiveIcon from 'assets/images/userActiveIcon.svg'
-import userInActiveIcon from 'assets/images/userInActiveIcon.svg'
 import IOSSwitch from "components/common/IOSSwitch";
 import moment from 'moment'
 import CustomSelect from 'components/common/CustomSelect'
-import UserLoader from "assets/images/userLoader.gif";
-import CustomToolTip from "components/common/ToolTip";
 import NoDataFound from "components/common/NoDataFound";
 import Datepicker from "components/common/Datepicker";
-import CustomModal from "components/common/CustomModal";
-import AddShareForm from "./shareForm";
+import CustomToolTip from "components/common/ToolTip";
+import deleteIcon from 'assets/images/deleteIcon.svg'
+
 
 const headCells = [
+    { id: "index", numeric: false, disablePadding: false, label: "S.No." },
+    { id: "is_active", numeric: false, disablePadding: false, label: "status" },
+    { id: "user_name", numeric: false, disablePadding: false, label: "Username" },
+    { id: "email", numeric: false, disablePadding: false, label: "Email" },
     { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
-    { id: "index", numeric: false, disablePadding: false, label: "Image" },
-    { id: "index", numeric: false, disablePadding: false, label: "Name" },
-    { id: "is_active", numeric: false, disablePadding: false, label: "ID" },
-    { id: "user_name", numeric: false, disablePadding: false, label: "Price Per share" },
-    // { id: "email", numeric: false, disablePadding: false, label: "Email" },
-    // { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
-    // { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Mobile No." },
-    // { id: "group.name", numeric: false, disablePadding: false, label: "Live on TV" },
+    { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Mobile No." },
     { id: "a", numeric: false, disablePadding: false, label: "Action" },
 ];
 
-function Shares(props) {
+function Orders(props) {
     const { toast } = props
     const dispatch = useDispatch()
     const [search, setSearch] = useState('')
     const [openDeleteModal, setOpenDeleteModal] = useState(false)
-    const [shareId, setShareId] = useState(null)
+    const [userId, setUserId] = useState(null)
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('')
     const [rowsPerPage, setRowsPerPage] = useState(25)
@@ -71,23 +57,21 @@ function Shares(props) {
     const [focusedInput, setFocusedInput] = useState(false)
     const [timeOut, setTimeOut] = useState(null)
     const [userFilterSelect, setUserFilterSelect] = useState("")
-    const [addShareModal, setAddShareModal] = useState(false)
+    const [addUserModal, setAddUserModal] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
-    const [shareDetails, setShareDetails] = useState({})
+    const [userDetails, setUserDetails] = useState({})
     const [openUserLiveModal, setOpenUserLiveModal] = useState(false)
     const [removeLiveConfirmModal, setRemoveLiveConfirmModal] = useState(false)
 
 
     const { userList = {}, isLoading = false } = useSelector(state => state.users) || {}
 
-    const { total = "", current_page = "" } = userList || {}
+    const {  total = "", current_page = "" } = userList || {}
 
     const data = [
-        { id: 1, name: 'Axis Bank', image: '', id: 'NJKNKCD778', price: 10 },
-        { id: 2, name: 'Axis Bank', image: '', id: 'NJKNKCD778', price: 10 },
-        { id: 3, name: 'Axis Bank', image: '', id: 'NJKNKCD778', price: 10 },
-        { id: 4, name: 'Axis Bank', image: '', id: 'NJKNKCD778', price: 10 },
-        { id: 5, name: 'Axis Bank', image: '', id: 'NJKNKCD778', price: 10 },
+        {id : 1, name : 'a'},
+        {id : 2, name : 'b'},
+        {id : 3, name : 'ac'},
     ]
 
     useEffect(() => {
@@ -150,13 +134,13 @@ function Shares(props) {
     }
 
     const deleteModal = (id) => {
-        setShareId(id)
+        setUserId(id)
         setOpenDeleteModal(true)
     }
 
     const onUpdateStatus = (e, user) => {
         e.preventDefault();
-        // update(user)
+        update(user)
     }
 
     const handleRequestSort = (event, property) => {
@@ -194,7 +178,7 @@ function Shares(props) {
     }
 
     const deleteUser = () => {
-        dispatch(action.DeleteUser(shareId))
+        dispatch(action.DeleteUser(userId))
             .then(res => {
                 dispatch(action.getUserList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
                 toast.success("User has been deleted successfully")
@@ -207,25 +191,25 @@ function Shares(props) {
     }
 
     const handleCloseAddUserModal = () => {
-        setAddShareModal(false)
+        setAddUserModal(false)
         setIsEdit(false)
-        setShareDetails({})
+        setUserDetails({})
     }
 
     const handleEditUser = (users) => {
-        setShareDetails(users)
-        setAddShareModal(true)
+        setUserDetails(users)
+        setAddUserModal(true)
         setIsEdit(true)
     }
 
     const handleAddModal = () => {
-        setAddShareModal(true)
+        setAddUserModal(true)
     }
 
     const afterAction = () => {
         setSearch('')
         setUserFilterSelect('')
-        setShareId(null)
+        setUserId(null)
     }
 
     const usersFilter = [
@@ -234,16 +218,13 @@ function Shares(props) {
         { id: 4, value: 'mobile', label: 'Mobile Number' },
     ]
 
+    const handleCloseUserLiveModal = () => {
+        setOpenUserLiveModal(false)
+    }
 
-    const handleUserLive = (item) => {
-        const { is_live } = item
-        if (is_live == "true") {
-            setRemoveLiveConfirmModal(true)
-            setShareDetails(item)
-        } else {
-            setOpenUserLiveModal(true)
-            setShareDetails(item)
-        }
+    const handleSingleUser = (e,item) => {
+        const { id = "" } = item
+        props.history.push(`/user/${id}`)
     }
 
 
@@ -253,7 +234,7 @@ function Shares(props) {
         <div className="user-page">
             <Grid container spacing={3} className="mb-3 heading-sec" >
                 <Grid item xs={12} sm={12} md={12} lg={1} className="align-self-center">
-                    <h5 className="page-heading" >Shares</h5>
+                    <h5 className="page-heading" >Orders</h5>
                 </Grid>
 
                 <Grid item xs={12} sm={12} md={12} lg={11} className="custom-date-field d-flex align-items-center justify-content-end">
@@ -282,27 +263,9 @@ function Shares(props) {
                                 </div>
                         }
                     </Box>
-                    <Button onClick={handleAddModal} className="button-btn cat-button new-btn-color" disabled={isLoading} > Add Share</Button>
                 </Grid>
             </Grid>
 
-            <Grid container className="user-grid" >
-                <ShareCardField img={totalUserIcon}>
-                    <h5>Total Shares</h5>
-                    <h6>{isLoading ? <img src={UserLoader} alt="" className="user-loader-img" /> : 10}</h6>
-                </ShareCardField>
-
-                <ShareCardField img={userActiveIcon}>
-                    <h5>Active Shares</h5>
-                    <h6>{isLoading ? <img src={UserLoader} alt="" className="user-loader-img" /> : 8 } </h6>
-                </ShareCardField>
-
-                <ShareCardField img={userInActiveIcon}>
-                    <h5>Inactive Shares</h5>
-                    <h6>{isLoading ? <img src={UserLoader} alt="" className="user-loader-img" /> : 2} </h6>
-                </ShareCardField>
-
-            </Grid>
             <div className="cust-table">
                 {!isLoading ?
                     <div>
@@ -315,22 +278,23 @@ function Shares(props) {
                                     headCells={headCells}
                                 />
                                 <TableBody>
-                                    {data && data.length ?
+                                    {true ?
                                         stableSort(data || [], getComparator(order, orderBy)).map((item, index) => {
-                                            const { image = "", name = "", price = "", id = "", is_active = "" } = item || {}
+                                            const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
                                             return (
-                                                <TableRow hover key={id} className="cursor_default"  >
+                                                <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
+                                                    <TableCell className="table-custom-width" data-title="S NO.">{name}. </TableCell>
                                                     <TableCell className="table-custom-width" data-title="USER NAME"><IOSSwitch onChange={(e) => onUpdateStatus(e, item)} checked={is_active && JSON.parse(is_active)} /></TableCell>
-                                                    <TableCell className="table-custom-width" data-title="S NO."> {'image'} </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME"> {name} </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">{id}</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS"> {price} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="USER NAME">csdc </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="EMAIL">csdcsd</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">cscs </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="MOBILE NO."> cvfd </TableCell>
                                                     <TableCell className="table-custom-width" data-title="ACTION">
-                                                        <CustomToolTip title="Edit" >
+                                                        {/* <CustomToolTip title="Edit" >
                                                             <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >
                                                                 <img src={editIcon} alt="" />
                                                             </span>
-                                                        </CustomToolTip>
+                                                        </CustomToolTip> */}
                                                         <CustomToolTip title="Delete" >
                                                             <span className="delete-icon" onClick={() => deleteModal(id)} >
                                                                 <img src={deleteIcon} alt="" />
@@ -363,18 +327,6 @@ function Shares(props) {
                 }
             </div>
 
-            <CustomModal open={addShareModal} maxWidth="xl">
-                <AddShareForm
-                    {...props}
-                    onClose={handleCloseAddUserModal}
-                    toast={toast}
-                    shareDetails={shareDetails}
-                    update={isEdit}
-                    afterAction={afterAction}
-                />
-            </CustomModal>
-
-
             <CustomDialogBox
                 handleClose={() => setOpenDeleteModal(false)}
                 confirmAction={deleteUser}
@@ -382,17 +334,17 @@ function Shares(props) {
                 title="Warning"
                 dialogtext={`Are you sure you want to delete this user?`}
                 isLoading={isLoading}
-                text="Keep Share"
+                text="Keep User"
             />
 
         </div>
     )
 }
 
-export default withTranslation("translations")(withStyles(tablestyle)(Shares));
+export default withTranslation("translations")(withStyles(tablestyle)(Orders));
 
-function ShareCardField(props) {
-    return <Grid item xs={12} sm={4} md={4} lg={4}>
+function UserCardField(props) {
+    return <Grid item xs={12} sm={3} md={3} lg={3}>
         <Card className="user-cards" >
             <CardContent>
                 <Grid container>

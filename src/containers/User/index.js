@@ -27,6 +27,9 @@ import moment from 'moment'
 import CustomSelect from 'components/common/CustomSelect'
 import NoDataFound from "components/common/NoDataFound";
 import Datepicker from "components/common/Datepicker";
+import CustomToolTip from "components/common/ToolTip";
+import deleteIcon from 'assets/images/deleteIcon.svg'
+
 
 const headCells = [
     { id: "index", numeric: false, disablePadding: false, label: "S.No." },
@@ -35,7 +38,6 @@ const headCells = [
     { id: "email", numeric: false, disablePadding: false, label: "Email" },
     { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
     { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Mobile No." },
-    { id: "group.name", numeric: false, disablePadding: false, label: "Live on TV" },
     { id: "a", numeric: false, disablePadding: false, label: "Action" },
 ];
 
@@ -287,18 +289,18 @@ function User(props) {
                                                     <TableCell className="table-custom-width" data-title="EMAIL">csdcsd</TableCell>
                                                     <TableCell className="table-custom-width" data-title="STATUS">cscs </TableCell>
                                                     <TableCell className="table-custom-width" data-title="MOBILE NO."> cvfd </TableCell>
-                                                    {/* <TableCell className="table-custom-width" data-title="ACTION">
-                                                        <CustomToolTip title="Edit" >
+                                                    <TableCell className="table-custom-width" data-title="ACTION">
+                                                        {/* <CustomToolTip title="Edit" >
                                                             <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >
                                                                 <img src={editIcon} alt="" />
                                                             </span>
-                                                        </CustomToolTip>
+                                                        </CustomToolTip> */}
                                                         <CustomToolTip title="Delete" >
                                                             <span className="delete-icon" onClick={() => deleteModal(id)} >
                                                                 <img src={deleteIcon} alt="" />
                                                             </span>
                                                         </CustomToolTip>
-                                                    </TableCell> */}
+                                                    </TableCell>
                                                 </TableRow>
                                             )
                                         })

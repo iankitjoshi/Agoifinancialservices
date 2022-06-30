@@ -26,7 +26,6 @@ const initialUserState = {
     companyState: '',
     faceValue: '',
     pricePerShare: '',
-    shareAvailable: [...ShareAvailablePlateform],
     shareQuantity: '',
     description: ''
 }
@@ -36,22 +35,22 @@ const initialUserState = {
 function AddShareForm(props) {
     const dispatch = useDispatch()
     const { isLoading = false } = useSelector(state => state.users) || {}
-    const [shares, setUsers] = useState({ ...initialUserState })
+    const [shares, setShares] = useState({ ...initialUserState })
+    const [shareAvailable, setShareAvailable] = useState([...ShareAvailablePlateform])
     const [shareImage, setShareImage] = useState('')
     const [shareImgBinaryData, setShareImgBinaryData] = useState('')
     const [removeShareImg, setRemoveShareImg] = useState(false)
-
     const [errors, setError] = useState({})
     const [dataChange, setDataChange] = useState(false)
 
     const { update } = props
 
     useEffect(() => {
-        const { userDetails, update } = props
-        const { user_name = "", email = "", phone = "" } = userDetails
+        const { shareDetails, update } = props
+        const { user_name = "", email = "", phone = "" } = shareDetails
 
         if (update) {
-            setUsers({ ...shares, name: user_name, email, mobile: phone })
+            setShares({ ...shares, name: user_name, email, mobile: phone })
         }
     }, [])
 
@@ -66,7 +65,7 @@ function AddShareForm(props) {
         let balanceRegex = /^(\d+(\.\d{0,5})?|\.?\d{1,2})$/;
         if (['faceValue', 'pricePerShare', 'shareQuantity'].includes(name) && value && !balanceRegex.test(value)) return;
 
-        setUsers({ ...shares, [name]: value })
+        setShares({ ...shares, [name]: value })
         setError({ ...errors, [name]: '' })
         setDataChange(true)
     }
@@ -103,8 +102,8 @@ function AddShareForm(props) {
 
     const handleSubmit = () => {
         const { name = "", email = "", password = "", mobile = "" } = shares
-        const { toast, update, userDetails } = props
-        const { id } = userDetails
+        const { toast, update, shareDetails } = props
+        const { id } = shareDetails
         console.log(shares, 'shares')
 
         if (isValid()) {
@@ -146,9 +145,12 @@ function AddShareForm(props) {
         }
     }
 
-    const handleChecked = (e,data) => {
-
-        console.log(data)
+    const handleChecked = (e, index) => {
+        let shareAvailUpdate = shareAvailable && shareAvailable?.map((data, i) => {
+            if (index == i) return { ...data, check: !data.check }
+            return data;
+        })
+        setShareAvailable(shareAvailUpdate)
     }
 
     return (
@@ -183,41 +185,17 @@ function AddShareForm(props) {
                     <Grid item xs={12} sm={6}>
                         <FormGroup className="share-available" >
                             {
-                                shares.shareAvailable.map(data => {
-                                    return <FormControlLabel control={<Checkbox checked={data.check} onChange={(e) => handleChecked(e, data)} name={data.name} />} label={data.name} />
+                                shareAvailable.map((data, index) => {
+                                    return <FormControlLabel control={<Checkbox checked={data.check} onChange={(e) => handleChecked(e, index)} name={data.name} />} label={data.name} />
 
                                 })
                             }
                         </FormGroup>
-
-                        {/* <InputField name="shareAvailable" label="Share Available" placeholder="Please enter Share Available"
-                            value={shares.shareAvailable} error={errors.shareAvailable} onChange={handleChange} required/> */}
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <InputField name="companyType" label="Company Type" placeholder="Please enter Company Type"
                             value={shares.companyType} error={errors.companyType} onChange={handleChange} />
                     </Grid>
-                    {/* <Grid item xs={12} sm={6}>
-                        <FormControl variant="outlined" className="" fullWidth disabled={isLoading} >
-                            <InputLabel id="channel">Company's Origin State</InputLabel>
-                            {isLoading ? <div className="field-loader"> <CircularProgress color="primary" size={25} /> </div> : ''}
-                            <Select
-                                labelId="companyState"
-                                id="companyState"
-                                value={shares.companyState}
-                                onChange={(e) => handleChange(e)}
-                                label="company State"
-                                name="companyState"
-                            >
-                                <MenuItem value="" disabled > <em>None</em> </MenuItem>
-                                {
-                                    StateName?.map(state => {
-                                        return <MenuItem value={state} >{state}</MenuItem>
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                    </Grid> */}
                     <Grid item xs={12} sm={6}>
                         <InputField name="faceValue" label="Face Value" placeholder="Please enter Face Value"
                             value={shares.faceValue} error={errors.faceValue} onChange={handleChange} required />
@@ -226,15 +204,22 @@ function AddShareForm(props) {
                         <InputField name="pricePerShare" label="Price Per Share" placeholder="Please enter Price Per Share"
                             value={shares.pricePerShare} error={errors.pricePerShare} onChange={handleChange} required />
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6}>
                         <InputField name="shareQuantity" label="Share Quantity" placeholder="Please enter Share Quantity"
                             value={shares.shareQuantity} error={errors.shareQuantity} onChange={handleChange} required />
                     </Grid>
                     <Grid item xs={12} sm={12}>
-                        <InputField name="description" label="Description" placeholder="Please enter Description"
-                            value={shares.description} error={errors.description} onChange={handleChange}
-                            rows={3} required />
+                        <InputField 
+                            name='description'
+                            value={shares.description}
+                            label="Description"
+                            placeholder="Please enter Description"
+                            onChange={handleChange}
+                            error={errors.description}
+                            rows={3}
+                            required
+                         />
                     </Grid>
 
                 </Grid>

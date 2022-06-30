@@ -20,7 +20,7 @@ import EnhancedTableHead from 'components/common/EnhancedTableHead'
 import CustomTablePagination from 'components/common/CustomPagination';
 import InputField from "components/common/InputField"
 import { useDispatch, useSelector } from "react-redux"
-import * as action from '../User/actions'
+import * as action from './actions'
 import 'react-dates/initialize';
 import "react-dates/lib/css/_datepicker.css";
 import CustomDialogBox from "components/common/CustomDialogBox"
@@ -48,8 +48,6 @@ const headCells = [
     { id: "email", numeric: false, disablePadding: false, label: "Email" },
     { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
     { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Mobile No." },
-    { id: "group.name", numeric: false, disablePadding: false, label: "Live on TV" },
-    { id: "a", numeric: false, disablePadding: false, label: "Action" },
 ];
 
 function KYC(props) {
@@ -295,7 +293,6 @@ function KYC(props) {
                                             return (
                                                 <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
                                                     <TableCell className="table-custom-width" data-title="S NO.">{name}. </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME"><IOSSwitch onChange={(e) => onUpdateStatus(e, item)} checked={is_active && JSON.parse(is_active)} /></TableCell>
                                                     <TableCell className="table-custom-width" data-title="USER NAME">csdc </TableCell>
                                                     <TableCell className="table-custom-width" data-title="EMAIL">csdcsd</TableCell>
                                                     <TableCell className="table-custom-width" data-title="STATUS">cscs </TableCell>

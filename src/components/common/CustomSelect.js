@@ -1,6 +1,6 @@
 import React from 'react'
 import SelectCmp from "react-select"
-
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 const colourStyles = {
   control: styles => ({
@@ -54,6 +54,7 @@ function CustomSelect(props) {
         isSearchable={isSearchable}
         options={options}
       />
+      < ArrowDropDownIcon style={{display : 'none'}} />
       <svg class="cus-select-dropdown MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"></path></svg>
     </div>
   )

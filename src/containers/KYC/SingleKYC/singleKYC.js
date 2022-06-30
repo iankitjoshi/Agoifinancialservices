@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import UserLoader from "../../../assets/images/userLoader.gif";
+import InputField from '../../../components/common/InputField'
+import * as action from '../actions'
 
-import { Grid, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@material-ui/core'
+import { Button, Grid, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@material-ui/core'
 
 function SingleKYCDetails(props) {
+    const dispatch = useDispatch()
+
     const [types, setTypes] = useState(['Accept', 'Reject'])
     const [typeSelected, setTypeSelected] = useState('')
-    const dispatch = useDispatch()
+    const [rejectReason, setRejectReason] = useState('')
     const { userId } = props.match.params;
 
     useEffect(() => {
@@ -17,6 +21,29 @@ function SingleKYCDetails(props) {
 
     const handleRadio = (event) => {
         setTypeSelected(event.target.value);
+    }
+
+    const handleChange = (e) => {
+        const { value = "" } = e.target
+        setRejectReason(value)
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        const formData = {
+            typeSelected,
+            rejectReason
+        }
+        console.log(formData, 'formData')
+        dispatch(action.CreateUser(formData))
+            .then(({ res = "" }) => {
+                props.toast.success(res || "User added successfully");
+                props.onClose()
+                props.afterAction()
+            })
+            .catch(({ message = "" }) => {
+                props.toast.error(message || 'Oops! Something went wrong')
+            })
     }
 
     return (
@@ -43,25 +70,46 @@ cscsd
                     {true ?
                         <Grid container spacing={4} className="category-section">
                             <Grid item xs={12} sm={12} md={3} lg={3}>
-                                A
+                                <p>
+                                    <label> Name: </label>
+                                    <strong> Ankit Joshi </strong>
+                                </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
-                                B
+                                <p>
+                                    <label> Name: </label>
+                                    <strong> Ankit Joshi </strong>
+                                </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
-                                C
+                                <p>
+                                    <label> Name: </label>
+                                    <strong> Ankit Joshi </strong>
+                                </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
-                                D
+                                <p>
+                                    <label> Name: </label>
+                                    <strong> Ankit Joshi </strong>
+                                </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
-                                E
+                                <p>
+                                    <label> Name: </label>
+                                    <strong> Ankit Joshi </strong>
+                                </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
-                                F
+                                <p>
+                                    <label> Name: </label>
+                                    <strong> Ankit Joshi </strong>
+                                </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
-                                G
+                                <p>
+                                    <label> Name: </label>
+                                    <strong> Ankit Joshi </strong>
+                                </p>
                             </Grid>
                         </Grid>
 
@@ -70,8 +118,8 @@ cscsd
                             Loader
                         </div>
                     }
-                    <FormControl>
-                        <FormLabel id="demo-controlled-radio-buttons-group">Gender</FormLabel>
+                    <h6 className="mt-5" >KYC Status</h6>
+                    <FormControl className="m-2" >
                         <RadioGroup row aria-label="position" name="position" defaultValue="top">
                             {
                                 types.map((type, i) => {
@@ -84,7 +132,27 @@ cscsd
                             }
                         </RadioGroup>
                     </FormControl>
+
+                    {
+                        typeSelected == 'Reject' ?
+                            <Grid item xs={12} sm={12}>
+                                <InputField
+                                    name='rejectReason'
+                                    value={rejectReason}
+                                    label="Reason"
+                                    placeholder="Please enter Reason"
+                                    onChange={handleChange}
+                                    margin="normal"
+                                    fullWidth
+                                    rows={3}
+                                    required
+                                />
+                            </Grid>
+                            :
+                            null
+                    }
                 </div>
+                <Button onClick={handleSubmit} className="button-btn cat-button new-btn-color"  > Submit</Button>
             </div>
         </div>
     )

@@ -10,6 +10,9 @@ import Shares from "containers/Share"
 import SingleUserDetails from "containers/User/SingleUserDetails/userDetails"
 import KYC from "containers/KYC"
 import SingleKYCDetails from '../containers/KYC/SingleKYC/singleKYC';
+import Settings from "../containers/Settings"
+import Order from "containers/Order"
+
 
 
 class Routes extends Component {
@@ -39,6 +42,8 @@ class Routes extends Component {
             
             <PrivateRoute exact path="/kyc" component={KYC} notification={this.notification} />
             <PrivateRoute exact path="/kyc/:kycId" component={SingleKYCDetails} notification={this.notification} />
+            <PrivateRoute exact path="/order" component={Order} notification={this.notification} />
+            <PrivateRoute exact path="/settings" component={Settings} notification={this.notification} />
 
             <Route component={NotFound} />
           </Switch>
