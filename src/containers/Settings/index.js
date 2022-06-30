@@ -13,6 +13,7 @@ import loader from '../../assets/images/loader.gif'
 import editcatIcon from '../../assets/images/edit.svg'
 import CustomTooltip from '../../components/common/ToolTip'
 import CrossIcon from '../../assets/images/cross-black.svg'
+import Notification from 'components/common/Notification'
 // import loader from '../../assets/images/loader.gif'
 
 const initInfo = {
@@ -128,6 +129,7 @@ export default function Settings(props) {
 
     return (
         <div className="settings-page">
+            <Notification />
             <div className="setting-top">
                 <Grid container >
                     <Grid item xs={12} sm={6} md={6} lg={6}>

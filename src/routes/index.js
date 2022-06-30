@@ -12,6 +12,7 @@ import KYC from "containers/KYC"
 import SingleKYCDetails from '../containers/KYC/SingleKYC/singleKYC';
 import Settings from "../containers/Settings"
 import Order from "containers/Order"
+import SingleOrderDetails from "containers/Order/SingleOrderDetails/orderDetails"
 
 
 
@@ -43,6 +44,7 @@ class Routes extends Component {
             <PrivateRoute exact path="/kyc" component={KYC} notification={this.notification} />
             <PrivateRoute exact path="/kyc/:kycId" component={SingleKYCDetails} notification={this.notification} />
             <PrivateRoute exact path="/order" component={Order} notification={this.notification} />
+            <PrivateRoute exact path="/order/:orderID" component={SingleOrderDetails} notification={this.notification} />
             <PrivateRoute exact path="/settings" component={Settings} notification={this.notification} />
 
             <Route component={NotFound} />

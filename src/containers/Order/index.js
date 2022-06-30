@@ -10,7 +10,10 @@ import {
     Card,
     Box,
     CardContent,
+    InputAdornment,
+    IconButton,
 } from '@material-ui/core'
+import InputField from "components/common/InputField"
 import { withTranslation } from "react-i18next"
 import EnhancedTableHead from 'components/common/EnhancedTableHead'
 import CustomTablePagination from 'components/common/CustomPagination';
@@ -29,6 +32,9 @@ import NoDataFound from "components/common/NoDataFound";
 import Datepicker from "components/common/Datepicker";
 import CustomToolTip from "components/common/ToolTip";
 import deleteIcon from 'assets/images/deleteIcon.svg'
+import ClearIcon from '@material-ui/icons/Clear';
+import CustomLoader from "components/common/Loader"
+import Notification from "components/common/Notification"
 
 
 const headCells = [
@@ -57,21 +63,16 @@ function Orders(props) {
     const [focusedInput, setFocusedInput] = useState(false)
     const [timeOut, setTimeOut] = useState(null)
     const [userFilterSelect, setUserFilterSelect] = useState("")
-    const [addUserModal, setAddUserModal] = useState(false)
-    const [isEdit, setIsEdit] = useState(false)
-    const [userDetails, setUserDetails] = useState({})
-    const [openUserLiveModal, setOpenUserLiveModal] = useState(false)
-    const [removeLiveConfirmModal, setRemoveLiveConfirmModal] = useState(false)
 
 
     const { userList = {}, isLoading = false } = useSelector(state => state.users) || {}
 
-    const {  total = "", current_page = "" } = userList || {}
+    const { total = "", current_page = "" } = userList || {}
 
     const data = [
-        {id : 1, name : 'a'},
-        {id : 2, name : 'b'},
-        {id : 3, name : 'ac'},
+        { id: 1, name: 'a' },
+        { id: 2, name: 'b' },
+        { id: 3, name: 'ac' },
     ]
 
     useEffect(() => {
@@ -116,21 +117,13 @@ function Orders(props) {
         setTimeOut(setTimeOut(() => {
             searchUser(value)
         }, 700))
-        props.history.replace(`/user?page=${0}&limit=${5}`)
+        props.history.replace(`/order?page=${0}&limit=${5}`)
     }
 
     const searchUser = (value) => {
         if (value.length != 1) {
             dispatch(action.getUserByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
         }
-    }
-
-    const handleItemType = ({ target: { value } }) => {
-        setUserFilterSelect(value)
-        setSearch('')
-        if (search !== '') (
-            dispatch(action.getUserList())
-        )
     }
 
     const deleteModal = (id) => {
@@ -152,7 +145,7 @@ function Orders(props) {
     const handleChangePage = (event, currentPage, pageLimit) => {
         setCurrentPage(currentPage)
         dispatch(action.getUserByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
-        props.history.replace(`/user?page=${currentPage}&limit=${rowsPerPage}`)
+        props.history.replace(`/order?page=${currentPage}&limit=${rowsPerPage}`)
     }
 
     const handleChangeRowsPerPage = (rowsPerPage) => {
@@ -161,7 +154,7 @@ function Orders(props) {
         setRowsPerPage(value)
         setCurrentPage(0)
         dispatch(action.getUserByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
-        props.history.replace(`/user?page=${currentPage}&limit=${value}`)
+        props.history.replace(`/order?page=${currentPage}&limit=${value}`)
     }
 
     const update = (user) => {
@@ -190,21 +183,7 @@ function Orders(props) {
             })
     }
 
-    const handleCloseAddUserModal = () => {
-        setAddUserModal(false)
-        setIsEdit(false)
-        setUserDetails({})
-    }
 
-    const handleEditUser = (users) => {
-        setUserDetails(users)
-        setAddUserModal(true)
-        setIsEdit(true)
-    }
-
-    const handleAddModal = () => {
-        setAddUserModal(true)
-    }
 
     const afterAction = () => {
         setSearch('')
@@ -212,32 +191,32 @@ function Orders(props) {
         setUserId(null)
     }
 
-    const usersFilter = [
-        { id: 1, value: 'user_name', label: 'Username' },
-        { id: 3, value: 'email', label: 'Email' },
-        { id: 4, value: 'mobile', label: 'Mobile Number' },
-    ]
 
-    const handleCloseUserLiveModal = () => {
-        setOpenUserLiveModal(false)
-    }
-
-    const handleSingleUser = (e,item) => {
+    const handleSingleUser = (e, item) => {
         const { id = "" } = item
-        props.history.push(`/user/${id}`)
+        props.history.push(`/order/${id}`)
     }
 
-
-    let labelData = usersFilter.find(item => item.value === userFilterSelect);
+    const clearSearch = () => {
+        setSearch('')
+        // dispatch(action.SearchJuryByFilter())
+    }
 
     return (
         <div className="user-page">
+            <Notification />
             <Grid container spacing={3} className="mb-3 heading-sec" >
                 <Grid item xs={12} sm={12} md={12} lg={1} className="align-self-center">
                     <h5 className="page-heading" >Orders</h5>
                 </Grid>
 
                 <Grid item xs={12} sm={12} md={12} lg={11} className="custom-date-field d-flex align-items-center justify-content-end">
+                    <Box className="cust-formfields">
+                        <Grid item xs={12} sm={12} md={5} lg={5} className="custom-date-field d-flex align-items-center justify-content-end">
+                            <InputField type="search" value={search} name={search} label={`Search Order`} inputProps={{ maxlength: 40 }}
+                                onChange={(e) => handleChange(e)} fullWidth />
+                        </Grid>
+                    </Box>
                     <Box className="custom-box" display="flex" justifyContent="flex-end" alignItems="center">
                         <CustomSelect
                             className="cust-select"
@@ -284,7 +263,6 @@ function Orders(props) {
                                             return (
                                                 <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
                                                     <TableCell className="table-custom-width" data-title="S NO.">{name}. </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME"><IOSSwitch onChange={(e) => onUpdateStatus(e, item)} checked={is_active && JSON.parse(is_active)} /></TableCell>
                                                     <TableCell className="table-custom-width" data-title="USER NAME">csdc </TableCell>
                                                     <TableCell className="table-custom-width" data-title="EMAIL">csdcsd</TableCell>
                                                     <TableCell className="table-custom-width" data-title="STATUS">cscs </TableCell>
@@ -321,9 +299,7 @@ function Orders(props) {
                         />
                     </div>
                     :
-                    <div className="table-loader">
-                        <img src={loader} alt="" />
-                    </div>
+                    <CustomLoader />
                 }
             </div>
 

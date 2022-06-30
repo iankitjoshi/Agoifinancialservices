@@ -1,6 +1,5 @@
 import React from "react";
 import { Grid } from '@material-ui/core';
-import logo from '../../assets/images/logo.png'
 
 export default function AuthWrapper(props) {
   return (

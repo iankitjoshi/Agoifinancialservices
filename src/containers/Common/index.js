@@ -20,7 +20,6 @@ import CustomDialogBox from "../../components/common/CustomDialogBox";
 import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
 import colors from '../../assets/scss/_colors.scss';
-import logo from '../../assets/images/logo.png'
 import dashboardIcon from '../../assets/images/dashboardIcon.svg'
 import userIcon from '../../assets/images/userIcon.svg'
 import toggleIcon from '../../assets/images/white-toggle.svg'
@@ -48,7 +47,7 @@ const menuItems = [
   },
   {
     label: "Order",
-    path: '/Order',
+    path: '/order',
     icon: categoryIcon
   },
   {
@@ -461,7 +460,6 @@ function MobileResponsiveHeader(props) {
               >
                 <img src={WhiteToogleIcon} style={{ height: '25px', width: '25px' }} />
               </IconButton>
-              <img src={logo} className="logo-icon" />
             </div>
             {drawer}
           </Drawer>

@@ -6,6 +6,8 @@ import InputField from '../../../components/common/InputField'
 import * as action from '../actions'
 
 import { Button, Grid, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@material-ui/core'
+import CustomLoader from "components/common/Loader";
+import Notification from "components/common/Notification";
 
 function SingleKYCDetails(props) {
     const dispatch = useDispatch()
@@ -18,6 +20,16 @@ function SingleKYCDetails(props) {
     useEffect(() => {
 
     })
+
+    const isValid = () => {
+        if (!typeSelected) return false
+        if (typeSelected == 'Reject') {
+            if (!rejectReason) return false
+            return true
+        } else {
+            return true
+        }
+    }
 
     const handleRadio = (event) => {
         setTypeSelected(event.target.value);
@@ -34,7 +46,6 @@ function SingleKYCDetails(props) {
             typeSelected,
             rejectReason
         }
-        console.log(formData, 'formData')
         dispatch(action.CreateUser(formData))
             .then(({ res = "" }) => {
                 props.toast.success(res || "User added successfully");
@@ -48,6 +59,7 @@ function SingleKYCDetails(props) {
 
     return (
         <div className="user-page">
+            <Notification />
             <div className="category-page">
                 <Grid container spacing={3} className="mb-3 heading-sec d-flex align-items-center justify-content-end" >
                     <Grid item xs={12} sm={12} md={3} lg={3} className="align-self-center heading-top">
@@ -114,9 +126,7 @@ cscsd
                         </Grid>
 
                         :
-                        <div className="table-loader">
-                            Loader
-                        </div>
+                        <CustomLoader />
                     }
                     <h6 className="mt-5" >KYC Status</h6>
                     <FormControl className="m-2" >
@@ -137,6 +147,7 @@ cscsd
                         typeSelected == 'Reject' ?
                             <Grid item xs={12} sm={12}>
                                 <InputField
+                                    type="textarea"
                                     name='rejectReason'
                                     value={rejectReason}
                                     label="Reason"
@@ -144,7 +155,6 @@ cscsd
                                     onChange={handleChange}
                                     margin="normal"
                                     fullWidth
-                                    rows={3}
                                     required
                                 />
                             </Grid>
@@ -152,7 +162,7 @@ cscsd
                             null
                     }
                 </div>
-                <Button onClick={handleSubmit} className="button-btn cat-button new-btn-color"  > Submit</Button>
+                <Button onClick={handleSubmit} className={`button-btn cat-button new-btn-color ${!isValid() ? 'disabled' : ''}`} disabled={!isValid()} > Submit</Button>
             </div>
         </div>
     )

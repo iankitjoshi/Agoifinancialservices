@@ -1,42 +1,23 @@
-import React, { Component } from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/HighlightOff';
-import MuiAlert from '@material-ui/lab/Alert';
+import React from "react"
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { Badge, Fab } from '@material-ui/core'
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import useWindowDimensions from "./WindowWidth";
 
-function Alert(props) {
-	return <MuiAlert elevation={6} variant="filled" {...props} />;
+
+const Notification = () => {
+    const MobileWidth = 768;
+    const { width } = useWindowDimensions();
+
+
+    return (
+        <Fab color="primary" aria-label="add" href="/kyc"
+            style={{ position: 'absolute', right: '45px', ...(width < MobileWidth ? { top: '65px' } : { bottom: '40px' }) }} >
+            <Badge badgeContent={4} color="primary">
+                <NotificationsIcon />
+            </Badge>
+        </Fab>
+    )
 }
-export default class Notification extends Component {
 
-	state = {
-		isOpen: false,
-		message: ''
-	}
-
-	close = () => {
-		this.setState({ isOpen: false });
-	}
-
-	open = (message) => {
-		this.setState({ isOpen: true, message });
-	}
-
-	render() {
-		const { duration = 5000, severity } = this.props;
-		const { message } = this.state;
-
-		return (
-			<Snackbar
-				className="notificationMessage"
-				anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-				open={this.state.isOpen}
-				onClose={this.close}
-				autoHideDuration={duration}
-			>
-				<Alert onClose={this.close} severity={severity}>
-					{message}
-				</Alert>
-			</Snackbar>
-		);
-	}
-}
+export default Notification

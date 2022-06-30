@@ -5,13 +5,13 @@ import {
 } from '@material-ui/core'
 import { useState } from 'react'
 import InputField from '../../components/common/InputField'
-import userValidation from '../Validation/userValidation'
 import * as action from './actions'
 import { useDispatch, useSelector } from 'react-redux'
 import CustomToolTip from '../../components/common/ToolTip'
 import CachedIcon from '@material-ui/icons/Cached';
 import cameraIcon from '../../assets/images/camera.svg'
 import CrossIconWhite from '../../assets/images/cross-white.svg'
+import shareValidation from 'containers/Validation/shareValidation'
 
 
 const ShareAvailablePlateform = [
@@ -55,7 +55,7 @@ function AddShareForm(props) {
     }, [])
 
     const isValid = () => {
-        const { isValid = true, errors = {} } = userValidation({ ...shares, update })
+        const { isValid = true, errors = {} } = shareValidation({ ...shares, shareImage, update })
         setError(errors)
         return isValid;
     }
@@ -104,7 +104,6 @@ function AddShareForm(props) {
         const { name = "", email = "", password = "", mobile = "" } = shares
         const { toast, update, shareDetails } = props
         const { id } = shareDetails
-        console.log(shares, 'shares')
 
         if (isValid()) {
             const formData = {
@@ -177,6 +176,7 @@ function AddShareForm(props) {
                             </div>
                             {shareImage ? <CustomToolTip title="Remove Image" > <img className="remove-img" src={CrossIconWhite} alt="" onClick={() => handleRemoveShareImage()} /> </CustomToolTip> : ''}
                         </div>
+                        {errors.shareImage && <span className="help-block error text-left">{errors.shareImage}</span>}
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <InputField name="shareId" label="Share ID" placeholder="Please enter Share ID"
@@ -211,13 +211,13 @@ function AddShareForm(props) {
                     </Grid>
                     <Grid item xs={12} sm={12}>
                         <InputField 
+                            type="textarea"
                             name='description'
                             value={shares.description}
                             label="Description"
                             placeholder="Please enter Description"
                             onChange={handleChange}
                             error={errors.description}
-                            rows={3}
                             required
                          />
                     </Grid>

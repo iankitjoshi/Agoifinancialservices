@@ -4,7 +4,6 @@ import {  getObject, formatString } from "../../utils"
 let object = getObject("top-challenge-token");
 let { id = "" } = object && JSON.parse(object) || '';
 
-console.log(id,'id')
 
 export function updatePasswordAPI(data) {
   // const data = {}

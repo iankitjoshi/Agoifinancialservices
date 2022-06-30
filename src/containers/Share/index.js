@@ -10,10 +10,9 @@ import {
     Card,
     Box,
     CardContent,
-    TextField,
-    MenuItem,
+    InputAdornment,
+    IconButton,
     Button,
-    Checkbox
 } from '@material-ui/core'
 import { withTranslation } from "react-i18next"
 import EnhancedTableHead from 'components/common/EnhancedTableHead'
@@ -28,11 +27,9 @@ import { stableSort, getComparator, tablestyle, getTimeStamps, } from "utils"
 import { dateFilter } from 'constant'
 import editIcon from 'assets/images/editIcon.svg';
 import deleteIcon from 'assets/images/deleteIcon.svg'
-import loader from 'assets/images/loader.gif'
 import totalUserIcon from 'assets/images/totalUserIcon.svg'
 import userActiveIcon from 'assets/images/userActiveIcon.svg'
 import userInActiveIcon from 'assets/images/userInActiveIcon.svg'
-import IOSSwitch from "components/common/IOSSwitch";
 import moment from 'moment'
 import CustomSelect from 'components/common/CustomSelect'
 import UserLoader from "assets/images/userLoader.gif";
@@ -41,6 +38,10 @@ import NoDataFound from "components/common/NoDataFound";
 import Datepicker from "components/common/Datepicker";
 import CustomModal from "components/common/CustomModal";
 import AddShareForm from "./shareForm";
+import ClearIcon from '@material-ui/icons/Clear';
+import CustomLoader from "components/common/Loader";
+import Notification from "components/common/Notification";
+
 
 const headCells = [
     { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
@@ -48,10 +49,6 @@ const headCells = [
     { id: "index", numeric: false, disablePadding: false, label: "Name" },
     { id: "is_active", numeric: false, disablePadding: false, label: "ID" },
     { id: "user_name", numeric: false, disablePadding: false, label: "Price Per share" },
-    // { id: "email", numeric: false, disablePadding: false, label: "Email" },
-    // { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
-    // { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Mobile No." },
-    // { id: "group.name", numeric: false, disablePadding: false, label: "Live on TV" },
     { id: "a", numeric: false, disablePadding: false, label: "Action" },
 ];
 
@@ -74,9 +71,6 @@ function Shares(props) {
     const [addShareModal, setAddShareModal] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
     const [shareDetails, setShareDetails] = useState({})
-    const [openUserLiveModal, setOpenUserLiveModal] = useState(false)
-    const [removeLiveConfirmModal, setRemoveLiveConfirmModal] = useState(false)
-
 
     const { userList = {}, isLoading = false } = useSelector(state => state.users) || {}
 
@@ -132,31 +126,18 @@ function Shares(props) {
         setTimeOut(setTimeOut(() => {
             searchUser(value)
         }, 700))
-        props.history.replace(`/user?page=${0}&limit=${5}`)
+        // props.history.replace(`/shares?page=${0}&limit=${5}`)
     }
 
     const searchUser = (value) => {
         if (value.length != 1) {
-            dispatch(action.getUserByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
+            // dispatch(action.getUserByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
         }
-    }
-
-    const handleItemType = ({ target: { value } }) => {
-        setUserFilterSelect(value)
-        setSearch('')
-        if (search !== '') (
-            dispatch(action.getUserList())
-        )
     }
 
     const deleteModal = (id) => {
         setShareId(id)
         setOpenDeleteModal(true)
-    }
-
-    const onUpdateStatus = (e, user) => {
-        e.preventDefault();
-        // update(user)
     }
 
     const handleRequestSort = (event, property) => {
@@ -168,7 +149,7 @@ function Shares(props) {
     const handleChangePage = (event, currentPage, pageLimit) => {
         setCurrentPage(currentPage)
         dispatch(action.getUserByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
-        props.history.replace(`/user?page=${currentPage}&limit=${rowsPerPage}`)
+        props.history.replace(`/shares?page=${currentPage}&limit=${rowsPerPage}`)
     }
 
     const handleChangeRowsPerPage = (rowsPerPage) => {
@@ -177,21 +158,9 @@ function Shares(props) {
         setRowsPerPage(value)
         setCurrentPage(0)
         dispatch(action.getUserByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
-        props.history.replace(`/user?page=${currentPage}&limit=${value}`)
+        props.history.replace(`/shares?page=${currentPage}&limit=${value}`)
     }
 
-    const update = (user) => {
-        let is_active = user?.is_active && JSON.parse(user?.is_active)
-        dispatch(action.UpdateActiveUser({ ...user, is_active: (!JSON.parse(user.is_active)).toString() }))
-            .then(() => {
-                dispatch(action.getUserList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
-                toast.success(`User has been ${is_active ? 'deactivated' : 'activated'} successfully!`)
-                afterAction()
-            })
-            .catch(({ message = '' }) => {
-                toast.error(message || 'Oops! Something went wrong')
-            })
-    }
 
     const deleteUser = () => {
         dispatch(action.DeleteUser(shareId))
@@ -228,35 +197,28 @@ function Shares(props) {
         setShareId(null)
     }
 
-    const usersFilter = [
-        { id: 1, value: 'user_name', label: 'Username' },
-        { id: 3, value: 'email', label: 'Email' },
-        { id: 4, value: 'mobile', label: 'Mobile Number' },
-    ]
-
-
-    const handleUserLive = (item) => {
-        const { is_live } = item
-        if (is_live == "true") {
-            setRemoveLiveConfirmModal(true)
-            setShareDetails(item)
-        } else {
-            setOpenUserLiveModal(true)
-            setShareDetails(item)
-        }
+    const clearSearch = () => {
+        setSearch('')
+        // dispatch(action.SearchJuryByFilter())
     }
 
 
-    let labelData = usersFilter.find(item => item.value === userFilterSelect);
-
     return (
         <div className="user-page">
+            <Notification />
             <Grid container spacing={3} className="mb-3 heading-sec" >
                 <Grid item xs={12} sm={12} md={12} lg={1} className="align-self-center">
                     <h5 className="page-heading" >Shares</h5>
                 </Grid>
 
                 <Grid item xs={12} sm={12} md={12} lg={11} className="custom-date-field d-flex align-items-center justify-content-end">
+                    <Box className="cust-formfields">
+                        <Grid item xs={12} sm={12} md={5} lg={5} className="custom-date-field d-flex align-items-center justify-content-end">
+                            <InputField type="search" value={search} name={search} label={`Search share`} inputProps={{ maxlength: 40 }}
+                                onChange={(e) => handleChange(e)} fullWidth/>
+                        </Grid>
+                    </Box>
+
                     <Box className="custom-box" display="flex" justifyContent="flex-end" alignItems="center">
                         <CustomSelect
                             className="cust-select"
@@ -294,7 +256,7 @@ function Shares(props) {
 
                 <ShareCardField img={userActiveIcon}>
                     <h5>Active Shares</h5>
-                    <h6>{isLoading ? <img src={UserLoader} alt="" className="user-loader-img" /> : 8 } </h6>
+                    <h6>{isLoading ? <img src={UserLoader} alt="" className="user-loader-img" /> : 8} </h6>
                 </ShareCardField>
 
                 <ShareCardField img={userInActiveIcon}>
@@ -320,7 +282,6 @@ function Shares(props) {
                                             const { image = "", name = "", price = "", id = "", is_active = "" } = item || {}
                                             return (
                                                 <TableRow hover key={id} className="cursor_default"  >
-                                                    <TableCell className="table-custom-width" data-title="USER NAME"><IOSSwitch onChange={(e) => onUpdateStatus(e, item)} checked={is_active && JSON.parse(is_active)} /></TableCell>
                                                     <TableCell className="table-custom-width" data-title="S NO."> {'image'} </TableCell>
                                                     <TableCell className="table-custom-width" data-title="USER NAME"> {name} </TableCell>
                                                     <TableCell className="table-custom-width" data-title="EMAIL">{id}</TableCell>
@@ -357,9 +318,7 @@ function Shares(props) {
                         />
                     </div>
                     :
-                    <div className="table-loader">
-                        <img src={loader} alt="" />
-                    </div>
+                    <CustomLoader />
                 }
             </div>
 

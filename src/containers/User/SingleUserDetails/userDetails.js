@@ -4,6 +4,8 @@ import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import UserLoader from "../../../assets/images/userLoader.gif";
 
 import { Grid, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@material-ui/core'
+import CustomLoader from "components/common/Loader";
+import Notification from "components/common/Notification";
 
 function SingleUserDetails(props) {
     const [types, setTypes] = useState(['Accept', 'Reject'])
@@ -21,6 +23,7 @@ function SingleUserDetails(props) {
 
     return (
         <div className="user-page">
+            <Notification />
             <div className="category-page">
                 <Grid container spacing={3} className="mb-3 heading-sec d-flex align-items-center justify-content-end" >
                     <Grid item xs={12} sm={12} md={3} lg={3} className="align-self-center heading-top">
@@ -87,9 +90,7 @@ cscsd
                         </Grid>
 
                         :
-                        <div className="table-loader">
-                            Loader
-                        </div>
+                        <CustomLoader />
                     }
                 </div>
             </div>
