@@ -10,8 +10,6 @@ import {
     Card,
     Box,
     CardContent,
-    InputAdornment,
-    IconButton,
 } from '@material-ui/core'
 import InputField from "components/common/InputField"
 import { withTranslation } from "react-i18next"
@@ -22,29 +20,25 @@ import * as action from './actions'
 import 'react-dates/initialize';
 import "react-dates/lib/css/_datepicker.css";
 import CustomDialogBox from "components/common/CustomDialogBox"
-import { stableSort, getComparator, tablestyle, getTimeStamps, } from "utils"
+import { stableSort, getComparator, tablestyle, getTimeStamps, positiveAmount, } from "utils"
 import { dateFilter } from 'constant'
-import loader from 'assets/images/loader.gif'
-import IOSSwitch from "components/common/IOSSwitch";
 import moment from 'moment'
 import CustomSelect from 'components/common/CustomSelect'
 import NoDataFound from "components/common/NoDataFound";
 import Datepicker from "components/common/Datepicker";
 import CustomToolTip from "components/common/ToolTip";
 import deleteIcon from 'assets/images/deleteIcon.svg'
-import ClearIcon from '@material-ui/icons/Clear';
 import CustomLoader from "components/common/Loader"
 import Notification from "components/common/Notification"
 
 
 const headCells = [
     { id: "index", numeric: false, disablePadding: false, label: "S.No." },
-    { id: "is_active", numeric: false, disablePadding: false, label: "status" },
-    { id: "user_name", numeric: false, disablePadding: false, label: "Username" },
-    { id: "email", numeric: false, disablePadding: false, label: "Email" },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
-    { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Mobile No." },
-    { id: "a", numeric: false, disablePadding: false, label: "Action" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Amount" },
+    { id: "user_name", numeric: false, disablePadding: false, label: "Txn ID" },
+    { id: "email", numeric: false, disablePadding: false, label: "Share Name" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Quantity" },
+    // { id: "a", numeric: false, disablePadding: false, label: "Action" },
 ];
 
 function Orders(props) {
@@ -262,23 +256,23 @@ function Orders(props) {
                                             const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
                                             return (
                                                 <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
-                                                    <TableCell className="table-custom-width" data-title="S NO.">{name}. </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME">csdc </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">csdcsd</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">cscs </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="MOBILE NO."> cvfd </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="ACTION">
-                                                        {/* <CustomToolTip title="Edit" >
+                                                    <TableCell className="table-custom-width" data-title="S NO.">{index + 1}. </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="USER NAME"> {positiveAmount(20)} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="EMAIL">12345678</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">ABC </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="MOBILE NO."> 10 </TableCell>
+                                                    {/* <TableCell className="table-custom-width" data-title="ACTION">
+                                                        <CustomToolTip title="Edit" >
                                                             <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >
                                                                 <img src={editIcon} alt="" />
                                                             </span>
-                                                        </CustomToolTip> */}
+                                                        </CustomToolTip>
                                                         <CustomToolTip title="Delete" >
                                                             <span className="delete-icon" onClick={() => deleteModal(id)} >
                                                                 <img src={deleteIcon} alt="" />
                                                             </span>
                                                         </CustomToolTip>
-                                                    </TableCell>
+                                                    </TableCell> */}
                                                 </TableRow>
                                             )
                                         })

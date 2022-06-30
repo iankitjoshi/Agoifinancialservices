@@ -10,8 +10,6 @@ import {
     Card,
     Box,
     CardContent,
-    InputAdornment,
-    IconButton,
 } from '@material-ui/core'
 import { withTranslation } from "react-i18next"
 import EnhancedTableHead from 'components/common/EnhancedTableHead'
@@ -24,20 +22,17 @@ import "react-dates/lib/css/_datepicker.css";
 import CustomDialogBox from "components/common/CustomDialogBox"
 import { stableSort, getComparator, tablestyle, getTimeStamps, } from "utils"
 import { dateFilter } from 'constant'
-import loader from 'assets/images/loader.gif'
 import moment from 'moment'
 import CustomSelect from 'components/common/CustomSelect'
 import NoDataFound from "components/common/NoDataFound";
 import Datepicker from "components/common/Datepicker";
-import ClearIcon from '@material-ui/icons/Clear';
 import CustomLoader from "components/common/Loader";
 
 const headCells = [
     { id: "index", numeric: false, disablePadding: false, label: "S.No." },
-    { id: "is_active", numeric: false, disablePadding: false, label: "status" },
-    { id: "user_name", numeric: false, disablePadding: false, label: "Username" },
-    { id: "email", numeric: false, disablePadding: false, label: "Email" },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Aadhar No." },
+    { id: "user_name", numeric: false, disablePadding: false, label: "PAN" },
+    { id: "email", numeric: false, disablePadding: false, label: "City" },
     { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Mobile No." },
 ];
 
@@ -57,6 +52,8 @@ function KYC(props) {
     const [focusedInput, setFocusedInput] = useState(false)
     const [timeOut, setTimeOut] = useState(null)
     const [userFilterSelect, setUserFilterSelect] = useState("")
+    
+
 
     const { userList = {}, isLoading = false } = useSelector(state => state.users) || {}
 
@@ -169,6 +166,8 @@ function KYC(props) {
         // dispatch(action.SearchJuryByFilter())
     }
 
+    
+
     return (
         <div className="user-page">
             <Grid container spacing={3} className="mb-3 heading-sec" >
@@ -229,11 +228,12 @@ function KYC(props) {
                                             const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
                                             return (
                                                 <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
-                                                    <TableCell className="table-custom-width" data-title="S NO.">{name}. </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME">csdc </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">csdcsd</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">cscs </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="MOBILE NO."> cvfd </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="S NO.">{index + 1}. </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="USER NAME">1234 1234 1234 </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="EMAIL">BHJB67THG</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">Jaipur </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="MOBILE NO."> 9876543210 </TableCell>
+
                                                     {/* <TableCell className="table-custom-width" data-title="ACTION">
                                                         <CustomToolTip title="Edit" >
                                                             <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >
@@ -280,6 +280,8 @@ function KYC(props) {
                 isLoading={isLoading}
                 text="Keep User"
             />
+
+
 
         </div>
     )

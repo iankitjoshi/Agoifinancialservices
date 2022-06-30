@@ -38,10 +38,8 @@ import Notification from "components/common/Notification"
 
 const headCells = [
     { id: "index", numeric: false, disablePadding: false, label: "S.No." },
-    { id: "is_active", numeric: false, disablePadding: false, label: "status" },
-    { id: "user_name", numeric: false, disablePadding: false, label: "Username" },
+    { id: "user_name", numeric: false, disablePadding: false, label: "Name" },
     { id: "email", numeric: false, disablePadding: false, label: "Email" },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
     { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Mobile No." },
     { id: "a", numeric: false, disablePadding: false, label: "Action" },
 ];
@@ -242,11 +240,10 @@ function User(props) {
                                             const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
                                             return (
                                                 <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
-                                                    <TableCell className="table-custom-width" data-title="S NO.">{name}. </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME">csdc </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">csdcsd</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">cscs </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="MOBILE NO."> cvfd </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="S NO.">{index + 1}. </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="USER NAME">Ankit Joshi </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="EMAIL">Ankit@gmail.com</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">9876543210 </TableCell>
                                                     <TableCell className="table-custom-width" data-title="ACTION">
                                                         {/* <CustomToolTip title="Edit" >
                                                             <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >

@@ -4,7 +4,7 @@ import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import UserLoader from "../../../assets/images/userLoader.gif";
 import InputField from '../../../components/common/InputField'
 import * as action from '../actions'
-
+import ImgsViewer from 'react-images-viewer'
 import { Button, Grid, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@material-ui/core'
 import CustomLoader from "components/common/Loader";
 import Notification from "components/common/Notification";
@@ -15,6 +15,10 @@ function SingleKYCDetails(props) {
     const [types, setTypes] = useState(['Accept', 'Reject'])
     const [typeSelected, setTypeSelected] = useState('')
     const [rejectReason, setRejectReason] = useState('')
+    const [viewerIsOpen, setViewerIsOpen] = useState(false)
+    const [imageToOpen, setImageToOpen] = useState(null)
+    const [caption, setCaption] = useState('')
+
     const { userId } = props.match.params;
 
     useEffect(() => {
@@ -57,24 +61,30 @@ function SingleKYCDetails(props) {
             })
     }
 
+    const viewerOpen = (currImg, caption) => {
+        setImageToOpen(currImg)
+        setViewerIsOpen(true)
+        setCaption(caption)
+    }
+
+    const closeViewer = () => {
+        setViewerIsOpen(false)
+        setImageToOpen(null)
+        setCaption('')
+    }
+
+    const image = 'https://picsum.photos/200/300'
+
     return (
         <div className="user-page">
             <Notification />
             <div className="category-page">
                 <Grid container spacing={3} className="mb-3 heading-sec d-flex align-items-center justify-content-end" >
-                    <Grid item xs={12} sm={12} md={3} lg={3} className="align-self-center heading-top">
+                    <Grid item xs={12} sm={12} md={12} lg={12} className="align-self-center heading-top">
                         <h5 className="page-heading">
                             <KeyboardBackspaceIcon onClick={() => props.history.goBack()} />
                             <span className="page-heading" >{false ? <img src={UserLoader} alt="" style={{ width: '100px' }} /> : 'csdc'} </span>
                         </h5>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={9} lg={9} className="search-bar">
-                        {/* <div className="right-search-btn">
-                            vdfk
-                            <div className="text-right">
-cscsd
-                            </div>
-                        </div> */}
                     </Grid>
                 </Grid>
 
@@ -121,8 +131,11 @@ cscsd
                                 <p>
                                     <label> Name: </label>
                                     <strong> Ankit Joshi </strong>
+                                    {image ? <img className="popup-img" src={image} alt="" width={60} onClick={() => viewerOpen(image, 'episode')} /> : '-'}
+
                                 </p>
                             </Grid>
+
                         </Grid>
 
                         :
@@ -164,6 +177,14 @@ cscsd
                 </div>
                 <Button onClick={handleSubmit} className={`button-btn cat-button new-btn-color ${!isValid() ? 'disabled' : ''}`} disabled={!isValid()} > Submit</Button>
             </div>
+            <ImgsViewer
+                imgs={[{ src: imageToOpen, caption }]}
+                isOpen={viewerIsOpen}
+                onClose={closeViewer}
+                closeBtnTitle={'Close'}
+                showImgCount={false}
+                backdropCloseable={true}
+            />
         </div>
     )
 }

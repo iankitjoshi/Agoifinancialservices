@@ -23,7 +23,7 @@ import * as action from './actions'
 import 'react-dates/initialize';
 import "react-dates/lib/css/_datepicker.css";
 import CustomDialogBox from "components/common/CustomDialogBox"
-import { stableSort, getComparator, tablestyle, getTimeStamps, } from "utils"
+import { stableSort, getComparator, tablestyle, getTimeStamps, positiveAmount, } from "utils"
 import { dateFilter } from 'constant'
 import editIcon from 'assets/images/editIcon.svg';
 import deleteIcon from 'assets/images/deleteIcon.svg'
@@ -286,6 +286,7 @@ function Shares(props) {
                                                     <TableCell className="table-custom-width" data-title="USER NAME"> {name} </TableCell>
                                                     <TableCell className="table-custom-width" data-title="EMAIL">{id}</TableCell>
                                                     <TableCell className="table-custom-width" data-title="STATUS"> {price} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS"> {positiveAmount(5)} </TableCell>
                                                     <TableCell className="table-custom-width" data-title="ACTION">
                                                         <CustomToolTip title="Edit" >
                                                             <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >
