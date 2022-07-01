@@ -1,6 +1,6 @@
 import { apiPost, apiGet, apiDelete, apiPut } from '../../utils/axios'
 
-export function getUserListAPI(data) {
+export function getOrderListAPI(data) {
   let payload = {
     limit: data && data.limit || '',
     page: data && data.page || '',
@@ -11,7 +11,7 @@ export function getUserListAPI(data) {
   return apiGet(`/user`, payload)
 }
 
-export function deleteUserAPI(data) {
+export function deleteOrderAPI(data) {
   return apiDelete(`/user/${data}`)
 }
 
@@ -19,14 +19,14 @@ export function CreateUserAPI(data) {
   return apiPost(`/user`, data)
 }
 
-export function updateUserActiveAPI(data) {
+export function UpdateOrderActiveAPI(data) {
   const updateData = {}
   updateData.is_active = data.is_active
   updateData.user_name = data.user_name
   return apiPut(`/user/${data.id}`, updateData)
 }
 
-export function updateUserAPI(data) {
+export function updateOrderAPI(data) {
   const updateData = {}
   updateData.user_name = data.user_name
   updateData.phone = data.phone
@@ -34,7 +34,7 @@ export function updateUserAPI(data) {
   return apiPut(`/user/${data.id}`, updateData)
 }
 
-export function searchUserByFilterAPI(data) {
+export function searchOrderByFilterAPI(data) {
   let payload = {
     limit: data && data.limit || '',
     page: data && data.page || '',

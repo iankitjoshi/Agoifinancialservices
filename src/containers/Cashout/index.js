@@ -27,7 +27,7 @@ import CustomSelect from 'components/common/CustomSelect'
 import NoDataFound from "components/common/NoDataFound";
 import Datepicker from "components/common/Datepicker";
 import CustomLoader from "components/common/Loader";
-import Notification from "components/common/Notification";
+
 
 const headCells = [
     { id: "index", numeric: false, disablePadding: false, label: "S.No." },
@@ -37,7 +37,7 @@ const headCells = [
 ];
 
 function Cashout(props) {
-    const { toast } = props
+    const { toast, KycNotification } = props
     const dispatch = useDispatch()
     const [search, setSearch] = useState('')
     const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -88,7 +88,7 @@ function Cashout(props) {
             startDate: startDateValue,
             endDate: endDateValue,
         }
-        dispatch(action.getUserByFilter({ startDate: data?.startDate, endDate: data?.endDate, limit: rowsPerPage, start: currentPage, term: search }))
+        dispatch(action.getCashoutByFilter({ startDate: data?.startDate, endDate: data?.endDate, limit: rowsPerPage, start: currentPage, term: search }))
     }
 
     function handleDateChange({ startDate, endDate }) {
@@ -112,7 +112,7 @@ function Cashout(props) {
 
     const searchUser = (value) => {
         if (value.length != 1) {
-            dispatch(action.getUserByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
+            dispatch(action.getCashoutByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
         }
     }
 
@@ -124,7 +124,7 @@ function Cashout(props) {
 
     const handleChangePage = (event, currentPage, pageLimit) => {
         setCurrentPage(currentPage)
-        dispatch(action.getUserByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
+        dispatch(action.getCashoutByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
         props.history.replace(`/kyc?page=${currentPage}&limit=${rowsPerPage}`)
     }
 
@@ -133,14 +133,14 @@ function Cashout(props) {
         value = value === "All" ? props.customer.length : value
         setRowsPerPage(value)
         setCurrentPage(0)
-        dispatch(action.getUserByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
+        dispatch(action.getCashoutByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
         props.history.replace(`/kyc?page=${currentPage}&limit=${value}`)
     }
 
     const deleteUser = () => {
         dispatch(action.DeleteUser(userId))
             .then(res => {
-                dispatch(action.getUserList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
+                dispatch(action.getCashoutList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
                 toast.success("User has been deleted successfully")
                 setOpenDeleteModal(false)
                 afterAction()
@@ -170,7 +170,7 @@ function Cashout(props) {
 
     return (
         <div className="user-page">
-            <Notification />
+            {KycNotification}
             <Grid container spacing={3} className="mb-3 heading-sec" >
                 <Grid item xs={12} sm={12} md={12} lg={1} className="align-self-center">
                     <h5 className="page-heading" >Cashout</h5>

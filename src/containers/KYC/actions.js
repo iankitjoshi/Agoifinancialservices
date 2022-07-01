@@ -1,29 +1,29 @@
 import {
-    getUserListAPI,
-    deleteUserAPI,
-    updateUserAPI,
-    searchUserByFilterAPI,
+    getKYCListAPI,
+    deleteKYCAPI,
+    updateKYCAPI,
+    searchKYCByFilterAPI,
     CreateUserAPI,
-    updateUserActiveAPI,
+    UpdateKYCActiveAPI,
     UserLiveUpdateAPI
 } from './apis'
 
-export function getUserList(data) {
+export function getKYCList(data) {
     return dispatch => {
         dispatch({
-            type: GET_USER_LIST_REQUEST,
+            type: GET_KYC_LIST_REQUEST,
         })
         return new Promise((resolve, rej) => {
-            getUserListAPI(data).then(res => {
+            getKYCListAPI(data).then(res => {
                 dispatch({
-                    type: GET_USER_LIST_REQUEST_SUCCEEDED,
+                    type: GET_KYC_LIST_REQUEST_SUCCEEDED,
                     payload: res
                 })
                 return resolve(res)
             })
                 .catch(err => {
                     dispatch({
-                        type: GET_USER_LIST_REQUEST_FAILED,
+                        type: GET_KYC_LIST_REQUEST_FAILED,
                         payload: {},
                     })
                     return rej(err)
@@ -32,22 +32,22 @@ export function getUserList(data) {
     }
 }
 
-export function getUserByFilter(data) {
+export function getKYCByFilter(data) {
     return dispatch => {
         dispatch({
-            type: GET_USER_LIST_REQUEST,
+            type: GET_KYC_LIST_REQUEST,
         })
         return new Promise((resolve, rej) => {
-            searchUserByFilterAPI(data).then(res => {
+            searchKYCByFilterAPI(data).then(res => {
                 dispatch({
-                    type: GET_USER_LIST_REQUEST_SUCCEEDED,
+                    type: GET_KYC_LIST_REQUEST_SUCCEEDED,
                     payload: res
                 })
                 return resolve(res)
             })
                 .catch(err => {
                     dispatch({
-                        type: GET_USER_LIST_REQUEST_FAILED,
+                        type: GET_KYC_LIST_REQUEST_FAILED,
                         payload: {},
                     })
                     return rej(err)
@@ -56,26 +56,26 @@ export function getUserByFilter(data) {
     }
 }
 
-export const GET_USER_LIST_REQUEST = 'GET_USER_LIST_REQUEST'
-export const GET_USER_LIST_REQUEST_SUCCEEDED = 'GET_USER_LIST_REQUEST_SUCCEEDED'
-export const GET_USER_LIST_REQUEST_FAILED = 'GET_USER_LIST_REQUEST_FAILED'
+export const GET_KYC_LIST_REQUEST = 'GET_KYC_LIST_REQUEST'
+export const GET_KYC_LIST_REQUEST_SUCCEEDED = 'GET_KYC_LIST_REQUEST_SUCCEEDED'
+export const GET_KYC_LIST_REQUEST_FAILED = 'GET_KYC_LIST_REQUEST_FAILED'
 
 
-export function DeleteUser(data) {
+export function DeleteKYC(data) {
     return dispatch => {
         dispatch({
-            type: DELETE_USER
+            type: DELETE_KYC
         })
         return new Promise((resolve, rej) => {
-            deleteUserAPI(data).then(res => {
+            deleteKYCAPI(data).then(res => {
                 dispatch({
-                    type: DELETE_USER_SUCCESS,
+                    type: DELETE_KYC_SUCCESS,
                 })
                 return resolve(res)
             })
                 .catch(err => {
                     dispatch({
-                        type: DELETE_USER_FAILED,
+                        type: DELETE_KYC_FAILED,
                     })
                     return rej(err)
                 })
@@ -83,25 +83,25 @@ export function DeleteUser(data) {
     }
 }
 
-export const DELETE_USER = "DELETE_USER";
-export const DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS";
-export const DELETE_USER_FAILED = "DELETE_USER_FAILED"
+export const DELETE_KYC = "DELETE_KYC";
+export const DELETE_KYC_SUCCESS = "DELETE_KYC_SUCCESS";
+export const DELETE_KYC_FAILED = "DELETE_KYC_FAILED"
 
-export function UpdateUser(data) {
+export function UpdateKYC(data) {
     return dispatch => {
         dispatch({
-            type: UPDATE_USER
+            type: UPDATE_KYC
         })
         return new Promise((resolve, rej) => {
-            updateUserAPI(data).then(res => {
+            updateKYCAPI(data).then(res => {
                 dispatch({
-                    type: UPDATE_USER_SUCCESS
+                    type: UPDATE_KYC_SUCCESS
                 })
                 return resolve(res)
             })
                 .catch(err => {
                     dispatch({
-                        type: UPDATE_USER_FAILED
+                        type: UPDATE_KYC_FAILED
                     })
                     return rej(err)
                 })
@@ -109,77 +109,6 @@ export function UpdateUser(data) {
     }
 }
 
-export function UpdateActiveUser(data) {
-    return dispatch => {
-        dispatch({
-            type: UPDATE_USER
-        })
-        return new Promise((resolve, rej) => {
-            updateUserActiveAPI(data).then(res => {
-                dispatch({
-                    type: UPDATE_USER_SUCCESS
-                })
-                return resolve(res)
-            })
-                .catch(err => {
-                    dispatch({
-                        type: UPDATE_USER_FAILED
-                    })
-                    return rej(err)
-                })
-        })
-    }
-}
-
-
-export const UPDATE_USER = "UPDATE_USER"
-export const UPDATE_USER_SUCCESS = "UPDATE_USER_SUCCESS"
-export const UPDATE_USER_FAILED = "UPDATE_USER_FAILED"
-
-export function CreateUser(data) {
-    return dispatch => {
-        dispatch({
-            type: CREATE_USERS
-        })
-        return new Promise((resolve, rej) => {
-            CreateUserAPI(data).then(res => {
-                dispatch({
-                    type: CREATE_USERS_SUCCESS
-                })
-                return resolve(res)
-            })
-                .catch(err => {
-                    dispatch({
-                        type: CREATE_USERS_FAILED
-                    })
-                    return rej(err)
-                })
-        })
-    }
-}
-
-export function UserLiveUpdate(data) {
-    return dispatch => {
-        dispatch({
-            type: CREATE_USERS
-        })
-        return new Promise((resolve, rej) => {
-            UserLiveUpdateAPI(data).then(res => {
-                dispatch({
-                    type: CREATE_USERS_SUCCESS
-                })
-                return resolve(res)
-            })
-                .catch(err => {
-                    dispatch({
-                        type: CREATE_USERS_FAILED
-                    })
-                    return rej(err)
-                })
-        })
-    }
-}
-
-export const CREATE_USERS = 'CREATE_USERS'
-export const CREATE_USERS_SUCCESS = "CREATE_USERS_SUCCESS"
-export const CREATE_USERS_FAILED = "CREATE_USERS_FAILED"
+export const UPDATE_KYC = "UPDATE_KYC"
+export const UPDATE_KYC_SUCCESS = "UPDATE_KYC_SUCCESS"
+export const UPDATE_KYC_FAILED = "UPDATE_KYC_FAILED"

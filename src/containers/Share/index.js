@@ -40,7 +40,7 @@ import CustomModal from "components/common/CustomModal";
 import AddShareForm from "./shareForm";
 import ClearIcon from '@material-ui/icons/Clear';
 import CustomLoader from "components/common/Loader";
-import Notification from "components/common/Notification";
+ 
 
 
 const headCells = [
@@ -53,7 +53,7 @@ const headCells = [
 ];
 
 function Shares(props) {
-    const { toast } = props
+    const { toast, KycNotification } = props
     const dispatch = useDispatch()
     const [search, setSearch] = useState('')
     const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -107,7 +107,7 @@ function Shares(props) {
             startDate: startDateValue,
             endDate: endDateValue,
         }
-        dispatch(action.getUserByFilter({ startDate: data?.startDate, endDate: data?.endDate, limit: rowsPerPage, start: currentPage, term: search }))
+        dispatch(action.getShareByFilter({ startDate: data?.startDate, endDate: data?.endDate, limit: rowsPerPage, start: currentPage, term: search }))
     }
 
     function handleDateChange({ startDate, endDate }) {
@@ -131,7 +131,7 @@ function Shares(props) {
 
     const searchUser = (value) => {
         if (value.length != 1) {
-            // dispatch(action.getUserByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
+            // dispatch(action.getShareByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
         }
     }
 
@@ -148,7 +148,7 @@ function Shares(props) {
 
     const handleChangePage = (event, currentPage, pageLimit) => {
         setCurrentPage(currentPage)
-        dispatch(action.getUserByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
+        dispatch(action.getShareByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
         props.history.replace(`/shares?page=${currentPage}&limit=${rowsPerPage}`)
     }
 
@@ -157,15 +157,15 @@ function Shares(props) {
         value = value === "All" ? props.customer.length : value
         setRowsPerPage(value)
         setCurrentPage(0)
-        dispatch(action.getUserByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
+        dispatch(action.getShareByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
         props.history.replace(`/shares?page=${currentPage}&limit=${value}`)
     }
 
 
-    const deleteUser = () => {
-        dispatch(action.DeleteUser(shareId))
+    const DeleteShare = () => {
+        dispatch(action.DeleteShare(shareId))
             .then(res => {
-                dispatch(action.getUserList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
+                dispatch(action.getShareList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
                 toast.success("User has been deleted successfully")
                 setOpenDeleteModal(false)
                 afterAction()
@@ -210,7 +210,7 @@ function Shares(props) {
 
     return (
         <div className="user-page">
-            <Notification />
+            {KycNotification}
             <Grid container spacing={3} className="mb-3 heading-sec" >
                 <Grid item xs={12} sm={12} md={12} lg={1} className="align-self-center">
                     <h5 className="page-heading" >Shares</h5>
@@ -342,7 +342,7 @@ function Shares(props) {
 
             <CustomDialogBox
                 handleClose={() => setOpenDeleteModal(false)}
-                confirmAction={deleteUser}
+                confirmAction={DeleteShare}
                 open={openDeleteModal}
                 title="Warning"
                 dialogtext={`Are you sure you want to delete this user?`}

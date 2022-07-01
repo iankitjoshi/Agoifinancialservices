@@ -32,7 +32,7 @@ import Datepicker from "components/common/Datepicker";
 import CustomToolTip from "components/common/ToolTip";
 import deleteIcon from 'assets/images/deleteIcon.svg'
 import CustomLoader from "components/common/Loader"
-import Notification from "components/common/Notification"
+ 
 
 
 const headCells = [
@@ -45,7 +45,7 @@ const headCells = [
 ];
 
 function Orders(props) {
-    const { toast } = props
+    const { toast, KycNotification } = props
     const dispatch = useDispatch()
     const [search, setSearch] = useState('')
     const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -96,7 +96,7 @@ function Orders(props) {
             startDate: startDateValue,
             endDate: endDateValue,
         }
-        dispatch(action.getUserByFilter({ startDate: data?.startDate, endDate: data?.endDate, limit: rowsPerPage, start: currentPage, term: search }))
+        dispatch(action.getOrderByFilter({ startDate: data?.startDate, endDate: data?.endDate, limit: rowsPerPage, start: currentPage, term: search }))
     }
 
     function handleDateChange({ startDate, endDate }) {
@@ -120,7 +120,7 @@ function Orders(props) {
 
     const searchUser = (value) => {
         if (value.length != 1) {
-            dispatch(action.getUserByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
+            dispatch(action.getOrderByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
         }
     }
 
@@ -142,7 +142,7 @@ function Orders(props) {
 
     const handleChangePage = (event, currentPage, pageLimit) => {
         setCurrentPage(currentPage)
-        dispatch(action.getUserByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
+        dispatch(action.getOrderByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
         props.history.replace(`/order?page=${currentPage}&limit=${rowsPerPage}`)
     }
 
@@ -151,7 +151,7 @@ function Orders(props) {
         value = value === "All" ? props.customer.length : value
         setRowsPerPage(value)
         setCurrentPage(0)
-        dispatch(action.getUserByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
+        dispatch(action.getOrderByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
         props.history.replace(`/order?page=${currentPage}&limit=${value}`)
     }
 
@@ -159,7 +159,7 @@ function Orders(props) {
         let is_active = user?.is_active && JSON.parse(user?.is_active)
         dispatch(action.UpdateActiveUser({ ...user, is_active: (!JSON.parse(user.is_active)).toString() }))
             .then(() => {
-                dispatch(action.getUserList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
+                dispatch(action.getOrderList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
                 toast.success(`User has been ${is_active ? 'deactivated' : 'activated'} successfully!`)
                 afterAction()
             })
@@ -168,10 +168,10 @@ function Orders(props) {
             })
     }
 
-    const deleteUser = () => {
-        dispatch(action.DeleteUser(userId))
+    const DeleteOrder = () => {
+        dispatch(action.DeleteOrder(userId))
             .then(res => {
-                dispatch(action.getUserList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
+                dispatch(action.getOrderList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
                 toast.success("User has been deleted successfully")
                 setOpenDeleteModal(false)
                 afterAction()
@@ -201,7 +201,7 @@ function Orders(props) {
 
     return (
         <div className="user-page">
-            <Notification />
+            {KycNotification}
             <Grid container spacing={3} className="mb-3 heading-sec" >
                 <Grid item xs={12} sm={12} md={12} lg={1} className="align-self-center">
                     <h5 className="page-heading" >Orders</h5>
@@ -313,7 +313,7 @@ function Orders(props) {
 
             <CustomDialogBox
                 handleClose={() => setOpenDeleteModal(false)}
-                confirmAction={deleteUser}
+                confirmAction={DeleteOrder}
                 open={openDeleteModal}
                 title="Warning"
                 dialogtext={`Are you sure you want to delete this user?`}

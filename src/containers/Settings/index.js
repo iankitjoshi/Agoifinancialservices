@@ -8,7 +8,6 @@ import validateSettingInfo from '../Validation/settingValidation'
 import validatePasswordUpdate from '../Validation/passwordValidation'
 import * as action from './actions'
 import loader from '../../assets/images/loader.gif'
-import Notification from 'components/common/Notification'
 
 const initInfo = {
     name: '',
@@ -22,6 +21,7 @@ const initPassword = {
 }
 
 export default function Settings(props) {
+    const { KycNotification } = props
 
     const [isEdit, setIsEdit] = useState(false)
     const [infoDetails, setInfoDetails] = useState({ ...initInfo })
@@ -116,7 +116,7 @@ export default function Settings(props) {
 
     return (
         <div className="settings-page">
-            <Notification />
+            {KycNotification}
             <div className="setting-top">
                 <Grid container >
                     <Grid item xs={12} sm={6} md={6} lg={6}>

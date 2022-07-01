@@ -6,7 +6,7 @@ import * as action from './actions'
 import ImgsViewer from 'react-images-viewer'
 import { CircularProgress, TextField, Button, FormControlLabel, Radio, FormControl, FormLabel, Grid } from '@material-ui/core'
 import CustomLoader from "components/common/Loader";
-import Notification from "components/common/Notification";
+import DummyData from './DummyData.json'
 import { Autocomplete } from '@material-ui/lab';
 
 function NotifyUser(props) {
@@ -16,21 +16,20 @@ function NotifyUser(props) {
     const [selectedGroup, setSelectedGroup] = useState([])
     const [searchingTimeout, setSearchingTimeout] = useState(null)
 
-    let allGroups = [], isLoading = false
+    let allGroups = DummyData, isLoading = false
     const { userId } = props.match.params;
+    const { KycNotification } = props
+
+    console.log(DummyData, 'DummyData')
 
     useEffect(() => {
 
     })
 
     const isValid = () => {
-        if (!message && !selectedGroup) {
-            return true
-        } else {
-            return false
-        }
+        if (message && selectedGroup.length) return true
+        else return false
     }
-
 
     const handleChange = (e) => {
         const { value = "" } = e.target
@@ -77,14 +76,14 @@ function NotifyUser(props) {
 
 
     const allGrouplist = Array.isArray(allGroups) && allGroups.length ? allGroups : [] || [];
-    let groupOption = [{ _id: 1, name: 'Select All', value: 'Select All' }, ...allGrouplist]
+    let groupOption = [{ id: 1, name: 'Select All', value: 'Select All' }, ...allGrouplist]
     if (selectedGroup && selectedGroup.length === allGrouplist.length) {
         groupOption = groupOption.slice(1)
     }
 
     return (
         <div className="user-page">
-            <Notification />
+            {KycNotification}
             <div className="category-page user-notify">
                 <div className="category-grid" >
                     <h5 className="text-centre mb-5" >Notify User:</h5>
@@ -94,7 +93,7 @@ function NotifyUser(props) {
                                 className="custom-autocomplete"
                                 id="asynchronous-demo"
                                 options={groupOption}
-                                getOptionSelected={(option, value) => option?._id === value?._id}
+                                getOptionSelected={(option, value) => option?.id === value?.id}
                                 value={selectedGroup}
                                 getOptionLabel={(groups) => groups?.name}
                                 onChange={(e, value) => {
@@ -105,7 +104,6 @@ function NotifyUser(props) {
                                         selectGroup(e, value)
                                     }
                                 }}
-                                // onChange={(e, value) => selectGroup(e, value)}
                                 fullWidth
                                 limitTags={5}
                                 filterSelectedOptions
@@ -139,10 +137,9 @@ function NotifyUser(props) {
                         </Grid>
                     </Grid>
 
-                    <Grid item xs={12} sm={12} className="mt-5" >
+                    <Grid item xs={12} sm={12} lg={8} className="mt-3" >
                         <InputField
                             type="textarea"
-                            width='68%'
                             name='message'
                             value={message}
                             label="Message"
@@ -157,7 +154,6 @@ function NotifyUser(props) {
                     <Button onClick={handleSubmit} className={`button-btn cat-button new-btn-color mt-4 ${!isValid() ? 'disabled' : ''}`} disabled={!isValid()} > Submit</Button>
 
                 </div>
-
             </div>
         </div>
     )

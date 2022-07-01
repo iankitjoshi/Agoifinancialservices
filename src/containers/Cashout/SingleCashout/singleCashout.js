@@ -6,7 +6,7 @@ import InputField from '../../../components/common/InputField'
 import * as action from '../actions'
 import { Button, Grid, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@material-ui/core'
 import CustomLoader from "components/common/Loader";
-import Notification from "components/common/Notification";
+ 
 
 function SingleCashoutDetails(props) {
     const dispatch = useDispatch()
@@ -16,6 +16,8 @@ function SingleCashoutDetails(props) {
     const [rejectReason, setRejectReason] = useState('')
 
     const { userId } = props.match.params;
+    const { KycNotification } = props
+
 
     useEffect(() => {
 
@@ -46,20 +48,20 @@ function SingleCashoutDetails(props) {
             typeSelected,
             rejectReason
         }
-        dispatch(action.CreateUser(formData))
-            .then(({ res = "" }) => {
-                props.toast.success(res || "User added successfully");
-                props.onClose()
-                props.afterAction()
-            })
-            .catch(({ message = "" }) => {
-                props.toast.error(message || 'Oops! Something went wrong')
-            })
+        // dispatch(action.CreateUser(formData))
+        //     .then(({ res = "" }) => {
+        //         props.toast.success(res || "User added successfully");
+        //         props.onClose()
+        //         props.afterAction()
+        //     })
+        //     .catch(({ message = "" }) => {
+        //         props.toast.error(message || 'Oops! Something went wrong')
+        //     })
     }
 
     return (
         <div className="user-page">
-            <Notification />
+            {KycNotification}
             <div className="category-page">
                 <Grid container spacing={3} className="mb-3 heading-sec d-flex align-items-center justify-content-end" >
                     <Grid item xs={12} sm={12} md={12} lg={12} className="align-self-center heading-top">

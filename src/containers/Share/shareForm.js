@@ -111,9 +111,9 @@ function AddShareForm(props) {
             }
             if (update) {
                 if (dataChange) {
-                    dispatch(action.UpdateUser(formData, id))
+                    dispatch(action.UpdateShare(formData, id))
                         .then(({ res = "" }) => {
-                            dispatch(action.getUserList({ limit: 25 }))
+                            dispatch(action.getShareList({ limit: 25 }))
                             toast.success(res || "User updated successfully");
                             props.onClose()
                             setDataChange(false)
@@ -131,9 +131,9 @@ function AddShareForm(props) {
                 }
             }
 
-            dispatch(action.CreateUser(formData))
+            dispatch(action.CreateShare(formData))
                 .then(({ res = "" }) => {
-                    dispatch(action.getUserList({ limit: 25 }))
+                    dispatch(action.getShareList({ limit: 25 }))
                     toast.success(res || "User added successfully");
                     props.onClose()
                     props.afterAction()

@@ -13,11 +13,11 @@ body .select__control:hover {
 }
 
 .MuiFormControl-root {
-  height: 48px;
+  // height: 48px;
 
   input {
-    padding: 0 14px;
-    height: 48px;
+    // padding: 0 14px;
+    // height: 48px;
   }
 }
 
@@ -25,6 +25,9 @@ body .select__control:hover {
   font-family: "Lato", sans-serif !important;
   font-weight: normal;
 
+  textarea{
+    padding: 14px;
+  }
   &:focus {
     outline: none !important;
   }
@@ -193,9 +196,9 @@ table {
 * {
   body {
     .MuiIconButton-root:hover {
-      background-color: map-get($i-colors, "primary");
-      ;
-      color: #fff;
+      // background-color: map-get($i-colors, "primary");
+      // ;
+      // color: #fff;
     }
 
     .cus-dialog {
@@ -240,13 +243,13 @@ table {
       }
     }
 
-    .MuiAutocomplete-popper {
-      z-index: 9999 !important;
+    // .MuiAutocomplete-popper {
+    //   z-index: 9999 !important;
 
-      >div {
-        @include boxShadow;
-      }
-    }
+    //   >div {
+    //     @include boxShadow;
+    //   }
+    // }
 
     .MuiToolbar-regular {
       min-height: 100%;
@@ -1339,11 +1342,11 @@ main .table-program {
 body {
   background-color: map-get($i-colors, "bg-light") !important;
 
-  .MuiAutocomplete-popper {
-    ul {
-      padding: 0 !important;
-    }
-  }
+  // .MuiAutocomplete-popper {
+  //   ul {
+  //     padding: 0 !important;
+  //   }
+  // }
 }
 
 //manage location
@@ -2832,7 +2835,7 @@ p.no-data {
     display: flex;
 
     .MuiInputBase-root {
-      height: 45px;
+      // height: 45px;
     }
   }
 
@@ -3864,18 +3867,10 @@ p.no-data {
   flex-direction: row !important;
 }
 
-.width-drop-down{
-  .MuiAutocomplete-inputRoot{
-    height: 60px;
-  }
-}
   
 .user-notify {
   .MuiFormControl-root {
     display: flex;
 
-    .MuiInputBase-root {
-      height: 65px;
-    }
   }
 }

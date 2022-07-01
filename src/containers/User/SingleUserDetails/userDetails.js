@@ -5,17 +5,19 @@ import UserLoader from "../../../assets/images/userLoader.gif";
 import InputField from '../../../components/common/InputField'
 import { Grid, Button, CircularProgress, Radio, FormControl, FormLabel } from '@material-ui/core'
 import CustomLoader from "components/common/Loader";
-import Notification from "components/common/Notification";
+ 
 import { positiveAmount } from 'utils';
 
 function SingleUserDetails(props) {
+    const dispatch = useDispatch()
+    
     const [types, setTypes] = useState(['Accept', 'Reject'])
     const [typeSelected, setTypeSelected] = useState('')
     const [isEdit, setIsEdit] = useState(true)
     const [walletBalance, setWalletBalance] = useState(1000)
     let isLoading = false
-    const dispatch = useDispatch()
     const { userId } = props.match.params;
+    const { KycNotification } = props
 
     useEffect(() => {
 
@@ -39,7 +41,7 @@ function SingleUserDetails(props) {
 
     return (
         <div className="user-page">
-            <Notification />
+            {KycNotification}
             <div className="category-page">
                 <Grid container spacing={3} className="mb-3 heading-sec d-flex align-items-center justify-content-end" >
                     <Grid item xs={12} sm={12} md={3} lg={3} className="align-self-center heading-top">

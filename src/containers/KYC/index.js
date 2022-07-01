@@ -37,7 +37,7 @@ const headCells = [
 ];
 
 function KYC(props) {
-    const { toast } = props
+    const { toast, KycNotification } = props
     const dispatch = useDispatch()
     const [search, setSearch] = useState('')
     const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -88,7 +88,7 @@ function KYC(props) {
             startDate: startDateValue,
             endDate: endDateValue,
         }
-        dispatch(action.getUserByFilter({ startDate: data?.startDate, endDate: data?.endDate, limit: rowsPerPage, start: currentPage, term: search }))
+        dispatch(action.getKYCByFilter({ startDate: data?.startDate, endDate: data?.endDate, limit: rowsPerPage, start: currentPage, term: search }))
     }
 
     function handleDateChange({ startDate, endDate }) {
@@ -112,7 +112,7 @@ function KYC(props) {
 
     const searchUser = (value) => {
         if (value.length != 1) {
-            dispatch(action.getUserByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
+            dispatch(action.getKYCByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
         }
     }
 
@@ -124,7 +124,7 @@ function KYC(props) {
 
     const handleChangePage = (event, currentPage, pageLimit) => {
         setCurrentPage(currentPage)
-        dispatch(action.getUserByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
+        dispatch(action.getKYCByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
         props.history.replace(`/kyc?page=${currentPage}&limit=${rowsPerPage}`)
     }
 
@@ -133,14 +133,14 @@ function KYC(props) {
         value = value === "All" ? props.customer.length : value
         setRowsPerPage(value)
         setCurrentPage(0)
-        dispatch(action.getUserByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
+        dispatch(action.getKYCByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
         props.history.replace(`/kyc?page=${currentPage}&limit=${value}`)
     }
 
-    const deleteUser = () => {
-        dispatch(action.DeleteUser(userId))
+    const DeleteKYC = () => {
+        dispatch(action.DeleteKYC(userId))
             .then(res => {
-                dispatch(action.getUserList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
+                dispatch(action.getKYCList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
                 toast.success("User has been deleted successfully")
                 setOpenDeleteModal(false)
                 afterAction()
@@ -273,7 +273,7 @@ function KYC(props) {
 
             <CustomDialogBox
                 handleClose={() => setOpenDeleteModal(false)}
-                confirmAction={deleteUser}
+                confirmAction={DeleteKYC}
                 open={openDeleteModal}
                 title="Warning"
                 dialogtext={`Are you sure you want to delete this user?`}

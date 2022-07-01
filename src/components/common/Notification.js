@@ -13,7 +13,7 @@ const Notification = () => {
     return (
         <Fab color="primary" aria-label="add" href="/kyc"
             style={{ position: 'absolute', right: '45px', ...(width < MobileWidth ? { top: '65px' } : { bottom: '40px' }) }} >
-            <Badge badgeContent={4} color="primary">
+            <Badge badgeContent={14} >
                 <NotificationsIcon />
             </Badge>
         </Fab>

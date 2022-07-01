@@ -1,16 +1,16 @@
 
 import {
-  GET_USER_LIST_REQUEST,
-  GET_USER_LIST_REQUEST_SUCCEEDED,
-  GET_USER_LIST_REQUEST_FAILED,
+  GET_KYC_LIST_REQUEST,
+  GET_KYC_LIST_REQUEST_SUCCEEDED,
+  GET_KYC_LIST_REQUEST_FAILED,
 
-  DELETE_USER,
-  DELETE_USER_SUCCESS,
-  DELETE_USER_FAILED,
+  DELETE_KYC,
+  DELETE_KYC_SUCCESS,
+  DELETE_KYC_FAILED,
 
-  UPDATE_USER,
-  UPDATE_USER_SUCCESS,
-  UPDATE_USER_FAILED,
+  UPDATE_KYC,
+  UPDATE_KYC_SUCCESS,
+  UPDATE_KYC_FAILED,
 
   CREATE_USERS,
   CREATE_USERS_SUCCESS,
@@ -27,35 +27,35 @@ const initState = {
 export default function (state = { ...initState }, action) {
   switch (action.type) {
 
-    case GET_USER_LIST_REQUEST:
+    case GET_KYC_LIST_REQUEST:
       return { ...state, isLoading: true }
 
-    case GET_USER_LIST_REQUEST_SUCCEEDED:
+    case GET_KYC_LIST_REQUEST_SUCCEEDED:
       return { ...state, isLoading: false, userList: action.payload }
 
-    case GET_USER_LIST_REQUEST_FAILED:
+    case GET_KYC_LIST_REQUEST_FAILED:
       return { ...state, isLoading: false, userList: {} }
 
 
-    case DELETE_USER : 
+    case DELETE_KYC : 
       return {...state , isLoading : true}
     
 
-    case DELETE_USER_SUCCESS : 
+    case DELETE_KYC_SUCCESS : 
       return {...state , isLoading : false}
     
 
-    case DELETE_USER_FAILED : 
+    case DELETE_KYC_FAILED : 
       return {...state , isLoading : false}
     
 
-    case UPDATE_USER : 
+    case UPDATE_KYC : 
       return {...state , isLoading : true}
 
-    case UPDATE_USER_SUCCESS : 
+    case UPDATE_KYC_SUCCESS : 
       return {...state , isLoading : false}
     
-    case UPDATE_USER_FAILED : 
+    case UPDATE_KYC_FAILED : 
       return {...state, isLoading : false}
       
 

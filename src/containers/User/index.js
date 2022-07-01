@@ -33,7 +33,7 @@ import CustomToolTip from "components/common/ToolTip";
 import deleteIcon from 'assets/images/deleteIcon.svg'
 import ClearIcon from '@material-ui/icons/Clear';
 import CustomLoader from "components/common/Loader"
-import Notification from "components/common/Notification"
+ 
 
 
 const headCells = [
@@ -45,7 +45,7 @@ const headCells = [
 ];
 
 function User(props) {
-    const { toast } = props
+    const { toast, KycNotification } = props
     const dispatch = useDispatch()
     const [search, setSearch] = useState('')
     const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -182,7 +182,7 @@ function User(props) {
     }
     return (
         <div className="user-page">
-            <Notification />
+            {KycNotification}
             <Grid container spacing={3} className="mb-3 heading-sec" >
                 <Grid item xs={12} sm={12} md={12} lg={1} className="align-self-center">
                     <h5 className="page-heading" >Users</h5>

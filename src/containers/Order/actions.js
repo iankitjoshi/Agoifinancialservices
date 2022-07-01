@@ -1,29 +1,29 @@
 import {
-    getUserListAPI,
-    deleteUserAPI,
-    updateUserAPI,
-    searchUserByFilterAPI,
+    getOrderListAPI,
+    deleteOrderAPI,
+    updateOrderAPI,
+    searchOrderByFilterAPI,
     CreateUserAPI,
-    updateUserActiveAPI,
+    UpdateOrderActiveAPI,
     UserLiveUpdateAPI
 } from './apis'
 
-export function getUserList(data) {
+export function getOrderList(data) {
     return dispatch => {
         dispatch({
-            type: GET_USER_LIST_REQUEST,
+            type: GET_ORDER_LIST_REQUEST,
         })
         return new Promise((resolve, rej) => {
-            getUserListAPI(data).then(res => {
+            getOrderListAPI(data).then(res => {
                 dispatch({
-                    type: GET_USER_LIST_REQUEST_SUCCEEDED,
+                    type: GET_ORDER_LIST_REQUEST_SUCCEEDED,
                     payload: res
                 })
                 return resolve(res)
             })
                 .catch(err => {
                     dispatch({
-                        type: GET_USER_LIST_REQUEST_FAILED,
+                        type: GET_ORDER_LIST_REQUEST_FAILED,
                         payload: {},
                     })
                     return rej(err)
@@ -32,22 +32,22 @@ export function getUserList(data) {
     }
 }
 
-export function getUserByFilter(data) {
+export function getOrderByFilter(data) {
     return dispatch => {
         dispatch({
-            type: GET_USER_LIST_REQUEST,
+            type: GET_ORDER_LIST_REQUEST,
         })
         return new Promise((resolve, rej) => {
-            searchUserByFilterAPI(data).then(res => {
+            searchOrderByFilterAPI(data).then(res => {
                 dispatch({
-                    type: GET_USER_LIST_REQUEST_SUCCEEDED,
+                    type: GET_ORDER_LIST_REQUEST_SUCCEEDED,
                     payload: res
                 })
                 return resolve(res)
             })
                 .catch(err => {
                     dispatch({
-                        type: GET_USER_LIST_REQUEST_FAILED,
+                        type: GET_ORDER_LIST_REQUEST_FAILED,
                         payload: {},
                     })
                     return rej(err)
@@ -56,26 +56,26 @@ export function getUserByFilter(data) {
     }
 }
 
-export const GET_USER_LIST_REQUEST = 'GET_USER_LIST_REQUEST'
-export const GET_USER_LIST_REQUEST_SUCCEEDED = 'GET_USER_LIST_REQUEST_SUCCEEDED'
-export const GET_USER_LIST_REQUEST_FAILED = 'GET_USER_LIST_REQUEST_FAILED'
+export const GET_ORDER_LIST_REQUEST = 'GET_ORDER_LIST_REQUEST'
+export const GET_ORDER_LIST_REQUEST_SUCCEEDED = 'GET_ORDER_LIST_REQUEST_SUCCEEDED'
+export const GET_ORDER_LIST_REQUEST_FAILED = 'GET_ORDER_LIST_REQUEST_FAILED'
 
 
-export function DeleteUser(data) {
+export function DeleteOrder(data) {
     return dispatch => {
         dispatch({
-            type: DELETE_USER
+            type: DELETE_ORDER
         })
         return new Promise((resolve, rej) => {
-            deleteUserAPI(data).then(res => {
+            deleteOrderAPI(data).then(res => {
                 dispatch({
-                    type: DELETE_USER_SUCCESS,
+                    type: DELETE_ORDER_SUCCESS,
                 })
                 return resolve(res)
             })
                 .catch(err => {
                     dispatch({
-                        type: DELETE_USER_FAILED,
+                        type: DELETE_ORDER_FAILED,
                     })
                     return rej(err)
                 })
@@ -83,25 +83,25 @@ export function DeleteUser(data) {
     }
 }
 
-export const DELETE_USER = "DELETE_USER";
-export const DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS";
-export const DELETE_USER_FAILED = "DELETE_USER_FAILED"
+export const DELETE_ORDER = "DELETE_ORDER";
+export const DELETE_ORDER_SUCCESS = "DELETE_ORDER_SUCCESS";
+export const DELETE_ORDER_FAILED = "DELETE_ORDER_FAILED"
 
-export function UpdateUser(data) {
+export function UpdateOrder(data) {
     return dispatch => {
         dispatch({
-            type: UPDATE_USER
+            type: UPDATE_ORDER
         })
         return new Promise((resolve, rej) => {
-            updateUserAPI(data).then(res => {
+            updateOrderAPI(data).then(res => {
                 dispatch({
-                    type: UPDATE_USER_SUCCESS
+                    type: UPDATE_ORDER_SUCCESS
                 })
                 return resolve(res)
             })
                 .catch(err => {
                     dispatch({
-                        type: UPDATE_USER_FAILED
+                        type: UPDATE_ORDER_FAILED
                     })
                     return rej(err)
                 })
@@ -112,18 +112,18 @@ export function UpdateUser(data) {
 export function UpdateActiveUser(data) {
     return dispatch => {
         dispatch({
-            type: UPDATE_USER
+            type: UPDATE_ORDER
         })
         return new Promise((resolve, rej) => {
-            updateUserActiveAPI(data).then(res => {
+            UpdateOrderActiveAPI(data).then(res => {
                 dispatch({
-                    type: UPDATE_USER_SUCCESS
+                    type: UPDATE_ORDER_SUCCESS
                 })
                 return resolve(res)
             })
                 .catch(err => {
                     dispatch({
-                        type: UPDATE_USER_FAILED
+                        type: UPDATE_ORDER_FAILED
                     })
                     return rej(err)
                 })
@@ -132,9 +132,9 @@ export function UpdateActiveUser(data) {
 }
 
 
-export const UPDATE_USER = "UPDATE_USER"
-export const UPDATE_USER_SUCCESS = "UPDATE_USER_SUCCESS"
-export const UPDATE_USER_FAILED = "UPDATE_USER_FAILED"
+export const UPDATE_ORDER = "UPDATE_ORDER"
+export const UPDATE_ORDER_SUCCESS = "UPDATE_ORDER_SUCCESS"
+export const UPDATE_ORDER_FAILED = "UPDATE_ORDER_FAILED"
 
 export function CreateUser(data) {
     return dispatch => {
