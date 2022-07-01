@@ -10,6 +10,9 @@ import {
     Card,
     Box,
     CardContent,
+    Tabs,
+    Tab,
+    Paper
 } from '@material-ui/core'
 import InputField from "components/common/InputField"
 import { withTranslation } from "react-i18next"
@@ -57,6 +60,7 @@ function Orders(props) {
     const [focusedInput, setFocusedInput] = useState(false)
     const [timeOut, setTimeOut] = useState(null)
     const [userFilterSelect, setUserFilterSelect] = useState("")
+    const [tab, setTab] = useState(0);
 
 
     const { userList = {}, isLoading = false } = useSelector(state => state.users) || {}
@@ -191,9 +195,8 @@ function Orders(props) {
         props.history.push(`/order/${id}`)
     }
 
-    const clearSearch = () => {
-        setSearch('')
-        // dispatch(action.SearchJuryByFilter())
+    const selectTab = (e, newValue) => {
+        setTab(newValue)
     }
 
     return (
@@ -238,7 +241,18 @@ function Orders(props) {
                     </Box>
                 </Grid>
             </Grid>
-
+            <Paper>
+                <Tabs
+                    value={tab}
+                    onChange={selectTab}
+                    aria-label="disabled tabs example"
+                    className='tab-custom'
+                >
+                    <Tab label="All Orders" id="Orders-tab" />
+                    <Tab label="Purchase Orders" id="Orders-tab1" />
+                    <Tab label='Sell Orders' id="Orders-tab2" />
+                </Tabs>
+            </Paper>
             <div className="cust-table">
                 {!isLoading ?
                     <div>

@@ -12,7 +12,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import SearchIcon from '@material-ui/icons/Search';
 
-const InputField = ({ type, error, fullWidth, ...props }) => {
+const InputField = ({ type, error, fullWidth, width = '100%', ...props }) => {
     const [show, setShow] = useState(false)
 
     if (type === 'password') {
@@ -79,7 +79,7 @@ const InputField = ({ type, error, fullWidth, ...props }) => {
                     id="outlined-basic"
                     label="Outlined"
                     variant="outlined"
-                    style={{ width: '100%', height : '60px' }}
+                        style={{ width: width, height : '60px' }}
                     className="custom-textarea"
                     {...props}
                 />

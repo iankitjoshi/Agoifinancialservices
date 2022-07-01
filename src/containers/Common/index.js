@@ -51,6 +51,16 @@ const menuItems = [
     icon: categoryIcon
   },
   {
+    label: "Notify User",
+    path: '/notify-user',
+    icon: categoryIcon
+  },
+  {
+    label: "Cashout",
+    path: '/cashout',
+    icon: categoryIcon
+  },
+  {
     label: "Settings",
     path: '/settings',
     icon: settingIcon

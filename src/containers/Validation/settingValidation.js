@@ -12,20 +12,13 @@ export default function validateSettingInfo(data) {
         "string.empty": `Name is required!`,
       }),
 
-      mobNo: Joi
-      .string()
-      .required()
-      .messages({
-        "string.empty": `Mobile No. is required!`,
-      }),
-
-      email: Joi
+    email: Joi
       .string()
       .required()
       .email({ tlds: { allow: false } })
       .messages({
-          "string.empty": `Email is required`,
-          "string.email": "Please enter valid email address",
+        "string.empty": `Email is required`,
+        "string.email": "Please enter valid email address",
       }),
   }).validate(data, { abortEarly: false })
 

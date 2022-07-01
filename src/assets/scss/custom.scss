@@ -3863,3 +3863,19 @@ p.no-data {
 .share-available{
   flex-direction: row !important;
 }
+
+.width-drop-down{
+  .MuiAutocomplete-inputRoot{
+    height: 60px;
+  }
+}
+  
+.user-notify {
+  .MuiFormControl-root {
+    display: flex;
+
+    .MuiInputBase-root {
+      height: 65px;
+    }
+  }
+}

@@ -1,25 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Grid, Box, CircularProgress } from '@material-ui/core'
-import SettingsIcon from '@material-ui/icons/Settings'
 import InputField from '../../components/common/InputField'
 import { Button } from '@material-ui/core'
 import { updatePassword } from './actions'
 import { useDispatch, useSelector } from 'react-redux'
-import userImage from '../../assets/images/userImage.svg'
 import validateSettingInfo from '../Validation/settingValidation'
 import validatePasswordUpdate from '../Validation/passwordValidation'
 import * as action from './actions'
 import loader from '../../assets/images/loader.gif'
-import editcatIcon from '../../assets/images/edit.svg'
-import CustomTooltip from '../../components/common/ToolTip'
-import CrossIcon from '../../assets/images/cross-black.svg'
 import Notification from 'components/common/Notification'
-// import loader from '../../assets/images/loader.gif'
 
 const initInfo = {
     name: '',
     email: '',
-    mobNo: '',
 }
 
 const initPassword = {
@@ -51,7 +44,7 @@ export default function Settings(props) {
     useEffect(() => {
         if (isEdit) {
             setInfoDetails({
-                ...infoDetails, mobNo: contact_no, email, name: username
+                ...infoDetails, email, name: username
             })
         }
     }, [isEdit])
@@ -65,11 +58,6 @@ export default function Settings(props) {
     }
 
     const handleInfoChange = ({ target: { name = "", value = "" } }) => {
-        let numberReg = /^[0-9]{0,10}$/;
-
-        if (name == "mobNo" && value && !numberReg.test(value)) return;
-
-        if (name == "mobNo" && value.length > 10) return;
         setInfoDetails({ ...infoDetails, [name]: value })
         setError({ ...errors, [name]: '' })
         setDataChange(true)
@@ -104,7 +92,6 @@ export default function Settings(props) {
             const formData = {
 
             }
-
             if (dataChange) {
                 dispatch(action.UpdateSetting(formData))
                     .then(response => {
@@ -160,15 +147,6 @@ export default function Settings(props) {
                                         <InputField value={infoDetails.email} name="email" error={errors.email} onChange={handleInfoChange} />
                                         :
                                         <label> {email || '-'} </label>
-                                    }
-                                </p>
-
-                                <p>
-                                    <span>Mobile No.</span>
-                                    {isEdit ?
-                                        <InputField value={infoDetails.mobNo} name="mobNo" error={errors.mobNo} onChange={handleInfoChange} />
-                                        :
-                                        <label> {contact_no || '-'} </label>
                                     }
                                 </p>
 
