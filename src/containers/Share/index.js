@@ -10,8 +10,6 @@ import {
     Card,
     Box,
     CardContent,
-    InputAdornment,
-    IconButton,
     Button,
 } from '@material-ui/core'
 import { withTranslation } from "react-i18next"
@@ -30,6 +28,8 @@ import deleteIcon from 'assets/images/deleteIcon.svg'
 import totalUserIcon from 'assets/images/totalUserIcon.svg'
 import userActiveIcon from 'assets/images/userActiveIcon.svg'
 import userInActiveIcon from 'assets/images/userInActiveIcon.svg'
+import downArrow from 'assets/images/downArrow.png'
+import upArrow from 'assets/images/upArrow.png'
 import moment from 'moment'
 import CustomSelect from 'components/common/CustomSelect'
 import UserLoader from "assets/images/userLoader.gif";
@@ -40,15 +40,16 @@ import CustomModal from "components/common/CustomModal";
 import AddShareForm from "./shareForm";
 import ClearIcon from '@material-ui/icons/Clear';
 import CustomLoader from "components/common/Loader";
- 
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
 
 const headCells = [
-    { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
-    { id: "index", numeric: false, disablePadding: false, label: "Image" },
     { id: "index", numeric: false, disablePadding: false, label: "Name" },
     { id: "is_active", numeric: false, disablePadding: false, label: "ID" },
     { id: "user_name", numeric: false, disablePadding: false, label: "Price Per share" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Share Type" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Share Growth" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Share Quantity" },
     { id: "a", numeric: false, disablePadding: false, label: "Action" },
 ];
 
@@ -220,7 +221,7 @@ function Shares(props) {
                     <Box className="cust-formfields">
                         <Grid item xs={12} sm={12} md={5} lg={5} className="custom-date-field d-flex align-items-center justify-content-end">
                             <InputField type="search" value={search} name={search} label={`Search share`} inputProps={{ maxlength: 40 }}
-                                onChange={(e) => handleChange(e)} fullWidth/>
+                                onChange={(e) => handleChange(e)} fullWidth />
                         </Grid>
                     </Box>
 
@@ -287,11 +288,30 @@ function Shares(props) {
                                             const { image = "", name = "", price = "", id = "", is_active = "" } = item || {}
                                             return (
                                                 <TableRow hover key={id} className="cursor_default" onClick={() => handleSingleShare(item)}  >
-                                                    <TableCell className="table-custom-width" data-title="S NO."> {'image'} </TableCell>
                                                     <TableCell className="table-custom-width" data-title="USER NAME"> {name} </TableCell>
                                                     <TableCell className="table-custom-width" data-title="EMAIL">{id}</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS"> {price} </TableCell>
                                                     <TableCell className="table-custom-width" data-title="STATUS"> {positiveAmount(5)} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS"> NSDL </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">
+
+                                                        {/* <div style={{ display: 'flex' }} >
+                                                            <p style={{ marginTop: '6px' }} >10% &nbsp;	</p>
+
+                                                            <span className="delete-icon" >
+                                                                <img src={downArrow} alt="" />
+                                                            </span>
+                                                        </div> */}
+
+                                                        <div style={{ display: 'flex' }} >
+                                                            <p style={{ marginTop: '4px' }} >10% &nbsp;	</p>
+
+                                                            <span className="up-arrow" >
+                                                                <img src={upArrow} alt="" />
+                                                            </span>
+                                                        </div>
+
+                                                    </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS"> 1000 </TableCell>
                                                     <TableCell className="table-custom-width" data-title="ACTION">
                                                         <CustomToolTip title="Edit" >
                                                             <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >

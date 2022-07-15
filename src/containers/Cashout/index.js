@@ -34,6 +34,7 @@ const headCells = [
     { id: "is_active", numeric: false, disablePadding: false, label: "Name" },
     { id: "user_name", numeric: false, disablePadding: false, label: "Mobile No." },
     { id: "email", numeric: false, disablePadding: false, label: "Cashout Amount" },
+    { id: "email", numeric: false, disablePadding: false, label: "Status" },
 ];
 
 function Cashout(props) {
@@ -233,19 +234,7 @@ function Cashout(props) {
                                                     <TableCell className="table-custom-width" data-title="USER NAME">Ankit Joshi </TableCell>
                                                     <TableCell className="table-custom-width" data-title="MOBILE NO."> 9876543210 </TableCell>
                                                     <TableCell className="table-custom-width" data-title="EMAIL">{positiveAmount(100)}</TableCell>
-
-                                                    {/* <TableCell className="table-custom-width" data-title="ACTION">
-                                                        <CustomToolTip title="Edit" >
-                                                            <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >
-                                                                <img src={editIcon} alt="" />
-                                                            </span>
-                                                        </CustomToolTip>
-                                                        <CustomToolTip title="Delete" >
-                                                            <span className="delete-icon" onClick={() => deleteModal(id)} >
-                                                                <img src={deleteIcon} alt="" />
-                                                            </span>
-                                                        </CustomToolTip>
-                                                    </TableCell> */}
+                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${true ? 'user-active' : 'user-inactive'}`}> {true ? 'Approved' : 'Inactive'}</span> </TableCell>
                                                 </TableRow>
                                             )
                                         })

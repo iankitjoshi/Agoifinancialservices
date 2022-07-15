@@ -22,7 +22,7 @@ import * as action from './actions'
 import 'react-dates/initialize';
 import "react-dates/lib/css/_datepicker.css";
 import CustomDialogBox from "components/common/CustomDialogBox"
-import { stableSort, getComparator, tablestyle, getTimeStamps, } from "utils"
+import { stableSort, getComparator, tablestyle, getTimeStamps, positiveAmount, } from "utils"
 import { dateFilter } from 'constant'
 import loader from 'assets/images/loader.gif'
 import moment from 'moment'
@@ -37,11 +37,14 @@ import CustomLoader from "components/common/Loader"
 
 
 const headCells = [
-    { id: "index", numeric: false, disablePadding: false, label: "S.No." },
-    { id: "user_name", numeric: false, disablePadding: false, label: "Name" },
-    { id: "email", numeric: false, disablePadding: false, label: "Email" },
-    { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Mobile No." },
-    { id: "a", numeric: false, disablePadding: false, label: "Action" },
+    { id: "index", numeric: false, disablePadding: false, label: "User" },
+    { id: "user_name", numeric: false, disablePadding: false, label: "Verified" },
+    { id: "email", numeric: false, disablePadding: false, label: "Mobile" },
+    { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Investment" },
+    { id: "a", numeric: false, disablePadding: false, label: "D.O.J." },
+    { id: "a", numeric: false, disablePadding: false, label: "Wallet" },
+    { id: "a", numeric: false, disablePadding: false, label: "Orders" },
+    { id: "a", numeric: false, disablePadding: false, label: "" },
 ];
 
 function User(props) {
@@ -240,10 +243,13 @@ function User(props) {
                                             const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
                                             return (
                                                 <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
-                                                    <TableCell className="table-custom-width" data-title="S NO.">{index + 1}. </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME">Ankit Joshi </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">Ankit@gmail.com</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">9876543210 </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="S NO."> <b>  Yoko Pottie <p>ypottiec@privacy.gov.au</p> </b></TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${true ? 'user-active' : 'user-status-no'}`}> {true ? 'Yes' : 'No'}</span> </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="USER NAME">9876543210 </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="EMAIL"> {positiveAmount(9876)} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">Mav 26. 2019 </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">{positiveAmount(9876)}</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">5</TableCell>
                                                     <TableCell className="table-custom-width" data-title="ACTION">
                                                         {/* <CustomToolTip title="Edit" >
                                                             <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >
@@ -296,23 +302,3 @@ function User(props) {
 
 export default withTranslation("translations")(withStyles(tablestyle)(User));
 
-function UserCardField(props) {
-    return <Grid item xs={12} sm={3} md={3} lg={3}>
-        <Card className="user-cards" >
-            <CardContent>
-                <Grid container>
-                    <Grid item xs={4} sm={4} md={4} lg={4}>
-                        <div className="user-card-img">
-                            <img src={props.img} className="user-card-img" alt="" />
-                        </div>
-                    </Grid>
-                    <Grid item xs={8} sm={8} md={8} lg={8}>
-                        <div className="user-card-connent" >
-                            {props?.children}
-                        </div>
-                    </Grid>
-                </Grid>
-            </CardContent>
-        </Card>
-    </Grid>
-}

@@ -36,12 +36,14 @@ import CustomLoader from "components/common/Loader"
 
 
 const headCells = [
-    { id: "index", numeric: false, disablePadding: false, label: "S.No." },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Amount" },
-    { id: "user_name", numeric: false, disablePadding: false, label: "Txn ID" },
-    { id: "email", numeric: false, disablePadding: false, label: "Share Name" },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Quantity" },
-    // { id: "a", numeric: false, disablePadding: false, label: "Action" },
+    { id: "index", numeric: false, disablePadding: false, label: "Order ID" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Date" },
+    { id: "user_name", numeric: false, disablePadding: false, label: "Customer" },
+    { id: "email", numeric: false, disablePadding: false, label: "Total" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Stock" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Orders" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Type" },
 ];
 
 function Orders(props) {
@@ -270,23 +272,14 @@ function Orders(props) {
                                             const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
                                             return (
                                                 <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
-                                                    <TableCell className="table-custom-width" data-title="S NO.">{index + 1}. </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME"> {positiveAmount(20)} </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">12345678</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">ABC </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="MOBILE NO."> 10 </TableCell>
-                                                    {/* <TableCell className="table-custom-width" data-title="ACTION">
-                                                        <CustomToolTip title="Edit" >
-                                                            <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >
-                                                                <img src={editIcon} alt="" />
-                                                            </span>
-                                                        </CustomToolTip>
-                                                        <CustomToolTip title="Delete" >
-                                                            <span className="delete-icon" onClick={() => deleteModal(id)} >
-                                                                <img src={deleteIcon} alt="" />
-                                                            </span>
-                                                        </CustomToolTip>
-                                                    </TableCell> */}
+                                                    <TableCell className="table-custom-width" data-title="S NO."> #143567 </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="USER NAME">22/01/2021 </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="EMAIL">Dominik Lamakani</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">{positiveAmount(129)}</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${true ? 'user-active' : 'user-inactive'}`}> {true ? 'Approved' : 'Inactive'}</span> </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">Chennai Superkings</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">5</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">Sell</TableCell>
                                                 </TableRow>
                                             )
                                         })

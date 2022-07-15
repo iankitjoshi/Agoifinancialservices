@@ -7,9 +7,7 @@ import {
     TableCell,
     TableBody,
     withStyles,
-    Card,
     Box,
-    CardContent,
 } from '@material-ui/core'
 import { withTranslation } from "react-i18next"
 import EnhancedTableHead from 'components/common/EnhancedTableHead'
@@ -29,11 +27,10 @@ import Datepicker from "components/common/Datepicker";
 import CustomLoader from "components/common/Loader";
 
 const headCells = [
-    { id: "index", numeric: false, disablePadding: false, label: "S.No." },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Aadhar No." },
-    { id: "user_name", numeric: false, disablePadding: false, label: "PAN" },
-    { id: "email", numeric: false, disablePadding: false, label: "City" },
+    { id: "index", numeric: false, disablePadding: false, label: "Name" },
+    { id: "is_active", numeric: false, disablePadding: false, label: "Email" },
     { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Mobile No." },
+    { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Status" },
 ];
 
 function KYC(props) {
@@ -228,11 +225,11 @@ function KYC(props) {
                                             const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
                                             return (
                                                 <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
-                                                    <TableCell className="table-custom-width" data-title="S NO.">{index + 1}. </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME">1234 1234 1234 </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">BHJB67THG</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">Jaipur </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="EMAIL">Ankit Joshi</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">a@gmail.com </TableCell>
                                                     <TableCell className="table-custom-width" data-title="MOBILE NO."> 9876543210 </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${false ? 'user-active' : 'user-inactive'}`}> {false ? 'Approved' : 'Pending'}</span> </TableCell>
+
 
                                                     {/* <TableCell className="table-custom-width" data-title="ACTION">
                                                         <CustomToolTip title="Edit" >
@@ -289,23 +286,3 @@ function KYC(props) {
 
 export default withTranslation("translations")(withStyles(tablestyle)(KYC));
 
-function UserCardField(props) {
-    return <Grid item xs={12} sm={3} md={3} lg={3}>
-        <Card className="user-cards" >
-            <CardContent>
-                <Grid container>
-                    <Grid item xs={4} sm={4} md={4} lg={4}>
-                        <div className="user-card-img">
-                            <img src={props.img} className="user-card-img" alt="" />
-                        </div>
-                    </Grid>
-                    <Grid item xs={8} sm={8} md={8} lg={8}>
-                        <div className="user-card-connent" >
-                            {props?.children}
-                        </div>
-                    </Grid>
-                </Grid>
-            </CardContent>
-        </Card>
-    </Grid>
-}

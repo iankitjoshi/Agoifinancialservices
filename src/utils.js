@@ -108,10 +108,6 @@ export function ExpirytimeFormat(data) {
 }
 
 
-
-
-
-
 export function decorateAmount(amt) {
   if (Math.sign(amt) === -1) {
     return amt && `- ₹${Math.abs(amt).toFixed(2)}` || ' ₹0.00'
