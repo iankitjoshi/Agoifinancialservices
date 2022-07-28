@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import InputField from '../../components/common/InputField'
 import * as action from './actions'
+import * as userAction from '../User/actions'
 import {
     CircularProgress, TextField, Button, TableContainer,
     Table,
@@ -12,35 +13,41 @@ import {
 import CustomLoader from "components/common/Loader";
 import DummyData from './DummyData.json'
 import { Autocomplete } from '@material-ui/lab';
-import { positiveAmount } from 'utils';
-import { NoDataFound } from 'components/common/NoDataFound';
+import { DataValue, timeFormat } from 'utils';
+import NoDataFound from '../../components/common/NoDataFound';
 import EnhancedTableHead from '../../components/common/EnhancedTableHead';
+import _ from 'lodash'
 
 const NotificationHeadCells = [
     { id: "index", numeric: false, disablePadding: false, label: "S.No." },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Date" },
-    { id: "user_name", numeric: false, disablePadding: false, label: "Notification" },
+    { id: "createdAt", numeric: false, disablePadding: false, label: "Date" },
+    { id: "message", numeric: false, disablePadding: false, label: "Notification" },
 ];
 
 function NotifyUser(props) {
     const dispatch = useDispatch()
 
+    const { userList = {} } = useSelector(state => state?.users) || {}
+    const { total = "", current_page = "", data: UserList = [] } = userList || {}
+
+    const { notificationList = {}, isLoading = false } = useSelector(state => state?.notifyUser) || {}
+    const { data = [] } = notificationList || {}
+
+
     const [message, setMessage] = useState('')
-    const [selectedGroup, setSelectedGroup] = useState([])
+    const [selectedUser, setSelectedGroup] = useState([])
     const [searchingTimeout, setSearchingTimeout] = useState(null)
 
-    let allGroups = DummyData, isLoading = false
-    const { userId } = props.match.params;
     const { KycNotification } = props
-
-    console.log(DummyData, 'DummyData')
+    console.log(selectedUser, 'selectedUser')
 
     useEffect(() => {
-
-    })
+        dispatch(action.getNotificationList())
+        dispatch(userAction.getUserList())
+    }, [])
 
     const isValid = () => {
-        if (message && selectedGroup.length) return true
+        if (message && selectedUser.length) return true
         else return false
     }
 
@@ -51,14 +58,16 @@ function NotifyUser(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        const userID = selectedUser?.map((data) => { return { id: data?._id } })
+
         const formData = {
+            userID,
             message
         }
-        dispatch(action.CreateUser(formData))
+        dispatch(action.CreateNotification(formData))
             .then(({ res = "" }) => {
                 props.toast.success(res || "User added successfully");
-                props.onClose()
-                props.afterAction()
+                dispatch(action.getNotificationList())
             })
             .catch(({ message = "" }) => {
                 props.toast.error(message || 'Oops! Something went wrong')
@@ -78,8 +87,8 @@ function NotifyUser(props) {
 
     }
 
-    const selectAllGroup = (e, selectedGroup) => {
-        setSelectedGroup(selectedGroup)
+    const selectAllGroup = (e, selectedUser) => {
+        setSelectedGroup(selectedUser)
     }
 
     const selectGroup = (e, group) => {
@@ -88,9 +97,9 @@ function NotifyUser(props) {
 
 
 
-    const allGrouplist = Array.isArray(allGroups) && allGroups.length ? allGroups : [] || [];
-    let groupOption = [{ id: 1, name: 'Select All', value: 'Select All' }, ...allGrouplist]
-    if (selectedGroup && selectedGroup.length === allGrouplist.length) {
+    const allUserlist = Array.isArray(UserList) && UserList.length ? UserList : [] || [];
+    let groupOption = [{ id: 1, name: 'Select All', value: 'Select All' }, ...allUserlist]
+    if (selectedUser && selectedUser?.length === allUserlist?.length) {
         groupOption = groupOption.slice(1)
     }
 
@@ -106,13 +115,13 @@ function NotifyUser(props) {
                                 className="custom-autocomplete"
                                 id="asynchronous-demo"
                                 options={groupOption}
-                                getOptionSelected={(option, value) => option?.id === value?.id}
-                                value={selectedGroup}
-                                getOptionLabel={(groups) => groups?.name}
+                                getOptionSelected={(option, value) => option?._id === value?._id}
+                                value={selectedUser}
+                                getOptionLabel={(user) => _.isObject(user) && user?.name && user?.name || user?.mobile_number || ''}
                                 onChange={(e, value) => {
                                     const isSelectAll = value.find(item => item.value === 'Select All')
                                     if (isSelectAll) {
-                                        return selectAllGroup(e, allGrouplist)
+                                        return selectAllGroup(e, allUserlist)
                                     } else {
                                         selectGroup(e, value)
                                     }
@@ -130,7 +139,7 @@ function NotifyUser(props) {
                                         variant="outlined"
                                         name="parentCategory"
                                         // placeholder="Enter and select user name"
-                                        value={selectedGroup && selectedGroup.name}
+                                        value={selectedUser && selectedUser.name}
                                         className="width-drop-down cus-select-box"
                                         onChange={e => getGroupName(e)}
                                         InputProps={{
@@ -178,14 +187,14 @@ function NotifyUser(props) {
                                     headCells={NotificationHeadCells}
                                 />
                                 <TableBody>
-                                    {true ?
-                                        [1, 2, 3, 4, 5, 6]?.map((item, index) => {
-                                            const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
+                                    {data?.length ?
+                                        data?.map((item, index) => {
+                                            const { is_live = "", name = "", email = "", message = "", _id = "", createdAt = "" } = item || {}
                                             return (
-                                                <TableRow hover key={id} className="cursor_default" >
+                                                <TableRow hover key={_id} className="cursor_default" >
                                                     <TableCell className="table-custom-width" data-title="S NO."> {index + 1}. </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME">22/01/2021 </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">In publishing and graphic design, </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="createdAt">{timeFormat(createdAt)} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="message">{DataValue(message)} </TableCell>
                                                 </TableRow>
                                             )
                                         })

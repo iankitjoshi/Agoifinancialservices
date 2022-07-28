@@ -1,10 +1,7 @@
 import { apiPost } from '../../utils/axios';
 
 export function loginAPI(data) {
-  const user = {}
-  user.email = data.email
-  user.password = data.password
-  return apiPost('/admin/login', user);
+  return apiPost('/auth/login', data);
 }
 
 export function logoutAPI() {

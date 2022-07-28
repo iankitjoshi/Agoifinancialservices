@@ -3,9 +3,7 @@ import {
     deleteOrderAPI,
     updateOrderAPI,
     searchOrderByFilterAPI,
-    CreateUserAPI,
-    UpdateOrderActiveAPI,
-    UserLiveUpdateAPI
+    getOrderByIDAPI
 } from './apis'
 
 export function getOrderList(data) {
@@ -109,48 +107,28 @@ export function UpdateOrder(data) {
     }
 }
 
-export function UpdateActiveUser(data) {
-    return dispatch => {
-        dispatch({
-            type: UPDATE_ORDER
-        })
-        return new Promise((resolve, rej) => {
-            UpdateOrderActiveAPI(data).then(res => {
-                dispatch({
-                    type: UPDATE_ORDER_SUCCESS
-                })
-                return resolve(res)
-            })
-                .catch(err => {
-                    dispatch({
-                        type: UPDATE_ORDER_FAILED
-                    })
-                    return rej(err)
-                })
-        })
-    }
-}
-
-
 export const UPDATE_ORDER = "UPDATE_ORDER"
 export const UPDATE_ORDER_SUCCESS = "UPDATE_ORDER_SUCCESS"
 export const UPDATE_ORDER_FAILED = "UPDATE_ORDER_FAILED"
 
-export function CreateUser(data) {
+
+export function getOrderID(data) {
     return dispatch => {
         dispatch({
-            type: CREATE_USERS
+            type: GET_ORDER_BY_ID_REQUEST,
         })
         return new Promise((resolve, rej) => {
-            CreateUserAPI(data).then(res => {
+            getOrderByIDAPI(data).then(res => {
                 dispatch({
-                    type: CREATE_USERS_SUCCESS
+                    type: GET_ORDER_BY_ID_REQUEST_SUCCEEDED,
+                    payload: res
                 })
                 return resolve(res)
             })
                 .catch(err => {
                     dispatch({
-                        type: CREATE_USERS_FAILED
+                        type: GET_ORDER_BY_ID_REQUEST_FAILED,
+                        payload: {},
                     })
                     return rej(err)
                 })
@@ -158,28 +136,7 @@ export function CreateUser(data) {
     }
 }
 
-export function UserLiveUpdate(data) {
-    return dispatch => {
-        dispatch({
-            type: CREATE_USERS
-        })
-        return new Promise((resolve, rej) => {
-            UserLiveUpdateAPI(data).then(res => {
-                dispatch({
-                    type: CREATE_USERS_SUCCESS
-                })
-                return resolve(res)
-            })
-                .catch(err => {
-                    dispatch({
-                        type: CREATE_USERS_FAILED
-                    })
-                    return rej(err)
-                })
-        })
-    }
-}
+export const GET_ORDER_BY_ID_REQUEST = 'GET_ORDER_BY_ID_REQUEST'
+export const GET_ORDER_BY_ID_REQUEST_SUCCEEDED = 'GET_ORDER_BY_ID_REQUEST_SUCCEEDED'
+export const GET_ORDER_BY_ID_REQUEST_FAILED = 'GET_ORDER_BY_ID_REQUEST_FAILED'
 
-export const CREATE_USERS = 'CREATE_USERS'
-export const CREATE_USERS_SUCCESS = "CREATE_USERS_SUCCESS"
-export const CREATE_USERS_FAILED = "CREATE_USERS_FAILED"

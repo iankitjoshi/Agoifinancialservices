@@ -15,13 +15,13 @@ function SingleCashoutDetails(props) {
     const [typeSelected, setTypeSelected] = useState('')
     const [rejectReason, setRejectReason] = useState('')
 
-    const { userId } = props.match.params;
+    const { cashoutId } = props.match.params;
     const { KycNotification } = props
 
 
     useEffect(() => {
-
-    })
+        dispatch(action.geyCashoutByID(cashoutId))
+    },[])
 
     const isValid = () => {
         if (!typeSelected) return false
@@ -35,6 +35,7 @@ function SingleCashoutDetails(props) {
 
     const handleRadio = (event) => {
         setTypeSelected(event.target.value);
+        if (typeSelected === 'Accept') setRejectReason('')
     }
 
     const handleChange = (e) => {

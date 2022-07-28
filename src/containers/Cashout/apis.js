@@ -8,19 +8,15 @@ export function getCashoutAPI(data) {
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
   }
-  return apiGet(`/user`, payload)
+  return apiGet(`/cashout`, payload)
 }
 
 export function deleteCashoutAPI(data) {
-  return apiDelete(`/user/${data}`)
+  return apiDelete(`/cashout/${data}`)
 }
 
 export function updateCashoutAPI(data) {
-  const updateData = {}
-  updateData.user_name = data.user_name
-  updateData.phone = data.phone
-  updateData.email = data.email
-  return apiPut(`/user/${data.id}`, updateData)
+  return apiPut(`/cashout/${data.id}`, data)
 }
 
 export function searchCashoutByFilterAPI(data) {
@@ -32,5 +28,9 @@ export function searchCashoutByFilterAPI(data) {
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
   }
-  return apiGet(`/user`, payload)
+  return apiGet(`/cashout`, payload)
+}
+
+export function getCashoutByIDAPI(data) {
+  return apiGet(`/cashout/${data}`)
 }

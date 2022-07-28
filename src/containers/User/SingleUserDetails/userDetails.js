@@ -11,9 +11,10 @@ import {
     TableBody,
 } from '@material-ui/core'
 import CustomLoader from "components/common/Loader";
-import { positiveAmount } from 'utils';
-import { NoDataFound } from 'components/common/NoDataFound';
+import { DataValue, positiveAmount } from 'utils';
+import NoDataFound from 'components/common/NoDataFound';
 import EnhancedTableHead from '../../../components/common/EnhancedTableHead';
+import * as action from '../actions'
 
 const headCells = [
     { id: "index", numeric: false, disablePadding: false, label: "Order ID" },
@@ -50,23 +51,24 @@ const ReferralHeadCells = [
 function SingleUserDetails(props) {
     const dispatch = useDispatch()
 
+    const { singleUser = {}, isLoading = false } = useSelector(state => state.users) || {}
+    const { data = {} } = singleUser || {}
+    const { notification = [], stock = [] } = data || {}
+
     const [types, setTypes] = useState(['Accept', 'Reject'])
     const [typeSelected, setTypeSelected] = useState('')
     const [isEdit, setIsEdit] = useState(true)
-    const [walletBalance, setWalletBalance] = useState(1000)
-    let isLoading = false
+    const [walletBalance, setWalletBalance] = useState(data?.wallet_balance)
+
     const { userId } = props.match.params;
     const { KycNotification } = props
 
     useEffect(() => {
+        dispatch(action.getUserByID(userId))
+    }, [])
 
-    })
 
-    const handleRadio = (event) => {
-        setTypeSelected(event.target.value);
-    }
-
-    const handleUpdateWallet = () => {
+    const handleEditWallet = () => {
         setIsEdit(!isEdit)
     }
 
@@ -82,6 +84,22 @@ function SingleUserDetails(props) {
 
     }
 
+    const handleUpdateWallet = () => {
+        setIsEdit(!isEdit)
+        const formData = {
+            wallet_balance: Number(walletBalance)
+        }
+        dispatch(action.UserWalletUpdate(formData, data?._id))
+            .then(({ res = "" }) => {
+                props.toast.success(res || "Wallet update successfully");
+                dispatch(action.getUserByID(userId))
+            })
+            .catch(({ message = "" }) => {
+                props.toast.error(message || 'Oops! Something went wrong')
+            })
+
+    }
+
     return (
         <div className="user-page">
             {KycNotification}
@@ -90,25 +108,25 @@ function SingleUserDetails(props) {
                     <Grid item xs={12} sm={12} md={12} lg={12} className="align-self-center heading-top">
                         <h5 className="page-heading">
                             <KeyboardBackspaceIcon onClick={() => props.history.goBack()} />
-                            <span className="page-heading" >{false ? <img src={UserLoader} alt="" style={{ width: '100px' }} /> : 'csdc'} </span>
+                            <span className="page-heading" >{isLoading ? <img src={UserLoader} alt="" style={{ width: '100px' }} /> : DataValue(data?.name)} </span>
                         </h5>
                     </Grid>
                 </Grid>
 
                 <div className="category-grid" >
-                    {true ?
+                    {!isLoading ?
                         <Grid container spacing={4} className="category-section">
                             <UserCardField>
-                                <label> Mobile: </label> <strong> 9876543210 </strong>
+                                <label> Mobile: </label> <strong> {DataValue(data?.mobile_number)} </strong>
                             </UserCardField>
                             <UserCardField>
-                                <label> Email: </label> <strong> A@GMAIL.COM </strong>
+                                <label> Email: </label> <strong> {DataValue(data?.email_id)} </strong>
                             </UserCardField>
                             <UserCardField>
-                                <label> PAN: </label> <strong> BJDS78CDSBHJ </strong>
+                                <label> PAN: </label> <strong> {DataValue(data?.pan_card_number)} </strong>
                             </UserCardField>
                             <UserCardField>
-                                <label> Aadhar: </label> <strong> 1234 1234 1234 </strong>
+                                <label> Aadhar: </label> <strong> {DataValue(data?.aadhar_number)} </strong>
                             </UserCardField>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
@@ -116,38 +134,38 @@ function SingleUserDetails(props) {
                                     {!isEdit ?
                                         <InputField value={walletBalance} className="new-input" name="walletBalance" error={''} onChange={handleWalletChange} />
                                         :
-                                        <strong> {positiveAmount(walletBalance)}</strong>
+                                        <strong> {positiveAmount(data?.wallet_balance)}</strong>
                                     }
 
                                     {isEdit
                                         ?
-                                        <Button className="button-btn new-btn-color" onClick={handleUpdateWallet} > Edit </Button>
+                                        <Button className="button-btn new-btn-color" onClick={handleEditWallet} > Edit </Button>
                                         :
-                                        <Button className={`button-btn new-btn-color ${!walletBalance && 'disabled'} `} onClick={handleUpdateWallet}>{false ? <CircularProgress width={5} /> : 'Update'} </Button>
+                                        <Button className={`button-btn new-btn-color ${!walletBalance && 'disabled'} `} onClick={handleUpdateWallet}>{isLoading ? <CircularProgress width={5} /> : 'Update'} </Button>
                                     }
                                 </p>
                             </Grid>
                             <UserCardField>
-                                <label> Invested: </label> <strong> {positiveAmount(walletBalance)}</strong>
+                                <label> Invested: </label> <strong> {positiveAmount(data?.mobile_number)}</strong>
                             </UserCardField>
                             <UserCardField>
-                                <label> UPI Address: </label> <strong> Ankit</strong>
+                                <label> UPI Address: </label> <strong> {DataValue(data?.mobile_number)}</strong>
                             </UserCardField>
                             <UserCardField>
-                                <label> Beneficiary Name: </label> <strong> Ankit</strong>
+                                <label> Beneficiary Name: </label> <strong> {DataValue(data?.mobile_number)}</strong>
                             </UserCardField>
                             <UserCardField>
                                 <p>
-                                    <label> Account Number: </label> <strong> 123232324324</strong>
-                                    <label> IFSC Code: </label> <strong> Ankit</strong>
+                                    <label> Account Number: </label> <strong> {DataValue(data?.account_number)}</strong>
+                                    <label> IFSC Code: </label> <strong> {DataValue(data?.ifsc_code)}</strong>
                                 </p>
                             </UserCardField>
                             <UserCardField>
-                                <p><label> NSDL: </label> <strong> 48384289347498</strong></p>
-                                <label> CDSL: </label> <strong> 48384289347498</strong>
+                                <p><label> NSDL: </label> <strong> {DataValue(data?.mobile_number)}</strong></p>
+                                <label> CDSL: </label> <strong> {DataValue(data?.mobile_number)}</strong>
                             </UserCardField>
                             <UserCardField>
-                                <label> Referred By: </label> <strong> Ankit</strong>
+                                <label> Referred By: </label> <strong> {DataValue(data?.mobile_number)}</strong>
                             </UserCardField>
                             <UserCardField>
                                 <Button className="button-btn new-btn-color" onClick={handleSeeKYC} > See full KYC </Button>
@@ -169,8 +187,8 @@ function SingleUserDetails(props) {
                                         headCells={headCells}
                                     />
                                     <TableBody>
-                                        {true ?
-                                            [1, 2, 3, 4, 5, 6]?.map((item, index) => {
+                                        {stock?.length ?
+                                            stock?.map((item, index) => {
                                                 const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
                                                 return (
                                                     <TableRow hover key={id} className="cursor_default" >
@@ -245,8 +263,8 @@ function SingleUserDetails(props) {
                                         headCells={NotificationHeadCells}
                                     />
                                     <TableBody>
-                                        {true ?
-                                            [1, 2, 3, 4, 5, 6]?.map((item, index) => {
+                                        {notification?.length ?
+                                            notification?.map((item, index) => {
                                                 const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
                                                 return (
                                                     <TableRow hover key={id} className="cursor_default" >

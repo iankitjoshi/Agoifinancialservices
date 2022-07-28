@@ -13,8 +13,8 @@ const PublicRoute = ({ component: Component, path }) => {
       exact
       path={path}
       render={(props) => {
-        return isLoggedIn("top-challenge-token") && path == "/login" ? (
-          <Redirect to="/user" />
+        return isLoggedIn("agoi-token") && path == "/login" ? (
+          <Redirect to="/shares" />
         ) : path === "/" ? <Redirect to="/login" /> : (
           <PublicMain {...props}>
             <ScrollRestoration {...props}>

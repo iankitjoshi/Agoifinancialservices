@@ -22,7 +22,7 @@ import * as action from './actions'
 import 'react-dates/initialize';
 import "react-dates/lib/css/_datepicker.css";
 import CustomDialogBox from "components/common/CustomDialogBox"
-import { stableSort, getComparator, tablestyle, getTimeStamps, positiveAmount, } from "utils"
+import { stableSort, getComparator, tablestyle, getTimeStamps, positiveAmount, DataValue, } from "utils"
 import { dateFilter } from 'constant'
 import loader from 'assets/images/loader.gif'
 import moment from 'moment'
@@ -39,7 +39,7 @@ import CustomLoader from "components/common/Loader"
 const headCells = [
     { id: "index", numeric: false, disablePadding: false, label: "User" },
     { id: "user_name", numeric: false, disablePadding: false, label: "Verified" },
-    { id: "email", numeric: false, disablePadding: false, label: "Mobile" },
+    { id: "mobile_number", numeric: false, disablePadding: false, label: "Mobile" },
     { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Investment" },
     { id: "a", numeric: false, disablePadding: false, label: "D.O.J." },
     { id: "a", numeric: false, disablePadding: false, label: "Wallet" },
@@ -66,14 +66,8 @@ function User(props) {
 
 
     const { userList = {}, isLoading = false } = useSelector(state => state.users) || {}
+    const { total = "", current_page = "", data = [] } = userList || {}
 
-    const { total = "", current_page = "" } = userList || {}
-
-    const data = [
-        { id: 1, name: 'a' },
-        { id: 2, name: 'b' },
-        { id: 3, name: 'ac' },
-    ]
 
     useEffect(() => {
         if (!startDate || !endDate) return;
@@ -174,8 +168,8 @@ function User(props) {
     }
 
     const handleSingleUser = (e, item) => {
-        const { id = "" } = item
-        props.history.push(`/user/${id}`)
+        const { _id = "" } = item
+        props.history.push(`/user/${_id}`)
     }
 
 
@@ -240,24 +234,24 @@ function User(props) {
                                 <TableBody>
                                     {true ?
                                         stableSort(data || [], getComparator(order, orderBy)).map((item, index) => {
-                                            const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
+                                            const { is_approved = "", name = "", email_id = "", mobile_number = "", _id = "", wallet_balance = "" } = item || {}
                                             return (
-                                                <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
-                                                    <TableCell className="table-custom-width" data-title="S NO."> <b>  Yoko Pottie <p>ypottiec@privacy.gov.au</p> </b></TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${true ? 'user-active' : 'user-status-no'}`}> {true ? 'Yes' : 'No'}</span> </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME">9876543210 </TableCell>
+                                                <TableRow hover key={_id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
+                                                    <TableCell className="table-custom-width" data-title="S NO."> <b>  {DataValue(name)} <p>{DataValue(email_id)}</p> </b></TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${is_approved ? 'user-active' : 'user-status-no'}`}> {is_approved ? 'Yes' : 'No'}</span> </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="USER NAME">{DataValue(mobile_number)} </TableCell>
                                                     <TableCell className="table-custom-width" data-title="EMAIL"> {positiveAmount(9876)} </TableCell>
                                                     <TableCell className="table-custom-width" data-title="STATUS">Mav 26. 2019 </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">{positiveAmount(9876)}</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">{positiveAmount(wallet_balance)}</TableCell>
                                                     <TableCell className="table-custom-width" data-title="STATUS">5</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="ACTION">
+                                                    <TableCell className="table-custom-width" data-title="ACTION" onClick={(e) => { e.stopPropagation() }}>
                                                         {/* <CustomToolTip title="Edit" >
                                                             <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >
                                                                 <img src={editIcon} alt="" />
                                                             </span>
                                                         </CustomToolTip> */}
                                                         <CustomToolTip title="Delete" >
-                                                            <span className="delete-icon" onClick={() => deleteModal(id)} >
+                                                            <span className="delete-icon" onClick={() => deleteModal(_id)} >
                                                                 <img src={deleteIcon} alt="" />
                                                             </span>
                                                         </CustomToolTip>

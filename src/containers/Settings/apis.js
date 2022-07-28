@@ -1,7 +1,7 @@
 import { apiGet, apiPost, apiPut } from '../../utils/axios'
 import {  getObject, formatString } from "../../utils"
 
-let object = getObject("top-challenge-token");
+let object = getObject("agoi-token");
 let { id = "" } = object && JSON.parse(object) || '';
 
 

@@ -47,7 +47,7 @@ export function apiReq(
       })
       .catch((err) => {
         if (err.response && err.response.status === 401 && !endPoint.includes('/login')) {
-          logOut('top-challenge-token')
+          logOut('agoi-token')
           window.location.href = '/login'
         }
         if (
@@ -56,7 +56,7 @@ export function apiReq(
           && err.response.data
           && err.response.data.message == 'Authorization token expired!'
         ) {
-          logOut('top-challenge-token')
+          logOut('agoi-token')
           window.location.href = '/login'
         }
         const errData = err && err.response && err.response.data || {};
@@ -88,7 +88,7 @@ export function apiPatch(endPoint, data, headers = {}) {
 
 
 export function getHeaders() {
-  let user = getObject('top-challenge-token') || {};
+  let user = getObject('agoi-token') || {};
   let token = user && Object.keys(user).length && JSON.parse(user).access_token
   return {
     Authorization: `Bearer ${token || null}`,

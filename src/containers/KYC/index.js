@@ -18,7 +18,7 @@ import * as action from './actions'
 import 'react-dates/initialize';
 import "react-dates/lib/css/_datepicker.css";
 import CustomDialogBox from "components/common/CustomDialogBox"
-import { stableSort, getComparator, tablestyle, getTimeStamps, } from "utils"
+import { stableSort, getComparator, tablestyle, getTimeStamps, DataValue, } from "utils"
 import { dateFilter } from 'constant'
 import moment from 'moment'
 import CustomSelect from 'components/common/CustomSelect'
@@ -27,10 +27,10 @@ import Datepicker from "components/common/Datepicker";
 import CustomLoader from "components/common/Loader";
 
 const headCells = [
-    { id: "index", numeric: false, disablePadding: false, label: "Name" },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Email" },
-    { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Mobile No." },
-    { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Status" },
+    { id: "user_name", numeric: false, disablePadding: false, label: "Name" },
+    { id: "email_id", numeric: false, disablePadding: false, label: "Email" },
+    { id: "mobile_number", numeric: false, disablePadding: false, label: "Mobile No." },
+    { id: "is_completed_profile", numeric: false, disablePadding: false, label: "Status" },
 ];
 
 function KYC(props) {
@@ -49,18 +49,13 @@ function KYC(props) {
     const [focusedInput, setFocusedInput] = useState(false)
     const [timeOut, setTimeOut] = useState(null)
     const [userFilterSelect, setUserFilterSelect] = useState("")
-    
 
 
-    const { userList = {}, isLoading = false } = useSelector(state => state.users) || {}
 
-    const { total = "", current_page = "" } = userList || {}
+    const { KYCList = {}, isLoading = false } = useSelector(state => state.KYC) || {}
+    const { total = "", current_page = "", data = [] } = KYCList || {}
+    console.log(data, 'data')
 
-    const data = [
-        { id: 1, name: 'a' },
-        { id: 2, name: 'b' },
-        { id: 3, name: 'ac' },
-    ]
 
     useEffect(() => {
         if (!startDate || !endDate) return;
@@ -153,9 +148,9 @@ function KYC(props) {
         setUserId(null)
     }
 
-    const handleSingleUser = (e,item) => {
-        const { id = "" } = item
-        props.history.push(`/kyc/${id}`)
+    const handleSingleKYC = (e, item) => {
+        const { _id = "" } = item
+        props.history.push(`/kyc/${_id}`)
     }
 
     const clearSearch = () => {
@@ -163,7 +158,7 @@ function KYC(props) {
         // dispatch(action.SearchJuryByFilter())
     }
 
-    
+
 
     return (
         <div className="user-page">
@@ -177,7 +172,7 @@ function KYC(props) {
                         <Grid item xs={12} sm={12} md={5} lg={5} className="custom-date-field d-flex align-items-center justify-content-end">
                             <InputField type="search" value={search} name={search} label={`Search KYC`} inputProps={{ maxlength: 40 }}
                                 onChange={(e) => handleChange(e)} fullWidth
-                                 />
+                            />
                         </Grid>
                     </Box>
                     <Box className="custom-box" display="flex" justifyContent="flex-end" alignItems="center">
@@ -220,15 +215,15 @@ function KYC(props) {
                                     headCells={headCells}
                                 />
                                 <TableBody>
-                                    {true ?
+                                    {data?.length ?
                                         stableSort(data || [], getComparator(order, orderBy)).map((item, index) => {
-                                            const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
+                                            const { is_live = "", name = "", email_id = "", mobile_number = "", _id = "", is_completed_kyc = "" } = item || {}
                                             return (
-                                                <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">Ankit Joshi</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">a@gmail.com </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="MOBILE NO."> 9876543210 </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${false ? 'user-active' : 'user-inactive'}`}> {false ? 'Approved' : 'Pending'}</span> </TableCell>
+                                                <TableRow hover key={_id} className="cursor_default" onClick={(e) => handleSingleKYC(e, item)} >
+                                                    <TableCell className="table-custom-width" data-title="EMAIL">{DataValue(name)}</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="email_id">{DataValue(email_id)}</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="mobile_number"> {DataValue(mobile_number)} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="is_completed_kyc"><span className={`${is_completed_kyc ? 'user-active' : 'user-inactive'}`}> {is_completed_kyc ? 'Approved' : 'Pending'}</span> </TableCell>
 
 
                                                     {/* <TableCell className="table-custom-width" data-title="ACTION">

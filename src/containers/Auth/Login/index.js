@@ -17,26 +17,12 @@ import { rememberMe, getObject, saveObject } from "../../../utils";
 
 class Login extends Component {
   state = {
-    email: "",
+    mobile_number: "",
     password: "",
     errors: {},
     checked: false,
   }
 
-  componentDidMount = () => {
-    let remember = getObject("remember_me");
-    if (!remember) {
-      return false;
-    }
-
-    const data = JSON.parse(window.atob(remember));
-
-    this.setState({
-      checked: remember ? true : false,
-      email: data.email,
-      password: data.password
-    });
-  }
 
   handleChecked = () => {
     this.setState({ checked: !this.state.checked })
@@ -49,8 +35,8 @@ class Login extends Component {
   };
 
   isValid = () => {
-    const { email, password } = this.state;
-    const { isValid = true, errors = {} } = validateLogin({ email, password })
+    const { mobile_number, password } = this.state;
+    const { isValid = true, errors = {} } = validateLogin({ mobile_number, password })
     this.setState({ errors });
     return isValid;
   }
@@ -58,14 +44,17 @@ class Login extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    let { email, password, checked } = this.state;
+    let { mobile_number, password, checked } = this.state;
     const { toast } = this.props;
-    this.props.history.push("/shares");
-
+    // this.props.history.push("/shares");
+    
     if (this.isValid()) {
-      this.props.login({ email, password }).then((res) => {
-        //Remember Me Functionality
-        rememberMe(checked, { email, password });
+      const formData = {
+        mobile_number : Number(mobile_number),
+        password
+      }
+      this.props.login(formData).then((res) => {
+
         this.props.history.push("/shares");
         toast.success((res && res.message) || "Logged in successfully.");
         this.props.GetAdminDetails()
@@ -81,7 +70,7 @@ class Login extends Component {
 
   render() {
     const { isLoading } = this.props;
-    const { errors, email, password } = this.state;
+    const { errors, mobile_number, password } = this.state;
 
     return (
       <AuthWrapper>
@@ -89,14 +78,14 @@ class Login extends Component {
           <h6 className="d-flex justify-content-center">Log In to Your Account</h6>
           <Grid item xs={12} sm={12} md={12} lg={12} className="mt-3 input-group">
             <InputField
-              name="email"
+              name="mobile_number"
               type="text"
-              label="Email"
+              label="Mobile Number"
               fullWidth
-              value={email}
-              placeholder="Please Enter Email ID"
+              value={mobile_number}
+              placeholder="Please Enter Mobile Number"
               onChange={this.handleChange}
-              error={errors.email}
+              error={errors.mobile_number}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} className="my-3 input-group">

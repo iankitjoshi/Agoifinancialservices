@@ -19,13 +19,6 @@ export function CreateUserAPI(data) {
   return apiPost(`/user`, data)
 }
 
-export function updateUserActiveAPI(data) {
-  const updateData = {}
-  updateData.is_active = data.is_active
-  updateData.user_name = data.user_name
-  return apiPut(`/user/${data.id}`, updateData)
-}
-
 export function updateUserAPI(data) {
   const updateData = {}
   updateData.user_name = data.user_name
@@ -46,6 +39,11 @@ export function searchUserByFilterAPI(data) {
   return apiGet(`/user`, payload)
 }
 
-export function UserLiveUpdateAPI(data) {
-  return apiPost('/user/live', data)
+export function UserWalletUpdateAPI(data, id) {
+  return apiPost(`/user/edit-wallet/${id}`, data)
 }
+
+export function getUserByIDAPI(data) {
+  return apiGet(`/user/${data}`)
+}
+

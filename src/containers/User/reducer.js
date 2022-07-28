@@ -16,12 +16,17 @@ import {
   CREATE_USERS_SUCCESS,
   CREATE_USERS_FAILED,
 
+  GET_USER_BY_ID_REQUEST,
+  GET_USER_BY_ID_REQUEST_SUCCEEDED,
+  GET_USER_BY_ID_REQUEST_FAILED,
+
 } from './actions'
 
 
 const initState = {
   isLoading: false,
   userList: {},
+  singleUser : {}
 }
 
 export default function (state = { ...initState }, action) {
@@ -67,6 +72,16 @@ export default function (state = { ...initState }, action) {
     
     case CREATE_USERS_FAILED : 
       return {...state, isLoading : false}
+
+    case GET_USER_BY_ID_REQUEST:
+      return { ...state, isLoading: true }
+
+    case GET_USER_BY_ID_REQUEST_SUCCEEDED:
+      return { ...state, isLoading: false, singleUser: action.payload }
+
+    case GET_USER_BY_ID_REQUEST_FAILED:
+      return { ...state, isLoading: false, singleUser: {} }
+
 
     default:
       return state

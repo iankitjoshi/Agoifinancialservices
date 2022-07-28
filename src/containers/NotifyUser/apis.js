@@ -1,6 +1,6 @@
 import { apiPost, apiGet, apiDelete, apiPut } from '../../utils/axios'
 
-export function getUserListAPI(data) {
+export function getNotificationListAPI(data) {
   let payload = {
     limit: data && data.limit || '',
     page: data && data.page || '',
@@ -8,33 +8,19 @@ export function getUserListAPI(data) {
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
   }
-  return apiGet(`/user`, payload)
+  return apiGet(`/user/notify/all`, payload)
 }
 
 export function deleteUserAPI(data) {
-  return apiDelete(`/user/${data}`)
+  return apiDelete(``)
 }
 
-export function CreateUserAPI(data) {
-  return apiPost(`/user`, data)
+export function SendNotificationAPI(data) {
+  return apiPost(`/user/notify`, data)
 }
 
-export function updateUserActiveAPI(data) {
-  const updateData = {}
-  updateData.is_active = data.is_active
-  updateData.user_name = data.user_name
-  return apiPut(`/user/${data.id}`, updateData)
-}
 
-export function updateUserAPI(data) {
-  const updateData = {}
-  updateData.user_name = data.user_name
-  updateData.phone = data.phone
-  updateData.email = data.email
-  return apiPut(`/user/${data.id}`, updateData)
-}
-
-export function searchUserByFilterAPI(data) {
+export function searchNotificationByFilterAPI(data) {
   let payload = {
     limit: data && data.limit || '',
     page: data && data.page || '',
@@ -43,9 +29,6 @@ export function searchUserByFilterAPI(data) {
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
   }
-  return apiGet(`/user`, payload)
+  return apiGet(`/user/notify/all`, payload)
 }
 
-export function UserLiveUpdateAPI(data) {
-  return apiPost('/user/live', data)
-}

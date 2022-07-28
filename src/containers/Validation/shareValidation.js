@@ -1,9 +1,13 @@
 import * as EmailValidator from 'email-validator';
 import { isEmpty } from "lodash";
+import _ from 'lodash'
 
 function shareValidation(data) {
     let errors = {}
     let valid = true;
+
+    let shareAvailableData = data?.shareAvailable?.map(share => share.check && share.name)
+    shareAvailableData = _.compact(shareAvailableData)
 
 
     if (!/\S/.test(data.shareName)) {
@@ -29,6 +33,10 @@ function shareValidation(data) {
     }
     if (!/\S/.test(data.shareImage)) {
         errors.shareImage = "Image is required!"
+    }
+
+    if (!(shareAvailableData.length)) {
+        errors.shareAvailable = "Share available plateform is required!"
     }
 
     return {

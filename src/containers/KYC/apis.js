@@ -8,7 +8,7 @@ export function getKYCListAPI(data) {
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
   }
-  return apiGet(`/user`, payload)
+  return apiGet(`/user/kyc/all`,payload)
 }
 
 export function deleteKYCAPI(data) {
@@ -16,12 +16,8 @@ export function deleteKYCAPI(data) {
 }
 
 
-export function updateKYCAPI(data) {
-  const updateData = {}
-  updateData.user_name = data.user_name
-  updateData.phone = data.phone
-  updateData.email = data.email
-  return apiPut(`/user/${data.id}`, updateData)
+export function updateKYCAPI(data,id) {
+  return apiPost(`/user/kyc/${id}`, data)
 }
 
 export function searchKYCByFilterAPI(data) {
@@ -33,5 +29,9 @@ export function searchKYCByFilterAPI(data) {
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
   }
-  return apiGet(`/user`, payload)
+  return apiGet(`/user/kyc/all`,payload)
+}
+
+export function getKYCByIDAPI(data) {
+  return apiGet(`/user/kyc/${data}`)
 }

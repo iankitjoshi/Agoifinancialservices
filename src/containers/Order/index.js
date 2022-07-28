@@ -32,14 +32,14 @@ import Datepicker from "components/common/Datepicker";
 import CustomToolTip from "components/common/ToolTip";
 import deleteIcon from 'assets/images/deleteIcon.svg'
 import CustomLoader from "components/common/Loader"
- 
+
 
 
 const headCells = [
     { id: "index", numeric: false, disablePadding: false, label: "Order ID" },
     { id: "is_active", numeric: false, disablePadding: false, label: "Date" },
     { id: "user_name", numeric: false, disablePadding: false, label: "Customer" },
-    { id: "email", numeric: false, disablePadding: false, label: "Total" },
+    { id: "order_amount", numeric: false, disablePadding: false, label: "Amount" },
     { id: "is_active", numeric: false, disablePadding: false, label: "Status" },
     { id: "is_active", numeric: false, disablePadding: false, label: "Stock" },
     { id: "is_active", numeric: false, disablePadding: false, label: "Orders" },
@@ -65,15 +65,9 @@ function Orders(props) {
     const [tab, setTab] = useState(0);
 
 
-    const { userList = {}, isLoading = false } = useSelector(state => state.users) || {}
+    const { orderList = {}, isLoading = false } = useSelector(state => state?.order) || {}
+    const { total = "", current_page = "", data = [] } = orderList || {}
 
-    const { total = "", current_page = "" } = userList || {}
-
-    const data = [
-        { id: 1, name: 'a' },
-        { id: 2, name: 'b' },
-        { id: 3, name: 'ac' },
-    ]
 
     useEffect(() => {
         if (!startDate || !endDate) return;
@@ -126,16 +120,6 @@ function Orders(props) {
         }
     }
 
-    const deleteModal = (id) => {
-        setUserId(id)
-        setOpenDeleteModal(true)
-    }
-
-    const onUpdateStatus = (e, user) => {
-        e.preventDefault();
-        update(user)
-    }
-
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc')
@@ -157,19 +141,6 @@ function Orders(props) {
         props.history.replace(`/order?page=${currentPage}&limit=${value}`)
     }
 
-    const update = (user) => {
-        let is_active = user?.is_active && JSON.parse(user?.is_active)
-        dispatch(action.UpdateActiveUser({ ...user, is_active: (!JSON.parse(user.is_active)).toString() }))
-            .then(() => {
-                dispatch(action.getOrderList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
-                toast.success(`User has been ${is_active ? 'deactivated' : 'activated'} successfully!`)
-                afterAction()
-            })
-            .catch(({ message = '' }) => {
-                toast.error(message || 'Oops! Something went wrong')
-            })
-    }
-
     const DeleteOrder = () => {
         dispatch(action.DeleteOrder(userId))
             .then(res => {
@@ -183,18 +154,15 @@ function Orders(props) {
             })
     }
 
-
-
     const afterAction = () => {
         setSearch('')
         setUserFilterSelect('')
         setUserId(null)
     }
 
-
     const handleSingleUser = (e, item) => {
-        const { id = "" } = item
-        props.history.push(`/order/${id}`)
+        const { _id = "" } = item
+        props.history.push(`/order/${_id}`)
     }
 
     const selectTab = (e, newValue) => {
@@ -267,16 +235,17 @@ function Orders(props) {
                                     headCells={headCells}
                                 />
                                 <TableBody>
-                                    {true ?
+                                    {data?.length ?
                                         stableSort(data || [], getComparator(order, orderBy)).map((item, index) => {
-                                            const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
+                                            console.log(item,'item')
+                                            const { order_amount = "", name = "", email = "", phone = "", _id = "", is_order_approved = "" } = item || {}
                                             return (
-                                                <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
+                                                <TableRow hover key={_id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
                                                     <TableCell className="table-custom-width" data-title="S NO."> #143567 </TableCell>
                                                     <TableCell className="table-custom-width" data-title="USER NAME">22/01/2021 </TableCell>
                                                     <TableCell className="table-custom-width" data-title="EMAIL">Dominik Lamakani</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">{positiveAmount(129)}</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${true ? 'user-active' : 'user-inactive'}`}> {true ? 'Approved' : 'Inactive'}</span> </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">{positiveAmount(order_amount)}</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${is_order_approved ? 'user-active' : 'user-inactive'}`}> {is_order_approved ? 'Approved' : 'Inactive'}</span> </TableCell>
                                                     <TableCell className="table-custom-width" data-title="STATUS">Chennai Superkings</TableCell>
                                                     <TableCell className="table-custom-width" data-title="STATUS">5</TableCell>
                                                     <TableCell className="table-custom-width" data-title="STATUS">Sell</TableCell>

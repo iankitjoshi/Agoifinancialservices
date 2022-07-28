@@ -8,30 +8,24 @@ export function getShareListAPI(data) {
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
   }
-  return apiGet(`/user`, payload)
+  return apiGet(`/stock/findAll`, payload)
 }
 
 export function deleteShareAPI(data) {
-  return apiDelete(`/user/${data}`)
+  return apiDelete(`/stock/${data}`)
 }
 
 export function CreateShareAPI(data) {
-  return apiPost(`/user`, data)
+  return apiPost(`/stock/create`, data)
 }
 
 export function UpdateShareActiveAPI(data) {
   const updateData = {}
-  updateData.is_active = data.is_active
-  updateData.user_name = data.user_name
   return apiPut(`/user/${data.id}`, updateData)
 }
 
-export function updateShareAPI(data) {
-  const updateData = {}
-  updateData.user_name = data.user_name
-  updateData.phone = data.phone
-  updateData.email = data.email
-  return apiPut(`/user/${data.id}`, updateData)
+export function updateShareAPI(data, id) {
+  return apiPut(`/stock/profile/edit/${id}`, data)
 }
 
 export function searchShareByFilterAPI(data) {
@@ -43,9 +37,15 @@ export function searchShareByFilterAPI(data) {
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
   }
-  return apiGet(`/user`, payload)
+  return apiGet(`/stock/findAll`, payload)
 }
 
-export function UserLiveUpdateAPI(data) {
-  return apiPost('/user/live', data)
+export function StockIconUpdateAPI(data, id) {
+  const updateData = {}
+  updateData.stock_icon = data.image
+  return apiPost(`/stock/icon/edit/${id}`, updateData)
+}
+
+export function getShareByIDAPI(data) {
+  return apiGet(`/stock/${data}`)
 }

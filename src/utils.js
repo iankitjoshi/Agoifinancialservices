@@ -47,7 +47,7 @@ export function rememberMe(checked, data) {
 
 //Function For Managinig Table Rows Functionality
 export function descendingComparator(a, b, orderBy) {
-  if(!a || !b ) return
+  if (!a || !b) return
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -249,4 +249,9 @@ export const getTimeStamps = (type, reqStartDate = 0, reqEndDate = 0) => {
       break;
   }
   return { startDate, endDate }
+}
+
+
+export function DataValue(data) {
+  return data ? data : '-'
 }

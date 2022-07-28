@@ -7,7 +7,8 @@ import * as action from '../actions'
 import ImgsViewer from 'react-images-viewer'
 import { Button, Grid, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@material-ui/core'
 import CustomLoader from "components/common/Loader";
- 
+import { DataValue } from "utils";
+
 
 function SingleKYCDetails(props) {
     const dispatch = useDispatch()
@@ -19,12 +20,15 @@ function SingleKYCDetails(props) {
     const [imageToOpen, setImageToOpen] = useState(null)
     const [caption, setCaption] = useState('')
 
-    const { userId } = props.match.params;
+    const { singleKYC = {}, isLoading = false } = useSelector(state => state.KYC) || {}
+    const { data = {} } = singleKYC || {}
+    console.log({ singleKYC, data })
+    const { kycId } = props.match.params;
     const { KycNotification } = props
 
     useEffect(() => {
-
-    })
+        dispatch(action.geyKYCByID(kycId))
+    }, [])
 
     const isValid = () => {
         if (!typeSelected) return false
@@ -38,6 +42,7 @@ function SingleKYCDetails(props) {
 
     const handleRadio = (event) => {
         setTypeSelected(event.target.value);
+        if (typeSelected === 'Accept') setRejectReason('')
     }
 
     const handleChange = (e) => {
@@ -48,18 +53,17 @@ function SingleKYCDetails(props) {
     const handleSubmit = (e) => {
         e.preventDefault()
         const formData = {
-            typeSelected,
-            rejectReason
+            is_kyc_approved: typeSelected == 'Accept' ? true : false,
+            kyc_feedback: rejectReason
         }
-        // dispatch(action.CreateUser(formData))
-        //     .then(({ res = "" }) => {
-        //         props.toast.success(res || "User added successfully");
-        //         props.onClose()
-        //         props.afterAction()
-        //     })
-        //     .catch(({ message = "" }) => {
-        //         props.toast.error(message || 'Oops! Something went wrong')
-        //     })
+        dispatch(action.UpdateKYC(formData, kycId))
+            .then(({res = ''}) => {
+                props && props.toast && props.toast.success(res || "KYC Updated successfully");
+                dispatch(action.geyKYCByID(kycId))
+            })
+            .catch(({ message = "" }) => {
+                props.toast.error(message || 'Oops! Something went wrong')
+            })
     }
 
     const viewerOpen = (currImg, caption) => {
@@ -84,7 +88,7 @@ function SingleKYCDetails(props) {
                     <Grid item xs={12} sm={12} md={12} lg={12} className="align-self-center heading-top">
                         <h5 className="page-heading">
                             <KeyboardBackspaceIcon onClick={() => props.history.goBack()} />
-                            <span className="page-heading" >{false ? <img src={UserLoader} alt="" style={{ width: '100px' }} /> : 'csdc'} </span>
+                            <span className="page-heading" >{isLoading ? <img src={UserLoader} alt="" style={{ width: '100px' }} /> :  DataValue(data?.name)} </span>
                         </h5>
                     </Grid>
                 </Grid>
@@ -94,44 +98,44 @@ function SingleKYCDetails(props) {
                         <Grid container spacing={4} className="category-section">
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
+                                    <label> Mobile Number: </label>
+                                    <strong> {DataValue(data?.mobile_number)} </strong>
+                                </p>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={3} lg={3}>
+                                <p>
+                                    <label> Email: </label>
+                                    <strong> {DataValue(data?.email_id)} </strong>
+                                </p>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={3} lg={3}>
+                                <p>
+                                    <label> Pan Card: </label>
+                                    <strong> {DataValue(data?.pan_card_number)} </strong>
+                                </p>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={3} lg={3}>
+                                <p>
+                                    <label> Account Number: </label>
+                                    <strong> {DataValue(data?.account_number)} </strong>
+                                </p>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={3} lg={3}>
+                                <p>
+                                    <label> Aadhar Number: </label>
+                                    <strong> {DataValue(data?.aadhar_number)} </strong>
+                                </p>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={3} lg={3}>
+                                <p>
+                                    <label> Nominee Name: </label>
+                                    <strong> {DataValue(data?.nominee_name)} </strong>
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
                                     <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
-                                </p>
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={3} lg={3}>
-                                <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
-                                </p>
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={3} lg={3}>
-                                <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
-                                </p>
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={3} lg={3}>
-                                <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
-                                </p>
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={3} lg={3}>
-                                <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
-                                </p>
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={3} lg={3}>
-                                <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
+                                    <strong> {DataValue(data?.mobile_number)} </strong>
                                     {image ? <img className="popup-img" src={image} alt="" width={60} onClick={() => viewerOpen(image, 'episode')} /> : '-'}
 
                                 </p>
@@ -142,42 +146,50 @@ function SingleKYCDetails(props) {
                         :
                         <CustomLoader />
                     }
-                    <h6 className="mt-5" >KYC Status</h6>
-                    <FormControl className="m-2" >
-                        <RadioGroup row aria-label="position" name="position" defaultValue="top">
-                            {
-                                types.map((type, i) => {
-                                    return (
-                                        <FormControlLabel value={type}
-                                            onChange={handleRadio} error={'errors.types'} name="credit"
-                                            control={<Radio color="primary" />} label={type} />
-                                    )
-                                })
-                            }
-                        </RadioGroup>
-                    </FormControl>
 
                     {
-                        typeSelected == 'Reject' ?
-                            <Grid item xs={12} sm={12}>
-                                <InputField
-                                    type="textarea"
-                                    name='rejectReason'
-                                    value={rejectReason}
-                                    label="Reason"
-                                    placeholder="Please enter Reason"
-                                    onChange={handleChange}
-                                    margin="normal"
-                                    fullWidth
-                                    required
-                                />
-                            </Grid>
+                        !data?.is_completed_kyc ?
+                            <div>
+                                <h6 className="mt-5" >KYC Status</h6>
+                                <FormControl className="m-2" >
+                                    <RadioGroup row aria-label="position" name="position" defaultValue="top">
+                                        {
+                                            types.map((type, i) => {
+                                                return (
+                                                    <FormControlLabel value={type}
+                                                        onChange={handleRadio} error={'errors.types'} name="credit"
+                                                        control={<Radio color="primary" />} label={type} />
+                                                )
+                                            })
+                                        }
+                                    </RadioGroup>
+                                </FormControl>
+
+                                {
+                                    typeSelected == 'Reject' ?
+                                        <Grid item xs={12} sm={12}>
+                                            <InputField
+                                                type="textarea"
+                                                name='rejectReason'
+                                                value={rejectReason}
+                                                label="Reason"
+                                                placeholder="Please enter Reason"
+                                                onChange={handleChange}
+                                                margin="normal"
+                                                fullWidth
+                                                required
+                                            />
+                                        </Grid>
+                                        :
+                                        null
+                                }
+                                <Button onClick={handleSubmit} className={`button-btn cat-button new-btn-color ${!isValid() ? 'disabled' : ''}`} disabled={!isValid()} > Submit</Button>
+                            </div>
                             :
                             null
                     }
                 </div>
-                <Button onClick={handleSubmit} className={`button-btn cat-button new-btn-color ${!isValid() ? 'disabled' : ''}`} disabled={!isValid()} > Submit</Button>
-            </div>
+            </div >
             <ImgsViewer
                 imgs={[{ src: imageToOpen, caption }]}
                 isOpen={viewerIsOpen}
@@ -186,7 +198,7 @@ function SingleKYCDetails(props) {
                 showImgCount={false}
                 backdropCloseable={true}
             />
-        </div>
+        </div >
     )
 }
 

@@ -5,13 +5,13 @@ export function validateLogin(data) {
   let newErrors = {}
 
   const schema = Joi.object({
-    email: Joi
+    mobile_number: Joi
       .string()
       .required()
-      // .email({ tlds: { allow: false } })
+      .regex(/^[0-9]{10}$/)
       .messages({
-        "string.empty": `Email ID is required!`,
-        // "string.email": `Invalid email!`
+        "string.empty": `Mobile Number is required!`,
+        'string.pattern.base': `Phone number must have 10 digits.`
       }),
     password: Joi
       .string()
@@ -23,10 +23,11 @@ export function validateLogin(data) {
 
   const { error } = schema
 
-  if(error) {
+  if (error) {
     isValid = false
     error.details.forEach(item => newErrors[item.context.key] = item.message)
   }
 
   return { isValid, errors: newErrors }
 }
+

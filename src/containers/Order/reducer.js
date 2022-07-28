@@ -12,16 +12,18 @@ import {
   UPDATE_ORDER_SUCCESS,
   UPDATE_ORDER_FAILED,
 
-  CREATE_USERS,
-  CREATE_USERS_SUCCESS,
-  CREATE_USERS_FAILED,
+  GET_ORDER_BY_ID_REQUEST,
+  GET_ORDER_BY_ID_REQUEST_SUCCEEDED,
+  GET_ORDER_BY_ID_REQUEST_FAILED,
+ 
 
 } from './actions'
 
 
 const initState = {
   isLoading: false,
-  userList: {},
+  orderList: {},
+  singleOrder : {}
 }
 
 export default function (state = { ...initState }, action) {
@@ -31,10 +33,10 @@ export default function (state = { ...initState }, action) {
       return { ...state, isLoading: true }
 
     case GET_ORDER_LIST_REQUEST_SUCCEEDED:
-      return { ...state, isLoading: false, userList: action.payload }
+      return { ...state, isLoading: false, orderList: action.payload }
 
     case GET_ORDER_LIST_REQUEST_FAILED:
-      return { ...state, isLoading: false, userList: {} }
+      return { ...state, isLoading: false, orderList: {} }
 
 
     case DELETE_ORDER : 
@@ -59,14 +61,14 @@ export default function (state = { ...initState }, action) {
       return {...state, isLoading : false}
       
 
-    case CREATE_USERS : 
-      return {...state , isLoading : true}
+    case GET_ORDER_BY_ID_REQUEST:
+      return { ...state, isLoading: true }
 
-    case CREATE_USERS_SUCCESS : 
-      return {...state , isLoading : false}
-    
-    case CREATE_USERS_FAILED : 
-      return {...state, isLoading : false}
+    case GET_ORDER_BY_ID_REQUEST_SUCCEEDED:
+      return { ...state, isLoading: false, singleOrder: action.payload }
+
+    case GET_ORDER_BY_ID_REQUEST_FAILED:
+      return { ...state, isLoading: false, singleOrder: {} }
 
     default:
       return state

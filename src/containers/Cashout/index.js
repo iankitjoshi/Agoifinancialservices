@@ -162,13 +162,6 @@ function Cashout(props) {
         props.history.push(`/cashout/${id}`)
     }
 
-    const clearSearch = () => {
-        setSearch('')
-        // dispatch(action.SearchJuryByFilter())
-    }
-
-
-
     return (
         <div className="user-page">
             {KycNotification}

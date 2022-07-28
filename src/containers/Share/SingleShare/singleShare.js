@@ -2,27 +2,30 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import UserLoader from "../../../assets/images/userLoader.gif";
-import InputField from '../../../components/common/InputField'
 import * as action from '../actions'
 import ImgsViewer from 'react-images-viewer'
-import { Button, Grid, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import CustomLoader from "components/common/Loader";
- 
+import { DataValue } from "utils";
+
 
 function SingleShareDetails(props) {
     const { KycNotification } = props
 
     const dispatch = useDispatch()
 
+    const { singleShare = {}, isLoading = false } = useSelector(state => state.share) || {}
+    const { data = {} } = singleShare || {}
+
     const [viewerIsOpen, setViewerIsOpen] = useState(false)
     const [imageToOpen, setImageToOpen] = useState(null)
     const [caption, setCaption] = useState('')
 
-    const { userId } = props.match.params;
+    const { shareId } = props.match.params;
 
     useEffect(() => {
-
-    })
+        dispatch(action.getShareByID(shareId))
+    }, [])
 
     const viewerOpen = (currImg, caption) => {
         setImageToOpen(currImg)
@@ -36,8 +39,6 @@ function SingleShareDetails(props) {
         setCaption('')
     }
 
-    const image = 'https://picsum.photos/200/300'
-
     return (
         <div className="user-page">
             {KycNotification}
@@ -46,59 +47,67 @@ function SingleShareDetails(props) {
                     <Grid item xs={12} sm={12} md={12} lg={12} className="align-self-center heading-top">
                         <h5 className="page-heading">
                             <KeyboardBackspaceIcon onClick={() => props.history.goBack()} />
-                            <span className="page-heading" >{false ? <img src={UserLoader} alt="" style={{ width: '100px' }} /> : 'csdc'} </span>
+                            <span className="page-heading" >{isLoading ? <img src={UserLoader} alt="" style={{ width: '100px' }} /> : data?.stock_name} </span>
                         </h5>
                     </Grid>
                 </Grid>
-
                 <div className="category-grid" >
-                    {true ?
+                    {!isLoading ?
                         <Grid container spacing={4} className="category-section">
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
+                                    <label> Share ID: </label>
+                                    <strong> {DataValue(data?.stock_sp_id)} </strong>
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
+                                    <label> Face Value: </label>
+                                    <strong> {DataValue(data?.face_value)} </strong>
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
+                                    <label> Price Per Share: </label>
+                                    <strong> {DataValue(data?.price_per_lot)} </strong>
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
+                                    <label>  Status: </label>
+                                    <strong> {DataValue(data?.stock_status)} </strong>
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
+                                    <label> Company Type: </label>
+                                    <strong> {DataValue(data?.companyType)} </strong>
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
+                                    <label>  Quantity: </label>
+                                    <strong> {DataValue(data?.share_per_lot)} </strong>
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
-                                    <label> Name: </label>
-                                    <strong> Ankit Joshi </strong>
-                                    {image ? <img className="popup-img" src={image} alt="" width={60} onClick={() => viewerOpen(image, 'episode')} /> : '-'}
-
+                                    <label>  Available On: </label>
+                                    <strong> {DataValue(data?.available_on)} </strong>
                                 </p>
                             </Grid>
-
+                            <Grid item xs={12} sm={12} md={3} lg={3}>
+                                <p>
+                                    <label>  Icon: </label>
+                                    {data?.stock_icon ? <img className="popup-img" src={data?.stock_icon} alt="" width={60} onClick={() => viewerOpen(data?.stock_icon, data?.stock_name)} /> : '-'}
+                                </p>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                                <p>
+                                    <label>  Discription: </label>
+                                    <strong> {DataValue(data?.discription)} </strong>
+                                </p>
+                            </Grid>
                         </Grid>
 
                         :

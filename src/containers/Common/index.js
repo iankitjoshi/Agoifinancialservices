@@ -173,7 +173,7 @@ function Main(props) {
   }
 
   const handleLogout = () => {
-    logOut("top-challenge-token")
+    logOut("agoi-token")
     logOut("top-challange-admin")
     history.push('/login')
   }
@@ -411,7 +411,7 @@ function MobileResponsiveHeader(props) {
   );
 
   const container = window !== undefined ? () => window().document.body : undefined;
-  const object = getObject("top-challenge-token");
+  const object = getObject("agoi-token");
   const { email = '' } = object && JSON.parse(object) || '';
 
   return (

@@ -44,12 +44,12 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
 
 const headCells = [
-    { id: "index", numeric: false, disablePadding: false, label: "Name" },
-    { id: "is_active", numeric: false, disablePadding: false, label: "ID" },
-    { id: "user_name", numeric: false, disablePadding: false, label: "Price Per share" },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Share Type" },
+    { id: "stock_name", numeric: false, disablePadding: false, label: "Name" },
+    { id: "stock_sp_id", numeric: true, disablePadding: false, label: "ID" },
+    { id: "price_per_lot", numeric: true, disablePadding: false, label: "Price Per share" },
+    { id: "available_on", numeric: false, disablePadding: false, label: "Share Type" },
     { id: "is_active", numeric: false, disablePadding: false, label: "Share Growth" },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Share Quantity" },
+    { id: "share_per_lot", numeric: true, disablePadding: false, label: "Share Quantity" },
     { id: "a", numeric: false, disablePadding: false, label: "Action" },
 ];
 
@@ -73,17 +73,8 @@ function Shares(props) {
     const [isEdit, setIsEdit] = useState(false)
     const [shareDetails, setShareDetails] = useState({})
 
-    const { userList = {}, isLoading = false } = useSelector(state => state.users) || {}
-
-    const { total = "", current_page = "" } = userList || {}
-
-    const data = [
-        { id: 1, name: 'Axis Bank', image: '', id: 'NJKNKCD778', price: 10 },
-        { id: 2, name: 'Axis Bank', image: '', id: 'NJKNKCD778', price: 10 },
-        { id: 3, name: 'Axis Bank', image: '', id: 'NJKNKCD778', price: 10 },
-        { id: 4, name: 'Axis Bank', image: '', id: 'NJKNKCD778', price: 10 },
-        { id: 5, name: 'Axis Bank', image: '', id: 'NJKNKCD778', price: 10 },
-    ]
+    const {  shareList = {}, isLoading = false } = useSelector(state =>state.share) || {}
+    const { total = "", current_page = "", data = [] } = shareList || {}
 
     useEffect(() => {
         if (!startDate || !endDate) return;
@@ -167,7 +158,7 @@ function Shares(props) {
         dispatch(action.DeleteShare(shareId))
             .then(res => {
                 dispatch(action.getShareList({ limit: rowsPerPage, start: currentPage, startDate: startDateValue, endDate: endDateValue }))
-                toast.success("User has been deleted successfully")
+                toast.success("Share has been deleted successfully")
                 setOpenDeleteModal(false)
                 afterAction()
             })
@@ -204,8 +195,8 @@ function Shares(props) {
     }
 
     const handleSingleShare = (item) => {
-        const { id = "" } = item
-        props.history.push(`/shares/${id}`)
+        const { _id = "" } = item
+        props.history.push(`/shares/${_id}`)
     }
 
 
@@ -285,14 +276,14 @@ function Shares(props) {
                                 <TableBody>
                                     {data && data.length ?
                                         stableSort(data || [], getComparator(order, orderBy)).map((item, index) => {
-                                            const { image = "", name = "", price = "", id = "", is_active = "" } = item || {}
+                                            const { stock_icon = "", available_on = "", stock_name = "", price_per_lot = "", _id = "", is_active = "", stock_sp_id = "", share_per_lot = "" } = item || {}
                                             return (
-                                                <TableRow hover key={id} className="cursor_default" onClick={() => handleSingleShare(item)}  >
-                                                    <TableCell className="table-custom-width" data-title="USER NAME"> {name} </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">{id}</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS"> {positiveAmount(5)} </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS"> NSDL </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">
+                                                <TableRow hover key={_id} className="cursor_default" onClick={() => handleSingleShare(item)}  >
+                                                    <TableCell className="table-custom-width" align="justify" data-title="stock_name"> {stock_name} </TableCell>
+                                                    <TableCell className="table-custom-width" align="justify" data-title="stock_sp_id">{stock_sp_id}</TableCell>
+                                                    <TableCell className="table-custom-width" align="justify" data-title="price_per_lot"> {positiveAmount(price_per_lot)} </TableCell>
+                                                    <TableCell className="table-custom-width" align="justify" data-title="available_on"> {JSON.parse(available_on).join(', ')} </TableCell>
+                                                    <TableCell className="table-custom-width" align="justify" data-title="STATUS">
 
                                                         {/* <div style={{ display: 'flex' }} >
                                                             <p style={{ marginTop: '6px' }} >10% &nbsp;	</p>
@@ -311,15 +302,15 @@ function Shares(props) {
                                                         </div>
 
                                                     </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS"> 1000 </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="ACTION">
+                                                    <TableCell className="table-custom-width" align="justify" data-title="share_per_lot"> {share_per_lot || '-'} </TableCell>
+                                                    <TableCell className="table-custom-width" align="justify" data-title="ACTION" onClick={(e) => { e.stopPropagation() }}>
                                                         <CustomToolTip title="Edit" >
                                                             <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >
                                                                 <img src={editIcon} alt="" />
                                                             </span>
                                                         </CustomToolTip>
                                                         <CustomToolTip title="Delete" >
-                                                            <span className="delete-icon" onClick={() => deleteModal(id)} >
+                                                            <span className="delete-icon" onClick={() => deleteModal(_id)} >
                                                                 <img src={deleteIcon} alt="" />
                                                             </span>
                                                         </CustomToolTip>

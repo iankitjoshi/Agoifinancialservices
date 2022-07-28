@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import {
-    Button, FormControl, Grid, CircularProgress, FormGroup,
+    Button, Grid, CircularProgress, FormGroup,
     FormControlLabel, Checkbox
 } from '@material-ui/core'
 import { useState } from 'react'
@@ -12,7 +12,7 @@ import CachedIcon from '@material-ui/icons/Cached';
 import cameraIcon from '../../assets/images/camera.svg'
 import CrossIconWhite from '../../assets/images/cross-white.svg'
 import shareValidation from 'containers/Validation/shareValidation'
-
+import _ from 'lodash'
 
 const ShareAvailablePlateform = [
     { id: 1, name: 'NSDL', check: false },
@@ -31,7 +31,6 @@ const initialUserState = {
 }
 
 
-
 function AddShareForm(props) {
     const dispatch = useDispatch()
     const { isLoading = false } = useSelector(state => state.users) || {}
@@ -47,15 +46,40 @@ function AddShareForm(props) {
 
     useEffect(() => {
         const { shareDetails, update } = props
-        const { user_name = "", email = "", phone = "" } = shareDetails
+        const { stock_name = "",
+            stock_sp_id = "",
+            available_on = "",
+            companyType = "",
+            face_value = "",
+            price_per_lot = "",
+            share_per_lot = "",
+            discription = "",
+            stock_icon = ""
+        } = shareDetails
 
         if (update) {
-            setShares({ ...shares, name: user_name, email, mobile: phone })
+            setShares({
+                ...shares,
+                shareName: stock_name,
+                shareId: stock_sp_id,
+                companyType: companyType,
+                faceValue: face_value,
+                pricePerShare: price_per_lot,
+                shareQuantity: share_per_lot,
+                description: discription,
+            })
+            setShareImage(stock_icon)
+            const availableOn = JSON.parse(available_on)
+            const Availabledata = ShareAvailablePlateform.map((data) => {
+                return { ...data, check: availableOn.includes(data.name) }
+                return data
+            })
+            setShareAvailable(Availabledata)
         }
     }, [])
 
     const isValid = () => {
-        const { isValid = true, errors = {} } = shareValidation({ ...shares, shareImage, update })
+        const { isValid = true, errors = {} } = shareValidation({ ...shares, shareImage, update, shareAvailable })
         setError(errors)
         return isValid;
     }
@@ -63,8 +87,7 @@ function AddShareForm(props) {
     const handleChange = (e) => {
         const { name, value } = e.target
         let balanceRegex = /^(\d+(\.\d{0,5})?|\.?\d{1,2})$/;
-        if (['faceValue', 'pricePerShare', 'shareQuantity'].includes(name) && value && !balanceRegex.test(value)) return;
-
+        if (['shareId', 'faceValue', 'pricePerShare', 'shareQuantity'].includes(name) && value && !balanceRegex.test(value)) return;
         setShares({ ...shares, [name]: value })
         setError({ ...errors, [name]: '' })
         setDataChange(true)
@@ -103,18 +126,42 @@ function AddShareForm(props) {
     const handleSubmit = () => {
         const { name = "", email = "", password = "", mobile = "" } = shares
         const { toast, update, shareDetails } = props
-        const { id } = shareDetails
+        const { _id } = shareDetails
+        let shareAvailableData = shareAvailable?.map(share => share.check && share.name)
+        shareAvailableData = _.compact(shareAvailableData)
 
         if (isValid()) {
-            const formData = {
-                shares
-            }
+            const fd = new FormData()
+            fd.append("stock_name", shares?.shareName);
+            fd.append("image", shareImgBinaryData ? shareImgBinaryData : shareImage);
+            fd.append("stock_sp_id", shares?.shareId);
+            fd.append("available_on", JSON.stringify(shareAvailableData));
+            fd.append("companyType", shares?.companyType);
+            fd.append("face_value", shares?.faceValue);
+            fd.append("price_per_lot", shares?.pricePerShare);
+            fd.append("share_per_lot", shares?.shareQuantity);
+            fd.append("discription", shares?.description);
+
             if (update) {
-                if (dataChange) {
-                    dispatch(action.UpdateShare(formData, id))
+                if (shareImgBinaryData) {
+                    dispatch(action.StockIconUpdate(fd, _id))
                         .then(({ res = "" }) => {
                             dispatch(action.getShareList({ limit: 25 }))
-                            toast.success(res || "User updated successfully");
+                            toast.success(res || "Share Icon updated successfully");
+                            props.onClose()
+                            setDataChange(false)
+                            props.afterAction()
+                        })
+                        .catch(({ message = '' }) => {
+                            toast.error(message || 'Oops! Something went wrong')
+                        })
+                    return
+                }
+                if (dataChange) {
+                    dispatch(action.UpdateShare(fd, _id))
+                        .then(({ res = "" }) => {
+                            dispatch(action.getShareList({ limit: 25 }))
+                            toast.success(res || "Share updated successfully");
                             props.onClose()
                             setDataChange(false)
                             props.afterAction()
@@ -131,10 +178,10 @@ function AddShareForm(props) {
                 }
             }
 
-            dispatch(action.CreateShare(formData))
+            dispatch(action.CreateShare(fd))
                 .then(({ res = "" }) => {
                     dispatch(action.getShareList({ limit: 25 }))
-                    toast.success(res || "User added successfully");
+                    toast.success(res || "Share added successfully");
                     props.onClose()
                     props.afterAction()
                 })
@@ -151,6 +198,8 @@ function AddShareForm(props) {
         })
         setShareAvailable(shareAvailUpdate)
     }
+
+    console.log(errors, 'errors.shareAvailable')
 
     return (
         <div className="cat-popup user-modal">
@@ -191,6 +240,8 @@ function AddShareForm(props) {
                                 })
                             }
                         </FormGroup>
+                        {errors.shareAvailable && <span className="help-block error text-left">{errors.shareAvailable}</span>}
+
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <InputField name="companyType" label="Company Type" placeholder="Please enter Company Type"
@@ -210,7 +261,7 @@ function AddShareForm(props) {
                             value={shares.shareQuantity} error={errors.shareQuantity} onChange={handleChange} required />
                     </Grid>
                     <Grid item xs={12} sm={12}>
-                        <InputField 
+                        <InputField
                             type="textarea"
                             name='description'
                             value={shares.description}
@@ -219,7 +270,7 @@ function AddShareForm(props) {
                             onChange={handleChange}
                             error={errors.description}
                             required
-                         />
+                        />
                     </Grid>
 
                 </Grid>

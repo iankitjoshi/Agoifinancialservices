@@ -5,7 +5,8 @@ import {
     searchShareByFilterAPI,
     CreateShareAPI,
     UpdateShareActiveAPI,
-    UserLiveUpdateAPI
+    getShareByIDAPI,
+    StockIconUpdateAPI
 } from './apis'
 
 export function getShareList(data) {
@@ -87,13 +88,13 @@ export const DELETE_SHARE = "DELETE_SHARE";
 export const DELETE_SHARE_SUCCESS = "DELETE_SHARE_SUCCESS";
 export const DELETE_SHARE_FAILED = "DELETE_SHARE_FAILED"
 
-export function UpdateShare(data) {
+export function UpdateShare(data, id) {
     return dispatch => {
         dispatch({
             type: UPDATE_SHARE
         })
         return new Promise((resolve, rej) => {
-            updateShareAPI(data).then(res => {
+            updateShareAPI(data, id).then(res => {
                 dispatch({
                     type: UPDATE_SHARE_SUCCESS
                 })
@@ -158,13 +159,13 @@ export function CreateShare(data) {
     }
 }
 
-export function UserLiveUpdate(data) {
+export function StockIconUpdate(data) {
     return dispatch => {
         dispatch({
             type: CREATE_USERS
         })
         return new Promise((resolve, rej) => {
-            UserLiveUpdateAPI(data).then(res => {
+            StockIconUpdateAPI(data).then(res => {
                 dispatch({
                     type: CREATE_USERS_SUCCESS
                 })
@@ -180,6 +181,35 @@ export function UserLiveUpdate(data) {
     }
 }
 
+
 export const CREATE_USERS = 'CREATE_USERS'
 export const CREATE_USERS_SUCCESS = "CREATE_USERS_SUCCESS"
 export const CREATE_USERS_FAILED = "CREATE_USERS_FAILED"
+
+export function getShareByID(data) {
+    return dispatch => {
+        dispatch({
+            type: GET_SHARE_BY_ID_REQUEST,
+        })
+        return new Promise((resolve, rej) => {
+            getShareByIDAPI(data).then(res => {
+                dispatch({
+                    type: GET_SHARE_BY_ID_REQUEST_SUCCEEDED,
+                    payload: res
+                })
+                return resolve(res)
+            })
+                .catch(err => {
+                    dispatch({
+                        type: GET_SHARE_BY_ID_REQUEST_FAILED,
+                        payload: {},
+                    })
+                    return rej(err)
+                })
+        })
+    }
+}
+
+export const GET_SHARE_BY_ID_REQUEST = 'GET_SHARE_BY_ID_REQUEST'
+export const GET_SHARE_BY_ID_REQUEST_SUCCEEDED = 'GET_SHARE_BY_ID_REQUEST_SUCCEEDED'
+export const GET_SHARE_BY_ID_REQUEST_FAILED = 'GET_SHARE_BY_ID_REQUEST_FAILED'

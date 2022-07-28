@@ -11,7 +11,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   return <Route
     {...rest}
     render={(props) => {
-      return isLoggedIn("top-challenge-token") ? (
+      return !isLoggedIn("agoi-token") ? (
         <Redirect to='/login' />
       ) : (
         <AppWrapper toast={toast} {...props} >
