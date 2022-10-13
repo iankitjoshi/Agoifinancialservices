@@ -9,7 +9,6 @@ export function login(data) {
             loginAPI(data).then(res => {
                 dispatch({
                     type: LOGIN_REQUEST_SUCCESS,
-                    user: {},
                     payload: res
                 })
                 return resolve(res)

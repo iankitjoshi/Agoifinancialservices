@@ -159,13 +159,13 @@ export function CreateShare(data) {
     }
 }
 
-export function StockIconUpdate(data) {
+export function StockIconUpdate(data, id) {
     return dispatch => {
         dispatch({
             type: CREATE_USERS
         })
         return new Promise((resolve, rej) => {
-            StockIconUpdateAPI(data).then(res => {
+            StockIconUpdateAPI(data, id).then(res => {
                 dispatch({
                     type: CREATE_USERS_SUCCESS
                 })

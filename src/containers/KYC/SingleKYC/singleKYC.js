@@ -22,7 +22,6 @@ function SingleKYCDetails(props) {
 
     const { singleKYC = {}, isLoading = false } = useSelector(state => state.KYC) || {}
     const { data = {} } = singleKYC || {}
-    console.log({ singleKYC, data })
     const { kycId } = props.match.params;
     const { KycNotification } = props
 
@@ -53,8 +52,9 @@ function SingleKYCDetails(props) {
     const handleSubmit = (e) => {
         e.preventDefault()
         const formData = {
-            is_kyc_approved: typeSelected == 'Accept' ? true : false,
-            kyc_feedback: rejectReason
+            is_kyc_approved: typeSelected == 'Accept' ? "Approve" : "Reject",
+            kyc_feedback: rejectReason,
+            is_approved: typeSelected == 'Accept' ? true : false
         }
         dispatch(action.UpdateKYC(formData, kycId))
             .then(({res = ''}) => {
@@ -78,11 +78,10 @@ function SingleKYCDetails(props) {
         setCaption('')
     }
 
-    const image = 'https://picsum.photos/200/300'
 
     return (
         <div className="user-page">
-            {KycNotification}
+            {/* {KycNotification} */}
             <div className="category-page">
                 <Grid container spacing={3} className="mb-3 heading-sec d-flex align-items-center justify-content-end" >
                     <Grid item xs={12} sm={12} md={12} lg={12} className="align-self-center heading-top">
@@ -112,18 +111,32 @@ function SingleKYCDetails(props) {
                                 <p>
                                     <label> Pan Card: </label>
                                     <strong> {DataValue(data?.pan_card_number)} </strong>
-                                </p>
+                                    {data?.pan_card_link ? <img className="popup-img" src={data?.pan_card_link} alt="" width={60} onClick={() => viewerOpen(data?.pan_card_link, data?.pan_card_number)} /> : '-'}
+
+                                </p>  
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
                                     <label> Account Number: </label>
                                     <strong> {DataValue(data?.account_number)} </strong>
+                                    {data?.account_number_link ? <img className="popup-img" src={data?.account_number_link} alt="" width={60} onClick={() => viewerOpen(data?.account_number_link, data?.account_number)} /> : '-'}
+
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
                                     <label> Aadhar Number: </label>
                                     <strong> {DataValue(data?.aadhar_number)} </strong>
+                                    {/* {data?.account_number_link ? <img className="popup-img" src={data?.account_number_link} alt="" width={60} onClick={() => viewerOpen(data?.account_number_link, data?.aadhar_number)} /> : '-'} */}
+
+                                </p>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={3} lg={3}>
+                                <p>
+                                    <label> Demat Number: </label>
+                                    <strong> {DataValue(data?.demat_acc_no)} </strong>
+                                    {data?.demat_screenshot ? <img className="popup-img" src={data?.demat_screenshot} alt="" width={60} onClick={() => viewerOpen(data?.demat_screenshot, data?.demat_acc_no)} /> : '-'}
+
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
@@ -132,15 +145,6 @@ function SingleKYCDetails(props) {
                                     <strong> {DataValue(data?.nominee_name)} </strong>
                                 </p>
                             </Grid>
-                            <Grid item xs={12} sm={12} md={3} lg={3}>
-                                <p>
-                                    <label> Name: </label>
-                                    <strong> {DataValue(data?.mobile_number)} </strong>
-                                    {image ? <img className="popup-img" src={image} alt="" width={60} onClick={() => viewerOpen(image, 'episode')} /> : '-'}
-
-                                </p>
-                            </Grid>
-
                         </Grid>
 
                         :
@@ -148,7 +152,7 @@ function SingleKYCDetails(props) {
                     }
 
                     {
-                        !data?.is_completed_kyc ?
+                        data?.is_kyc_approved === 'Pending' ?
                             <div>
                                 <h6 className="mt-5" >KYC Status</h6>
                                 <FormControl className="m-2" >

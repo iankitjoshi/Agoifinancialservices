@@ -85,13 +85,13 @@ export const DELETE_ORDER = "DELETE_ORDER";
 export const DELETE_ORDER_SUCCESS = "DELETE_ORDER_SUCCESS";
 export const DELETE_ORDER_FAILED = "DELETE_ORDER_FAILED"
 
-export function UpdateOrder(data) {
+export function UpdateOrder(data,id) {
     return dispatch => {
         dispatch({
             type: UPDATE_ORDER
         })
         return new Promise((resolve, rej) => {
-            updateOrderAPI(data).then(res => {
+            updateOrderAPI(data,id).then(res => {
                 dispatch({
                     type: UPDATE_ORDER_SUCCESS
                 })

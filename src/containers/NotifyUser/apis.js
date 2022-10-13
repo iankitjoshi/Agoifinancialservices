@@ -3,7 +3,7 @@ import { apiPost, apiGet, apiDelete, apiPut } from '../../utils/axios'
 export function getNotificationListAPI(data) {
   let payload = {
     limit: data && data.limit || '',
-    page: data && data.page || '',
+    page: data && data.page || '1',
     term: data && data.term || '',
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
@@ -23,11 +23,8 @@ export function SendNotificationAPI(data) {
 export function searchNotificationByFilterAPI(data) {
   let payload = {
     limit: data && data.limit || '',
-    page: data && data.page || '',
-    term: data && data.term || '',
-    type: data && data.type || '',
-    start_date: data && data.startDate || '',
-    end_date: data && data.endDate || '',
+    page: data && data.page || '1',
+    term: data && data.term || '',    
   }
   return apiGet(`/user/notify/all`, payload)
 }

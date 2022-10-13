@@ -54,7 +54,6 @@ function KYC(props) {
 
     const { KYCList = {}, isLoading = false } = useSelector(state => state.KYC) || {}
     const { total = "", current_page = "", data = [] } = KYCList || {}
-    console.log(data, 'data')
 
 
     useEffect(() => {
@@ -153,13 +152,6 @@ function KYC(props) {
         props.history.push(`/kyc/${_id}`)
     }
 
-    const clearSearch = () => {
-        setSearch('')
-        // dispatch(action.SearchJuryByFilter())
-    }
-
-
-
     return (
         <div className="user-page">
             <Grid container spacing={3} className="mb-3 heading-sec" >
@@ -217,13 +209,16 @@ function KYC(props) {
                                 <TableBody>
                                     {data?.length ?
                                         stableSort(data || [], getComparator(order, orderBy)).map((item, index) => {
-                                            const { is_live = "", name = "", email_id = "", mobile_number = "", _id = "", is_completed_kyc = "" } = item || {}
+                                            const { is_live = "", name = "", email_id = "", mobile_number = "", _id = "", is_completed_kyc = "", is_kyc_approved = "" } = item || {}
+                                            const kycApprove = is_kyc_approved === 'Approve' || is_kyc_approved === 'approve' 
                                             return (
                                                 <TableRow hover key={_id} className="cursor_default" onClick={(e) => handleSingleKYC(e, item)} >
                                                     <TableCell className="table-custom-width" data-title="EMAIL">{DataValue(name)}</TableCell>
                                                     <TableCell className="table-custom-width" data-title="email_id">{DataValue(email_id)}</TableCell>
                                                     <TableCell className="table-custom-width" data-title="mobile_number"> {DataValue(mobile_number)} </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="is_completed_kyc"><span className={`${is_completed_kyc ? 'user-active' : 'user-inactive'}`}> {is_completed_kyc ? 'Approved' : 'Pending'}</span> </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="is_completed_kyc">
+                                                        <span className={`${kycApprove ? 'user-active' : 'user-inactive'}`}> {kycApprove ? 'Approved' : 'Pending'}</span>
+                                                    </TableCell>
 
 
                                                     {/* <TableCell className="table-custom-width" data-title="ACTION">

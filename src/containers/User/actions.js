@@ -5,7 +5,8 @@ import {
     searchUserByFilterAPI,
     CreateUserAPI,
     UserWalletUpdateAPI,
-    getUserByIDAPI
+    getUserByIDAPI,
+    totalInvestmentAPI
 } from './apis'
 
 export function getUserList(data) {
@@ -189,3 +190,31 @@ export function getUserByID(data) {
 export const GET_USER_BY_ID_REQUEST = 'GET_USER_BY_ID_REQUEST'
 export const GET_USER_BY_ID_REQUEST_SUCCEEDED = 'GET_USER_BY_ID_REQUEST_SUCCEEDED'
 export const GET_USER_BY_ID_REQUEST_FAILED = 'GET_USER_BY_ID_REQUEST_FAILED'
+
+export function getUserTotalInvestment(data) {
+    return dispatch => {
+        dispatch({
+            type: GET_USER_TOTAL_INVESTMENT,
+        })
+        return new Promise((resolve, rej) => {
+            totalInvestmentAPI(data).then(res => {
+                dispatch({
+                    type: GET_USER_TOTAL_INVESTMENT_SUCCEEDED,
+                    payload: res
+                })
+                return resolve(res)
+            })
+                .catch(err => {
+                    dispatch({
+                        type: GET_USER_TOTAL_INVESTMENT_FAILED,
+                        payload: {},
+                    })
+                    return rej(err)
+                })
+        })
+    }
+}
+
+export const GET_USER_TOTAL_INVESTMENT = 'GET_USER_TOTAL_INVESTMENT'
+export const GET_USER_TOTAL_INVESTMENT_SUCCEEDED = 'GET_USER_TOTAL_INVESTMENT_SUCCEEDED'
+export const GET_USER_TOTAL_INVESTMENT_FAILED = 'GET_USER_TOTAL_INVESTMENT_FAILED'

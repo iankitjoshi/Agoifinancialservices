@@ -6,7 +6,7 @@ import * as action from '../actions'
 import ImgsViewer from 'react-images-viewer'
 import { Grid } from '@material-ui/core'
 import CustomLoader from "components/common/Loader";
-import { DataValue } from "utils";
+import { DataValue, isJson, positiveAmount } from "utils";
 
 
 function SingleShareDetails(props) {
@@ -41,7 +41,7 @@ function SingleShareDetails(props) {
 
     return (
         <div className="user-page">
-            {KycNotification}
+            {/* {KycNotification} */}
             <div className="category-page">
                 <Grid container spacing={3} className="mb-3 heading-sec d-flex align-items-center justify-content-end" >
                     <Grid item xs={12} sm={12} md={12} lg={12} className="align-self-center heading-top">
@@ -63,13 +63,13 @@ function SingleShareDetails(props) {
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
                                     <label> Face Value: </label>
-                                    <strong> {DataValue(data?.face_value)} </strong>
+                                    <strong> {positiveAmount(data?.face_value)} </strong>
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
                                     <label> Price Per Share: </label>
-                                    <strong> {DataValue(data?.price_per_lot)} </strong>
+                                    <strong> {positiveAmount(data?.price_per_lot)} </strong>
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>
@@ -93,7 +93,8 @@ function SingleShareDetails(props) {
                             <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <p>
                                     <label>  Available On: </label>
-                                    <strong> {DataValue(data?.available_on)} </strong>
+
+                                    <strong> {isJson(data?.available_on) ? JSON.parse(data?.available_on).join(', ') : '-'} </strong>
                                 </p>
                             </Grid>
                             <Grid item xs={12} sm={12} md={3} lg={3}>

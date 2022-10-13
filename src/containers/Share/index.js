@@ -21,7 +21,7 @@ import * as action from './actions'
 import 'react-dates/initialize';
 import "react-dates/lib/css/_datepicker.css";
 import CustomDialogBox from "components/common/CustomDialogBox"
-import { stableSort, getComparator, tablestyle, getTimeStamps, positiveAmount, } from "utils"
+import { stableSort, getComparator, tablestyle, getTimeStamps, positiveAmount, isJson, taxRateFormat } from "utils"
 import { dateFilter } from 'constant'
 import editIcon from 'assets/images/editIcon.svg';
 import deleteIcon from 'assets/images/deleteIcon.svg'
@@ -73,8 +73,8 @@ function Shares(props) {
     const [isEdit, setIsEdit] = useState(false)
     const [shareDetails, setShareDetails] = useState({})
 
-    const {  shareList = {}, isLoading = false } = useSelector(state =>state.share) || {}
-    const { total = "", current_page = "", data = [] } = shareList || {}
+    const { shareList = {}, isLoading = false } = useSelector(state => state.share) || {}
+    const { total = "", current_page = "", data = [], availableShare = "", soldoutShare = "", totalShare = "" } = shareList || {}
 
     useEffect(() => {
         if (!startDate || !endDate) return;
@@ -118,12 +118,12 @@ function Shares(props) {
         setTimeOut(setTimeOut(() => {
             searchUser(value)
         }, 700))
-        // props.history.replace(`/shares?page=${0}&limit=${5}`)
+        props.history.replace(`/shares?page=${0}&limit=${5}`)
     }
 
     const searchUser = (value) => {
         if (value.length != 1) {
-            // dispatch(action.getShareByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
+            dispatch(action.getShareByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
         }
     }
 
@@ -202,7 +202,7 @@ function Shares(props) {
 
     return (
         <div className="user-page">
-            {KycNotification}
+            {/* {KycNotification} */}
             <Grid container spacing={3} className="mb-3 heading-sec" >
                 <Grid item xs={12} sm={12} md={12} lg={1} className="align-self-center">
                     <h5 className="page-heading" >Shares</h5>
@@ -248,17 +248,19 @@ function Shares(props) {
             <Grid container className="user-grid" >
                 <ShareCardField img={totalUserIcon}>
                     <h5>Total Shares</h5>
-                    <h6>{isLoading ? <img src={UserLoader} alt="" className="user-loader-img" /> : 10}</h6>
+                    <h6>{isLoading ? <img src={UserLoader} alt="" className="user-loader-img" /> : total}</h6>
                 </ShareCardField>
-
+                
+                
+                
                 <ShareCardField img={userActiveIcon}>
-                    <h5>Active Shares</h5>
-                    <h6>{isLoading ? <img src={UserLoader} alt="" className="user-loader-img" /> : 8} </h6>
+                    <h5>Available Shares</h5>
+                    <h6>{isLoading ? <img src={UserLoader} alt="" className="user-loader-img" /> : availableShare} </h6>
                 </ShareCardField>
 
                 <ShareCardField img={userInActiveIcon}>
-                    <h5>Inactive Shares</h5>
-                    <h6>{isLoading ? <img src={UserLoader} alt="" className="user-loader-img" /> : 2} </h6>
+                    <h5>Sold-out Shares</h5>
+                    <h6>{isLoading ? <img src={UserLoader} alt="" className="user-loader-img" /> : soldoutShare} </h6>
                 </ShareCardField>
 
             </Grid>
@@ -276,30 +278,34 @@ function Shares(props) {
                                 <TableBody>
                                     {data && data.length ?
                                         stableSort(data || [], getComparator(order, orderBy)).map((item, index) => {
-                                            const { stock_icon = "", available_on = "", stock_name = "", price_per_lot = "", _id = "", is_active = "", stock_sp_id = "", share_per_lot = "" } = item || {}
+                                            const { stock_icon = "", available_on = "", stock_name = "", price_per_lot = "", _id = "", is_active = "", stock_sp_id = "", share_per_lot = "", growth_percentage = "" } = item || {}
                                             return (
                                                 <TableRow hover key={_id} className="cursor_default" onClick={() => handleSingleShare(item)}  >
                                                     <TableCell className="table-custom-width" align="justify" data-title="stock_name"> {stock_name} </TableCell>
                                                     <TableCell className="table-custom-width" align="justify" data-title="stock_sp_id">{stock_sp_id}</TableCell>
                                                     <TableCell className="table-custom-width" align="justify" data-title="price_per_lot"> {positiveAmount(price_per_lot)} </TableCell>
-                                                    <TableCell className="table-custom-width" align="justify" data-title="available_on"> {JSON.parse(available_on).join(', ')} </TableCell>
+                                                    <TableCell className="table-custom-width" align="justify" data-title="available_on"> {isJson(available_on) ? JSON.parse(available_on).join(', ') : '-'} </TableCell>
                                                     <TableCell className="table-custom-width" align="justify" data-title="STATUS">
+                                                        {
+                                                            growth_percentage >= 0 ?
+                                                                <div style={{ display: 'flex' }} >
+                                                                    <p style={{ marginTop: '4px' }} >{taxRateFormat(growth_percentage)} &nbsp;	</p>
 
-                                                        {/* <div style={{ display: 'flex' }} >
-                                                            <p style={{ marginTop: '6px' }} >10% &nbsp;	</p>
+                                                                    <span className="up-arrow" >
+                                                                        <img src={upArrow} alt="" />
+                                                                    </span>
+                                                                </div> :
+                                                                <div style={{ display: 'flex' }} >
+                                                                    <p style={{ marginTop: '6px' }} >{taxRateFormat(growth_percentage)} &nbsp;	</p>
 
-                                                            <span className="delete-icon" >
-                                                                <img src={downArrow} alt="" />
-                                                            </span>
-                                                        </div> */}
+                                                                    <span className="delete-icon" >
+                                                                        <img src={downArrow} alt="" />
+                                                                    </span>
+                                                                </div>
+                                                        }
 
-                                                        <div style={{ display: 'flex' }} >
-                                                            <p style={{ marginTop: '4px' }} >10% &nbsp;	</p>
 
-                                                            <span className="up-arrow" >
-                                                                <img src={upArrow} alt="" />
-                                                            </span>
-                                                        </div>
+
 
                                                     </TableCell>
                                                     <TableCell className="table-custom-width" align="justify" data-title="share_per_lot"> {share_per_lot || '-'} </TableCell>

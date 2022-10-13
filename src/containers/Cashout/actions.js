@@ -85,13 +85,13 @@ export const DELETE_CASHOUT = "DELETE_CASHOUT";
 export const DELETE_CASHOUT_SUCCESS = "DELETE_CASHOUT_SUCCESS";
 export const DELETE_CASHOUT_FAILED = "DELETE_CASHOUT_FAILED"
 
-export function UpdateCashOut(data) {
+export function UpdateCashOut(data, id) {
     return dispatch => {
         dispatch({
             type: UPDATE_CASHOUT
         })
         return new Promise((resolve, rej) => {
-            updateCashoutAPI(data).then(res => {
+            updateCashoutAPI(data, id).then(res => {
                 dispatch({
                     type: UPDATE_CASHOUT_SUCCESS
                 })

@@ -60,11 +60,11 @@ const menuItems = [
     path: '/cashout',
     icon: categoryIcon
   },
-  {
-    label: "Settings",
-    path: '/settings',
-    icon: settingIcon
-  },
+  // {
+  //   label: "Settings",
+  //   path: '/settings',
+  //   icon: settingIcon
+  // },
   {
     label: "Logout",
     icon: LogoutIcon,

@@ -116,7 +116,7 @@ export default function Settings(props) {
 
     return (
         <div className="settings-page">
-            {KycNotification}
+            {/* {KycNotification} */}
             <div className="setting-top">
                 <Grid container >
                     <Grid item xs={12} sm={6} md={6} lg={6}>

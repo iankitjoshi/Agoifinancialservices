@@ -13,6 +13,7 @@ import cameraIcon from '../../assets/images/camera.svg'
 import CrossIconWhite from '../../assets/images/cross-white.svg'
 import shareValidation from 'containers/Validation/shareValidation'
 import _ from 'lodash'
+import { isJson } from 'utils'
 
 const ShareAvailablePlateform = [
     { id: 1, name: 'NSDL', check: false },
@@ -69,9 +70,9 @@ function AddShareForm(props) {
                 description: discription,
             })
             setShareImage(stock_icon)
-            const availableOn = JSON.parse(available_on)
-            const Availabledata = ShareAvailablePlateform.map((data) => {
-                return { ...data, check: availableOn.includes(data.name) }
+            const availableOn = isJson(available_on) ? JSON.parse(available_on) : []
+            const Availabledata = ShareAvailablePlateform?.map((data) => {
+                return { ...data, check: availableOn?.includes(data.name) }
                 return data
             })
             setShareAvailable(Availabledata)
@@ -87,7 +88,7 @@ function AddShareForm(props) {
     const handleChange = (e) => {
         const { name, value } = e.target
         let balanceRegex = /^(\d+(\.\d{0,5})?|\.?\d{1,2})$/;
-        if (['shareId', 'faceValue', 'pricePerShare', 'shareQuantity'].includes(name) && value && !balanceRegex.test(value)) return;
+        if (['faceValue', 'pricePerShare', 'shareQuantity'].includes(name) && value && !balanceRegex.test(value)) return;
         setShares({ ...shares, [name]: value })
         setError({ ...errors, [name]: '' })
         setDataChange(true)
@@ -138,13 +139,16 @@ function AddShareForm(props) {
             fd.append("available_on", JSON.stringify(shareAvailableData));
             fd.append("companyType", shares?.companyType);
             fd.append("face_value", shares?.faceValue);
-            fd.append("price_per_lot", shares?.pricePerShare);
+            fd.append("price_per_lot", Number(shares?.pricePerShare));
             fd.append("share_per_lot", shares?.shareQuantity);
             fd.append("discription", shares?.description);
 
             if (update) {
                 if (shareImgBinaryData) {
-                    dispatch(action.StockIconUpdate(fd, _id))
+                    const fdImg = new FormData()
+                    fdImg.append("image", shareImgBinaryData ? shareImgBinaryData : shareImage);
+
+                    dispatch(action.StockIconUpdate(fdImg, _id))
                         .then(({ res = "" }) => {
                             dispatch(action.getShareList({ limit: 25 }))
                             toast.success(res || "Share Icon updated successfully");
@@ -158,7 +162,18 @@ function AddShareForm(props) {
                     return
                 }
                 if (dataChange) {
-                    dispatch(action.UpdateShare(fd, _id))
+                    const formData = {
+                        stock_name: shares?.shareName,
+                        image: shareImgBinaryData ? shareImgBinaryData : shareImage,
+                        stock_sp_id: shares?.shareId,
+                        available_on: JSON.stringify(shareAvailableData),
+                        companyType: shares?.companyType,
+                        face_value: shares?.faceValue,
+                        price_per_lot: Number(shares?.pricePerShare),
+                        share_per_lot: shares?.shareQuantity,
+                        discription: shares?.description,
+                    }
+                    dispatch(action.UpdateShare(formData, _id))
                         .then(({ res = "" }) => {
                             dispatch(action.getShareList({ limit: 25 }))
                             toast.success(res || "Share updated successfully");
@@ -199,7 +214,6 @@ function AddShareForm(props) {
         setShareAvailable(shareAvailUpdate)
     }
 
-    console.log(errors, 'errors.shareAvailable')
 
     return (
         <div className="cat-popup user-modal">
@@ -228,7 +242,7 @@ function AddShareForm(props) {
                         {errors.shareImage && <span className="help-block error text-left">{errors.shareImage}</span>}
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <InputField name="shareId" label="Share ID" placeholder="Please enter Share ID"
+                        <InputField name="shareId" label="ISIN NO." placeholder="Please enter ISIN NO."
                             value={shares.shareId} error={errors.shareId} onChange={handleChange} required />
                     </Grid>
                     <Grid item xs={12} sm={6}>

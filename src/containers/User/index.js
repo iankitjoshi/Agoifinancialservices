@@ -22,7 +22,7 @@ import * as action from './actions'
 import 'react-dates/initialize';
 import "react-dates/lib/css/_datepicker.css";
 import CustomDialogBox from "components/common/CustomDialogBox"
-import { stableSort, getComparator, tablestyle, getTimeStamps, positiveAmount, DataValue, } from "utils"
+import { stableSort, getComparator, tablestyle, getTimeStamps, positiveAmount, DataValue, timeFormat} from "utils"
 import { dateFilter } from 'constant'
 import loader from 'assets/images/loader.gif'
 import moment from 'moment'
@@ -37,12 +37,10 @@ import CustomLoader from "components/common/Loader"
 
 
 const headCells = [
-    { id: "index", numeric: false, disablePadding: false, label: "User" },
-    { id: "user_name", numeric: false, disablePadding: false, label: "Verified" },
+    { id: "name", numeric: false, disablePadding: false, label: "User" },
     { id: "mobile_number", numeric: false, disablePadding: false, label: "Mobile" },
-    { id: "authorizedCredit", numeric: false, disablePadding: false, label: "Investment" },
-    { id: "a", numeric: false, disablePadding: false, label: "D.O.J." },
-    { id: "a", numeric: false, disablePadding: false, label: "Wallet" },
+    { id: "createdAt", numeric: false, disablePadding: false, label: "D.O.J." },
+    { id: "wallet_balance", numeric: false, disablePadding: false, label: "Wallet" },
     { id: "a", numeric: false, disablePadding: false, label: "Orders" },
     { id: "a", numeric: false, disablePadding: false, label: "" },
 ];
@@ -179,7 +177,7 @@ function User(props) {
     }
     return (
         <div className="user-page">
-            {KycNotification}
+            {/* {KycNotification} */}
             <Grid container spacing={3} className="mb-3 heading-sec" >
                 <Grid item xs={12} sm={12} md={12} lg={1} className="align-self-center">
                     <h5 className="page-heading" >Users</h5>
@@ -232,18 +230,16 @@ function User(props) {
                                     headCells={headCells}
                                 />
                                 <TableBody>
-                                    {true ?
+                                    {data.length ?
                                         stableSort(data || [], getComparator(order, orderBy)).map((item, index) => {
-                                            const { is_approved = "", name = "", email_id = "", mobile_number = "", _id = "", wallet_balance = "" } = item || {}
+                                            const { createdAt = "", name = "", email_id = "", mobile_number = "", _id = "", wallet_balance = "" } = item || {}
                                             return (
                                                 <TableRow hover key={_id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
-                                                    <TableCell className="table-custom-width" data-title="S NO."> <b>  {DataValue(name)} <p>{DataValue(email_id)}</p> </b></TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${is_approved ? 'user-active' : 'user-status-no'}`}> {is_approved ? 'Yes' : 'No'}</span> </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME">{DataValue(mobile_number)} </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL"> {positiveAmount(9876)} </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">Mav 26. 2019 </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">{positiveAmount(wallet_balance)}</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">5</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="User"> <b>  {DataValue(name)} <p>{DataValue(email_id)}</p> </b></TableCell>
+                                                    <TableCell className="table-custom-width" data-title="Mobile">{DataValue(mobile_number)} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="D.O.J.">{createdAt && timeFormat(createdAt) || '-'} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="Wallet">{positiveAmount(wallet_balance)}</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="Orders">5</TableCell>
                                                     <TableCell className="table-custom-width" data-title="ACTION" onClick={(e) => { e.stopPropagation() }}>
                                                         {/* <CustomToolTip title="Edit" >
                                                             <span className="edit-icon mr-2" onClick={() => handleEditUser(item)} >

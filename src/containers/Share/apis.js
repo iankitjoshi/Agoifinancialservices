@@ -3,7 +3,7 @@ import { apiPost, apiGet, apiDelete, apiPut } from '../../utils/axios'
 export function getShareListAPI(data) {
   let payload = {
     limit: data && data.limit || '',
-    page: data && data.page || '',
+    page: data && data.page || '1',
     term: data && data.term || '',
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
@@ -25,15 +25,14 @@ export function UpdateShareActiveAPI(data) {
 }
 
 export function updateShareAPI(data, id) {
-  return apiPut(`/stock/profile/edit/${id}`, data)
+  return apiPost(`/stock/profile/edit/${id}`, data)
 }
 
 export function searchShareByFilterAPI(data) {
   let payload = {
     limit: data && data.limit || '',
-    page: data && data.page || '',
+    page: data && data.page || '1',
     term: data && data.term || '',
-    type: data && data.type || '',
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
   }
@@ -41,9 +40,7 @@ export function searchShareByFilterAPI(data) {
 }
 
 export function StockIconUpdateAPI(data, id) {
-  const updateData = {}
-  updateData.stock_icon = data.image
-  return apiPost(`/stock/icon/edit/${id}`, updateData)
+  return apiPost(`/stock/icon/edit/${id}`, data)
 }
 
 export function getShareByIDAPI(data) {

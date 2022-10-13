@@ -3609,14 +3609,6 @@ p.no-data {
   border-radius: 5px;
 }
 
-.custom-tooltip {
-  display: inline-block;
-  cursor: pointer;
-
-  &:hover {
-    color: map-get($i-colors, "primary");
-  }
-}
 
 .user-cards {
   background: #ffffff 0% 0% no-repeat padding-box;
@@ -3906,4 +3898,57 @@ p.no-data {
     display: flex;
 
   }
+}
+
+.custom-tooltip {
+    display: inline-block;
+    cursor: pointer;
+    margin: 1px 2px !important;
+
+    &:hover {
+        color: map-get($i-colors, "primary");
+    }
+}
+
+.MuiPopover-paper {
+    .chip-tax {
+        margin-bottom: 10px;
+    }
+}
+
+.chip-tax {
+    margin-right: 7px;
+
+    .MuiChip-labelSmall {
+        padding-left: 15px;
+        padding-right: 15px;
+        font-size: 15px;
+
+    }
+}
+
+.text-more {
+    white-space: normal;
+    -webkit-line-clamp: inherit;
+    -webkit-box-orient: vertical;
+    overflow: visible;
+    text-overflow: unset;
+    cursor: pointer;
+    color: map-get($i-colors, "primary");
+    min-width: 80px;
+
+    // margin-top: 2px;
+    .black {
+        color: map-get($i-colors, "secondary");
+
+        span {
+            color: map-get($i-colors, "primary");
+        }
+    }
+
+    // &:hover {
+    //     text-decoration: underline;
+
+    // }
+
 }

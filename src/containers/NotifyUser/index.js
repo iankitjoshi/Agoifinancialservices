@@ -11,17 +11,19 @@ import {
     TableBody, Grid
 } from '@material-ui/core'
 import CustomLoader from "components/common/Loader";
-import DummyData from './DummyData.json'
 import { Autocomplete } from '@material-ui/lab';
 import { DataValue, timeFormat } from 'utils';
 import NoDataFound from '../../components/common/NoDataFound';
 import EnhancedTableHead from '../../components/common/EnhancedTableHead';
 import _ from 'lodash'
+import DataShowMore from "components/common/DataShowMore";
+import CustomTablePagination from "components/common/CustomPagination";
 
 const NotificationHeadCells = [
     { id: "index", numeric: false, disablePadding: false, label: "S.No." },
     { id: "createdAt", numeric: false, disablePadding: false, label: "Date" },
     { id: "message", numeric: false, disablePadding: false, label: "Notification" },
+    { id: "message", numeric: false, disablePadding: false, label: "User Name" },
 ];
 
 function NotifyUser(props) {
@@ -34,12 +36,15 @@ function NotifyUser(props) {
     const { data = [] } = notificationList || {}
 
 
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('')
+    const [rowsPerPage, setRowsPerPage] = useState(25)
+    const [currentPage, setCurrentPage] = useState(0)
     const [message, setMessage] = useState('')
     const [selectedUser, setSelectedGroup] = useState([])
     const [searchingTimeout, setSearchingTimeout] = useState(null)
 
     const { KycNotification } = props
-    console.log(selectedUser, 'selectedUser')
 
     useEffect(() => {
         dispatch(action.getNotificationList())
@@ -56,18 +61,41 @@ function NotifyUser(props) {
         setMessage(value)
     }
 
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc')
+        setOrderBy(property)
+    }
+
+    const handleChangePage = (event, currentPage, pageLimit) => {
+        setCurrentPage(currentPage)
+        dispatch(action.getNotificationList({ limit: rowsPerPage, page: currentPage + 1 }));
+        props.history.replace(`/notify-user?page=${currentPage}&limit=${rowsPerPage}`)
+    }
+
+    const handleChangeRowsPerPage = (rowsPerPage) => {
+        let { value = 10 } = rowsPerPage.target;
+        value = value === "All" ? props.customer.length : value
+        setRowsPerPage(value)
+        setCurrentPage(0)
+        dispatch(action.getNotificationList({ limit: value, start: currentPage }))
+        props.history.replace(`/notify-user?page=${currentPage}&limit=${value}`)
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        const userID = selectedUser?.map((data) => { return { id: data?._id } })
+        const user_id = selectedUser?.map((data) => { return data?._id })
 
         const formData = {
-            userID,
+            user_id,
             message
         }
         dispatch(action.CreateNotification(formData))
             .then(({ res = "" }) => {
-                props.toast.success(res || "User added successfully");
+                props.toast.success(res || "Notification send successfully");
                 dispatch(action.getNotificationList())
+                setMessage('')
+                setSelectedGroup([])
             })
             .catch(({ message = "" }) => {
                 props.toast.error(message || 'Oops! Something went wrong')
@@ -78,13 +106,6 @@ function NotifyUser(props) {
         const { value } = e.target;
         if (searchingTimeout)
             clearTimeout(searchingTimeout);
-
-        // if (value.length != 1) {
-        //     setSearchingTimeout(setTimeout(() =>
-        //         dispatch(groupAction.SearchGroupByFilter({ term: value, limit: "all" }))
-        //         , 100))
-        // }
-
     }
 
     const selectAllGroup = (e, selectedUser) => {
@@ -105,7 +126,7 @@ function NotifyUser(props) {
 
     return (
         <div className="user-page">
-            {KycNotification}
+            {/* {KycNotification} */}
             <div className="category-page user-notify">
                 <div className="category-grid" >
                     <h5 className="text-centre mb-5" >Notify User:</h5>
@@ -184,17 +205,22 @@ function NotifyUser(props) {
                         <TableContainer className={`${props?.classes?.container} mt-2`}>
                             <Table className="table-program" stickyHeader aria-label="sticky table" id="customer-table">
                                 <EnhancedTableHead
+                                    order={order}
+                                    orderBy={orderBy}
+                                    onRequestSort={handleRequestSort}
                                     headCells={NotificationHeadCells}
                                 />
                                 <TableBody>
                                     {data?.length ?
                                         data?.map((item, index) => {
-                                            const { is_live = "", name = "", email = "", message = "", _id = "", createdAt = "" } = item || {}
+                                            const { is_live = "", name = "", user_id = [], message = "", _id = "", createdAt = "" } = item || {}
                                             return (
                                                 <TableRow hover key={_id} className="cursor_default" >
                                                     <TableCell className="table-custom-width" data-title="S NO."> {index + 1}. </TableCell>
                                                     <TableCell className="table-custom-width" data-title="createdAt">{timeFormat(createdAt)} </TableCell>
                                                     <TableCell className="table-custom-width" data-title="message">{DataValue(message)} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="message"> <DataShowMore data={user_id} {...props} /> </TableCell>
+
                                                 </TableRow>
                                             )
                                         })
@@ -206,7 +232,13 @@ function NotifyUser(props) {
                                 </TableBody>
                             </Table>
                         </TableContainer>
-
+                        <CustomTablePagination
+                            count={total || 10}
+                            rowsPerPage={rowsPerPage || 10}
+                            currentPage={currentPage}
+                            onChangePage={handleChangePage}
+                            onChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
                     </div>
                     :
                     <CustomLoader />

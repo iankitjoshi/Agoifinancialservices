@@ -11,7 +11,7 @@ import {
     TableBody,
 } from '@material-ui/core'
 import CustomLoader from "components/common/Loader";
-import { DataValue, positiveAmount } from 'utils';
+import { DataValue, positiveAmount, timeFormatDetails } from 'utils';
 import NoDataFound from 'components/common/NoDataFound';
 import EnhancedTableHead from '../../../components/common/EnhancedTableHead';
 import * as action from '../actions'
@@ -28,10 +28,10 @@ const headCells = [
 
 const CashOutHeadCells = [
     { id: "index", numeric: false, disablePadding: false, label: "S.No." },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Name" },
-    { id: "user_name", numeric: false, disablePadding: false, label: "Mobile No." },
     { id: "email", numeric: false, disablePadding: false, label: "Cashout Amount" },
     { id: "email", numeric: false, disablePadding: false, label: "Status" },
+    { id: "email", numeric: false, disablePadding: false, label: "Created Time" },
+    { id: "email", numeric: false, disablePadding: false, label: "Updated Time" },
 ];
 
 const NotificationHeadCells = [
@@ -51,9 +51,9 @@ const ReferralHeadCells = [
 function SingleUserDetails(props) {
     const dispatch = useDispatch()
 
-    const { singleUser = {}, isLoading = false } = useSelector(state => state.users) || {}
+    const { singleUser = {}, totalInvestment = {}, isLoading = false } = useSelector(state => state.users) || {}
     const { data = {} } = singleUser || {}
-    const { notification = [], stock = [] } = data || {}
+    const { notification = [], stock = [], referred_userDetails = {}, cashout = [] } = data || {}
 
     const [types, setTypes] = useState(['Accept', 'Reject'])
     const [typeSelected, setTypeSelected] = useState('')
@@ -65,7 +65,8 @@ function SingleUserDetails(props) {
 
     useEffect(() => {
         dispatch(action.getUserByID(userId))
-    }, [])
+        dispatch(action.getUserTotalInvestment(userId))
+    }, [userId])
 
 
     const handleEditWallet = () => {
@@ -80,8 +81,8 @@ function SingleUserDetails(props) {
         setWalletBalance(value)
     }
 
-    const handleSeeKYC = () => {
-
+    const handleSeeKYC = (id) => {
+        props.history.push(`/kyc/${id}`)
     }
 
     const handleUpdateWallet = () => {
@@ -100,9 +101,18 @@ function SingleUserDetails(props) {
 
     }
 
+    const handleNameClick = (_id) => {
+        props.history.push(`/user/${_id}`)
+    }
+
+    const handleSingleCashout = (e, item) => {
+        const { _id = "" } = item
+        props.history.push(`/cashout/${_id}`)
+    }
+
     return (
         <div className="user-page">
-            {KycNotification}
+            {/* {KycNotification} */}
             <div className="category-page">
                 <Grid container spacing={3} className="mb-3 heading-sec d-flex align-items-center justify-content-end" >
                     <Grid item xs={12} sm={12} md={12} lg={12} className="align-self-center heading-top">
@@ -146,13 +156,13 @@ function SingleUserDetails(props) {
                                 </p>
                             </Grid>
                             <UserCardField>
-                                <label> Invested: </label> <strong> {positiveAmount(data?.mobile_number)}</strong>
+                                <label>Total Invested: </label> <strong> {positiveAmount(totalInvestment?.totalInsvestment)}</strong>
                             </UserCardField>
                             <UserCardField>
                                 <label> UPI Address: </label> <strong> {DataValue(data?.mobile_number)}</strong>
                             </UserCardField>
                             <UserCardField>
-                                <label> Beneficiary Name: </label> <strong> {DataValue(data?.mobile_number)}</strong>
+                                <label> Beneficiary Name: </label> <strong> {DataValue(data?.name)}</strong>
                             </UserCardField>
                             <UserCardField>
                                 <p>
@@ -165,10 +175,11 @@ function SingleUserDetails(props) {
                                 <label> CDSL: </label> <strong> {DataValue(data?.mobile_number)}</strong>
                             </UserCardField>
                             <UserCardField>
-                                <label> Referred By: </label> <strong> {DataValue(data?.mobile_number)}</strong>
+                                <label> Referred By: </label> <strong onClick={() => handleNameClick(referred_userDetails?._id)} style={{ fontSize: '15px', textDecoration: "underline", cursor: "pointer" }} > {DataValue(referred_userDetails?.name)}</strong>
+
                             </UserCardField>
                             <UserCardField>
-                                <Button className="button-btn new-btn-color" onClick={handleSeeKYC} > See full KYC </Button>
+                                <Button className="button-btn new-btn-color" onClick={() => handleSeeKYC(data?._id)} > See full KYC </Button>
                             </UserCardField>
                         </Grid>
 
@@ -196,7 +207,7 @@ function SingleUserDetails(props) {
                                                         <TableCell className="table-custom-width" data-title="USER NAME">22/01/2021 </TableCell>
                                                         <TableCell className="table-custom-width" data-title="EMAIL">Dominik Lamakani</TableCell>
                                                         <TableCell className="table-custom-width" data-title="STATUS">{positiveAmount(129)}</TableCell>
-                                                        <TableCell className="table-custom-width" data-title="STATUS"><span className={`${true ? 'user-active' : 'user-inactive'}`}> {true ? 'Approved' : 'Inactive'}</span> </TableCell>
+                                                        <TableCell className="table-custom-width" data-title="STATUS"><span className={`${true ? 'user-active' : 'user-inactive'}`}> {true ? 'Approved' : 'Pending'}</span> </TableCell>
                                                         <TableCell className="table-custom-width" data-title="STATUS">Chennai Superkings</TableCell>
                                                         <TableCell className="table-custom-width" data-title="STATUS">5</TableCell>
                                                     </TableRow>
@@ -226,16 +237,16 @@ function SingleUserDetails(props) {
                                         headCells={CashOutHeadCells}
                                     />
                                     <TableBody>
-                                        {true ?
-                                            [1, 2, 3, 4,]?.map((item, index) => {
-                                                const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
+                                        {cashout.length ?
+                                            cashout?.map((item, index) => {
+                                                const { cashout_amount = "", cashout_status = "", createdAt = "", updatedAt = "", _id = "" } = item || {}
                                                 return (
-                                                    <TableRow hover key={id} className="cursor_default" >
+                                                    <TableRow hover key={_id} className="cursor_default" onClick={(e) => handleSingleCashout(e, item)}>
                                                         <TableCell className="table-custom-width" data-title="S NO.">{index + 1}. </TableCell>
-                                                        <TableCell className="table-custom-width" data-title="USER NAME">Ankit Joshi </TableCell>
-                                                        <TableCell className="table-custom-width" data-title="MOBILE NO."> 9876543210 </TableCell>
-                                                        <TableCell className="table-custom-width" data-title="EMAIL">{positiveAmount(100)}</TableCell>
-                                                        <TableCell className="table-custom-width" data-title="STATUS"><span className={`${true ? 'user-active' : 'user-inactive'}`}> {true ? 'Approved' : 'Inactive'}</span> </TableCell>
+                                                        <TableCell className="table-custom-width" data-title="USER NAME">{positiveAmount(cashout_amount)} </TableCell>
+                                                        <TableCell className="table-custom-width" data-title="STATUS"><span className={`${cashout_status ? 'user-active' : 'user-inactive'}`}> {cashout_status ? 'Approved' : 'Pending'}</span> </TableCell>
+                                                        <TableCell className="table-custom-width" data-title="MOBILE NO."> {timeFormatDetails(createdAt)} </TableCell>
+                                                        <TableCell className="table-custom-width" data-title="MOBILE NO."> {timeFormatDetails(updatedAt)} </TableCell>
                                                     </TableRow>
                                                 )
                                             })
@@ -265,12 +276,12 @@ function SingleUserDetails(props) {
                                     <TableBody>
                                         {notification?.length ?
                                             notification?.map((item, index) => {
-                                                const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
+                                                const { createdAt = "", message = "", _id = "" } = item || {}
                                                 return (
-                                                    <TableRow hover key={id} className="cursor_default" >
+                                                    <TableRow hover key={_id} className="cursor_default" >
                                                         <TableCell className="table-custom-width" data-title="S NO."> {index + 1}. </TableCell>
-                                                        <TableCell className="table-custom-width" data-title="USER NAME">22/01/2021 </TableCell>
-                                                        <TableCell className="table-custom-width" data-title="EMAIL">In publishing and graphic design, </TableCell>
+                                                        <TableCell className="table-custom-width" data-title="USER NAME">{timeFormatDetails(createdAt)} </TableCell>
+                                                        <TableCell className="table-custom-width" data-title="EMAIL">{message} </TableCell>
                                                     </TableRow>
                                                 )
                                             })
@@ -298,7 +309,7 @@ function SingleUserDetails(props) {
                                         headCells={ReferralHeadCells}
                                     />
                                     <TableBody>
-                                        {true ?
+                                        {false ?
                                             [1, 2, 3, 4, 5, 6]?.map((item, index) => {
                                                 const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
                                                 return (

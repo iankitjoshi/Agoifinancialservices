@@ -3,7 +3,7 @@ import { apiPost, apiGet, apiDelete, apiPut } from '../../utils/axios'
 export function getOrderListAPI(data) {
   let payload = {
     limit: data && data.limit || '',
-    page: data && data.page || '',
+    page: data && data.page || '1',
     term: data && data.term || '',
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
@@ -15,24 +15,28 @@ export function deleteOrderAPI(data) {
   return apiDelete(`/user/order/${data}`)
 }
 
-export function updateOrderAPI(data) {
-  const updateData = {}
-  updateData.user_name = data.user_name
-  updateData.phone = data.phone
-  updateData.email = data.email
-  return apiPut(`/user/order/${data.id}`, updateData)
+export function updateOrderAPI(data,id) {
+  return apiPut(`/user/order/${id}`, data)
 }
 
 export function searchOrderByFilterAPI(data) {
+
   let payload = {
     limit: data && data.limit || '',
-    page: data && data.page || '',
+    page: data && data.page || '1',
     term: data && data.term || '',
-    type: data && data.type || '',
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
   }
-  return apiGet(`/user/order`, payload)
+
+  const { tab = 0 } = data
+
+  const orderStatus = tab => ({
+    0: '/order',
+    1: '/order/purchase',
+    2: '/order/sell',
+  }[tab] || '/sell')
+  return apiGet(`/user${orderStatus(tab)}`, payload)
 }
 
 export function getOrderByIDAPI(data) {

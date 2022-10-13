@@ -1,7 +1,7 @@
 import moment from "moment";
 
 export function isLoggedIn(name) {
-  const access_token = window.localStorage.getItem(name)
+  const access_token = window?.localStorage?.getItem(name)
   return access_token;
 }
 
@@ -12,7 +12,7 @@ export function getObject(key) {
 }
 
 export function saveObject(key, value) {
-  if (window && window.localStorage) {
+  if (window && window?.localStorage) {
     window.localStorage.setItem(key, value);
   }
 }
@@ -101,6 +101,9 @@ export function AvatarName(data) {
 
 export function timeFormat(data) {
   return moment(data).format('DD MMM YYYY') || ''
+}
+export function timeFormatDetails(data) {
+  return moment(data).format('DD MMM YYYY hh:mm A') || ''
 }
 
 export function ExpirytimeFormat(data) {
@@ -254,4 +257,20 @@ export const getTimeStamps = (type, reqStartDate = 0, reqEndDate = 0) => {
 
 export function DataValue(data) {
   return data ? data : '-'
+}
+
+export function isJson(item) {
+  try {
+    var json = JSON.parse(item);
+    return (typeof json === 'object');
+  } catch (e) {
+    return false;
+  }
+}
+
+export function taxRateFormat(amt) {
+  if (amt < 0) {
+    return amt && `${(Math.abs(amt) * -1).toFixed(2)}%` || '0.00%'
+  }
+  return amt && `${Math.abs(amt).toFixed(2)}%` || '0.00%'
 }

@@ -30,8 +30,9 @@ import CustomSelect from 'components/common/CustomSelect'
 import NoDataFound from "components/common/NoDataFound";
 import Datepicker from "components/common/Datepicker";
 import CustomToolTip from "components/common/ToolTip";
-import deleteIcon from 'assets/images/deleteIcon.svg'
+import { useLocation } from 'react-router';
 import CustomLoader from "components/common/Loader"
+import { timeFormat, DataValue } from '../../utils';
 
 
 
@@ -68,11 +69,13 @@ function Orders(props) {
     const { orderList = {}, isLoading = false } = useSelector(state => state?.order) || {}
     const { total = "", current_page = "", data = [] } = orderList || {}
 
+    const paramData = useLocation().search;
+    const tabNumber = new URLSearchParams(paramData).get('tab') || 0;
 
     useEffect(() => {
         if (!startDate || !endDate) return;
         getData()
-    }, [startDate, endDate])
+    }, [startDate, endDate, tab])
 
     useEffect(() => {
         if (filter?.value) {
@@ -92,7 +95,7 @@ function Orders(props) {
             startDate: startDateValue,
             endDate: endDateValue,
         }
-        dispatch(action.getOrderByFilter({ startDate: data?.startDate, endDate: data?.endDate, limit: rowsPerPage, start: currentPage, term: search }))
+        dispatch(action.getOrderByFilter({ tab, startDate: data?.startDate, endDate: data?.endDate, limit: rowsPerPage, start: currentPage, term: search }))
     }
 
     function handleDateChange({ startDate, endDate }) {
@@ -116,7 +119,7 @@ function Orders(props) {
 
     const searchUser = (value) => {
         if (value.length != 1) {
-            dispatch(action.getOrderByFilter({ limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
+            dispatch(action.getOrderByFilter({ tab, limit: rowsPerPage, start: currentPage, term: value, type: userFilterSelect }));
         }
     }
 
@@ -128,7 +131,7 @@ function Orders(props) {
 
     const handleChangePage = (event, currentPage, pageLimit) => {
         setCurrentPage(currentPage)
-        dispatch(action.getOrderByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
+        dispatch(action.getOrderByFilter({ tab, limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
         props.history.replace(`/order?page=${currentPage}&limit=${rowsPerPage}`)
     }
 
@@ -137,7 +140,7 @@ function Orders(props) {
         value = value === "All" ? props.customer.length : value
         setRowsPerPage(value)
         setCurrentPage(0)
-        dispatch(action.getOrderByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
+        dispatch(action.getOrderByFilter({ tab, limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
         props.history.replace(`/order?page=${currentPage}&limit=${value}`)
     }
 
@@ -161,17 +164,19 @@ function Orders(props) {
     }
 
     const handleSingleUser = (e, item) => {
-        const { _id = "" } = item
-        props.history.push(`/order/${_id}`)
+        const { _id = "", orderType = "" } = item
+        props.history.push(`/order/${_id}?tab=${tab}&orderType=${orderType}`)
     }
 
     const selectTab = (e, newValue) => {
         setTab(newValue)
+        props.history.replace(`/order?tab=${newValue}`)
     }
+
 
     return (
         <div className="user-page">
-            {KycNotification}
+            {/* {KycNotification} */}
             <Grid container spacing={3} className="mb-3 heading-sec" >
                 <Grid item xs={12} sm={12} md={12} lg={1} className="align-self-center">
                     <h5 className="page-heading" >Orders</h5>
@@ -237,18 +242,20 @@ function Orders(props) {
                                 <TableBody>
                                     {data?.length ?
                                         stableSort(data || [], getComparator(order, orderBy)).map((item, index) => {
-                                            console.log(item,'item')
-                                            const { order_amount = "", name = "", email = "", phone = "", _id = "", is_order_approved = "" } = item || {}
+                                            const { order_amount = "", createdAt = "", no_of_stocks = "", user_id = {}, _id = "", is_order_approved = "", stock_id = {}, orderType = '' } = item || {}
                                             return (
                                                 <TableRow hover key={_id} className="cursor_default" onClick={(e) => handleSingleUser(e, item)} >
                                                     <TableCell className="table-custom-width" data-title="S NO."> #143567 </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME">22/01/2021 </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">Dominik Lamakani</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="USER NAME">{createdAt && timeFormat(createdAt) || '-'} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="EMAIL">{DataValue(user_id?.name)}</TableCell>
                                                     <TableCell className="table-custom-width" data-title="STATUS">{positiveAmount(order_amount)}</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${is_order_approved ? 'user-active' : 'user-inactive'}`}> {is_order_approved ? 'Approved' : 'Inactive'}</span> </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">Chennai Superkings</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">5</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS">Sell</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${is_order_approved ? 'user-active' : 'user-inactive'}`}> {is_order_approved ? 'Approved' : 'Pending'}</span> </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">{DataValue(stock_id?.stock_name)}</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">{DataValue(no_of_stocks)}</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="STATUS">{orderType ? orderType
+                                                        : tabNumber == '1' ? 'Purchase'
+                                                            : 'Sell'}
+                                                    </TableCell>
                                                 </TableRow>
                                             )
                                         })

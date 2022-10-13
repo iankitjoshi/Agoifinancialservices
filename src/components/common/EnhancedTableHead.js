@@ -15,7 +15,7 @@ function EnhancedTableHead(props) {
   let {
     order,
     orderBy,
-    onRequestSort,
+    onRequestSort = (() => ({})),
     headCells,
     showCheck,
     onChangeClick,
@@ -23,18 +23,17 @@ function EnhancedTableHead(props) {
   } = props;
 
   const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+     onRequestSort(event, property);
   };
 
-  
   if (showCheck) {
-    headCells = headCells.map((item, index) => ({ ...item, showCheck: false }))
+    headCells = headCells?.map((item, index) => ({ ...item, showCheck: false }))
     headCells.push({ showCheck: true })
   }
   return (
     <TableHead className="cf ">
       <TableRow>
-        {headCells.map((headCell, i) => {
+        {headCells?.map((headCell, i) => {
           if (headCell.showCheck) {
             return <TableCell
               key={i}
@@ -44,7 +43,7 @@ function EnhancedTableHead(props) {
                 <Checkbox
                   checked={isChecked}
                   onClick={e => onChangeClick(e.target.checked)}
-                  />
+                />
                 <span>Live On TV</span>
               </div>
             </TableCell>
@@ -56,12 +55,12 @@ function EnhancedTableHead(props) {
               sortDirection={orderBy === headCell.id ? order : false}
             >
               <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
+                active={orderBy === headCell?.id}
+                direction={orderBy === headCell?.id ? order : "asc"}
+                onClick={createSortHandler(headCell?.id)}
                 hideSortIcon={true}
               >
-                {headCell.label}
+                {headCell?.label}
                 {orderBy === headCell.id ? (
                   <span style={{ "display": "none" }}>
                     {order === "desc" ? "sorted descending" : "sorted ascending"}

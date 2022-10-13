@@ -3,7 +3,7 @@ import { apiPost, apiGet, apiDelete, apiPut } from '../../utils/axios'
 export function getUserListAPI(data) {
   let payload = {
     limit: data && data.limit || '',
-    page: data && data.page || '',
+    page: data && data.page || '1',
     term: data && data.term || '',
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
@@ -30,9 +30,9 @@ export function updateUserAPI(data) {
 export function searchUserByFilterAPI(data) {
   let payload = {
     limit: data && data.limit || '',
-    page: data && data.page || '',
+    page: data && data.page || '1',
     term: data && data.term || '',
-    type: data && data.type || '',
+    
     start_date: data && data.startDate || '',
     end_date: data && data.endDate || '',
   }
@@ -47,3 +47,6 @@ export function getUserByIDAPI(data) {
   return apiGet(`/user/${data}`)
 }
 
+export function totalInvestmentAPI(id) {
+  return apiGet(`/user/investment/${id}`)
+}

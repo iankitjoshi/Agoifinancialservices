@@ -20,7 +20,7 @@ import * as action from './actions'
 import 'react-dates/initialize';
 import "react-dates/lib/css/_datepicker.css";
 import CustomDialogBox from "components/common/CustomDialogBox"
-import { stableSort, getComparator, tablestyle, getTimeStamps, positiveAmount, } from "utils"
+import { stableSort, getComparator, tablestyle, getTimeStamps, positiveAmount, DataValue, } from "utils"
 import { dateFilter } from 'constant'
 import moment from 'moment'
 import CustomSelect from 'components/common/CustomSelect'
@@ -31,10 +31,10 @@ import CustomLoader from "components/common/Loader";
 
 const headCells = [
     { id: "index", numeric: false, disablePadding: false, label: "S.No." },
-    { id: "is_active", numeric: false, disablePadding: false, label: "Name" },
-    { id: "user_name", numeric: false, disablePadding: false, label: "Mobile No." },
-    { id: "email", numeric: false, disablePadding: false, label: "Cashout Amount" },
-    { id: "email", numeric: false, disablePadding: false, label: "Status" },
+    { id: "name", numeric: false, disablePadding: false, label: "Name" },
+    { id: "mobile_number", numeric: false, disablePadding: false, label: "Mobile No." },
+    { id: "cashout_amount", numeric: false, disablePadding: false, label: "Cashout Amount" },
+    { id: "cashout_status", numeric: false, disablePadding: false, label: "Status" },
 ];
 
 function Cashout(props) {
@@ -56,15 +56,10 @@ function Cashout(props) {
 
 
 
-    const { userList = {}, isLoading = false } = useSelector(state => state.users) || {}
+    const { cashoutList = {}, isLoading = false } = useSelector(state => state.cashout) || {}
 
-    const { total = "", current_page = "" } = userList || {}
+    const { total = "", current_page = "", data = [] } = cashoutList || {}
 
-    const data = [
-        { id: 1, name: 'a' },
-        { id: 2, name: 'b' },
-        { id: 3, name: 'ac' },
-    ]
 
     useEffect(() => {
         if (!startDate || !endDate) return;
@@ -108,7 +103,7 @@ function Cashout(props) {
         setTimeOut(setTimeOut(() => {
             searchUser(value)
         }, 700))
-        props.history.replace(`/kyc?page=${0}&limit=${5}`)
+        props.history.replace(`/cashout?page=${0}&limit=${5}`)
     }
 
     const searchUser = (value) => {
@@ -126,7 +121,7 @@ function Cashout(props) {
     const handleChangePage = (event, currentPage, pageLimit) => {
         setCurrentPage(currentPage)
         dispatch(action.getCashoutByFilter({ limit: rowsPerPage, page: currentPage + 1, term: search, startDate: startDateValue, endDate: endDateValue }));
-        props.history.replace(`/kyc?page=${currentPage}&limit=${rowsPerPage}`)
+        props.history.replace(`/cashout?page=${currentPage}&limit=${rowsPerPage}`)
     }
 
     const handleChangeRowsPerPage = (rowsPerPage) => {
@@ -135,7 +130,7 @@ function Cashout(props) {
         setRowsPerPage(value)
         setCurrentPage(0)
         dispatch(action.getCashoutByFilter({ limit: value, start: currentPage, term: search, startDate: startDateValue, endDate: endDateValue }))
-        props.history.replace(`/kyc?page=${currentPage}&limit=${value}`)
+        props.history.replace(`/cashout?page=${currentPage}&limit=${value}`)
     }
 
     const deleteUser = () => {
@@ -164,7 +159,7 @@ function Cashout(props) {
 
     return (
         <div className="user-page">
-            {KycNotification}
+            {/* {KycNotification} */}
             <Grid container spacing={3} className="mb-3 heading-sec" >
                 <Grid item xs={12} sm={12} md={12} lg={1} className="align-self-center">
                     <h5 className="page-heading" >Cashout</h5>
@@ -220,14 +215,14 @@ function Cashout(props) {
                                 <TableBody>
                                     {true ?
                                         stableSort(data || [], getComparator(order, orderBy)).map((item, index) => {
-                                            const { is_live = "", name = "", email = "", phone = "", id = "", is_active = "" } = item || {}
+                                            const { cashout_status = "", cashout_amount = "", user_id = {}, phone = "", id = "", is_active = "" } = item || {}
                                             return (
                                                 <TableRow hover key={id} className="cursor_default" onClick={(e) => handleSingleCashout(e, item)} >
-                                                    <TableCell className="table-custom-width" data-title="S NO.">{index + 1}. </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="USER NAME">Ankit Joshi </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="MOBILE NO."> 9876543210 </TableCell>
-                                                    <TableCell className="table-custom-width" data-title="EMAIL">{positiveAmount(100)}</TableCell>
-                                                    <TableCell className="table-custom-width" data-title="STATUS"><span className={`${true ? 'user-active' : 'user-inactive'}`}> {true ? 'Approved' : 'Inactive'}</span> </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="S.No.">{index + 1}. </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="Name"> {DataValue(user_id?.name)} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="Mobile No."> {DataValue(user_id?.mobile_number)} </TableCell>
+                                                    <TableCell className="table-custom-width" data-title="Cashout Amount">{positiveAmount(cashout_amount)}</TableCell>
+                                                    <TableCell className="table-custom-width" data-title="Status"><span className={`${cashout_status ? 'user-active' : 'user-inactive'}`}> {cashout_status ? 'Approved' : 'Pending'}</span> </TableCell>
                                                 </TableRow>
                                             )
                                         })
